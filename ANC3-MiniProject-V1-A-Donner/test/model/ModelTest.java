@@ -78,7 +78,7 @@ public class ModelTest {
         assertEquals(TEST_LIST.get(0), model.getDoneList().get(0));
         assertEquals(TEST_LIST.get(1), model.getToDoList().get(0));
     }
-/*
+
     @Test
     public void testSetDoneAll() {
         while(!model.getToDoList().isEmpty())
@@ -87,7 +87,7 @@ public class ModelTest {
         assertEquals(new HashSet<>(TEST_LIST), new HashSet<>(model.getDoneList()));
     }
        
- 
+ /*
     @Test
     public void testSetDoneAllSetToDoAll() {
         while(!model.getToDoList().isEmpty())
