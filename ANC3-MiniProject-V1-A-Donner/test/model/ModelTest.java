@@ -163,7 +163,7 @@ public class ModelTest {
         assertEquals(TEST_LIST, model.getToDoList());
         assertTrue(model.getDoneList().isEmpty());
     }
-/*
+
     @Test
     public void testAddToDoExisting2() {
         model.setDone(0);
@@ -174,5 +174,5 @@ public class ModelTest {
         assertTrue(model.getToDoList().size() == TEST_LIST.size() - 2);
         assertEquals(doneList, model.getDoneList());
     }
-*/
+
 }

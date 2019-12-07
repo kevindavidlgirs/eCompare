@@ -5,15 +5,10 @@
  */
 package miniproject;
 
-import static java.nio.file.Files.lines;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.scene.control.ListView;
 
 /**
  *
