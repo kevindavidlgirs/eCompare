@@ -87,7 +87,7 @@ public class ModelTest {
         assertEquals(new HashSet<>(TEST_LIST), new HashSet<>(model.getDoneList()));
     }
        
- /*
+ 
     @Test
     public void testSetDoneAllSetToDoAll() {
         while(!model.getToDoList().isEmpty())
@@ -97,7 +97,7 @@ public class ModelTest {
         assertTrue(model.getDoneList().isEmpty());
         assertEquals(TEST_LIST, model.getToDoList());
     }
-    
+ /*   
     @Test(expected = InvalidTransferException.class)
     public void testSetDoneInvalidIndex1() {
         model.setDone(-1);
