@@ -35,7 +35,7 @@ public class Model {
         if(index >= 0 && index < this.toDoList.size()){
             this.doneList.add(this.toDoList.remove(index));
         }else{
-            throw new InvalidTransferException();
+            throw new InvalidTransferException("Index incorrect !");
         }     
     }
     
@@ -43,7 +43,7 @@ public class Model {
         if(index >= 0 && index < this.doneList.size()){
             this.toDoList.add(this.doneList.remove(index));
         }else{
-            throw new InvalidTransferException();
+            throw new InvalidTransferException("Index incorrect !");
         }
     }
    
