@@ -97,13 +97,13 @@ public class ModelTest {
         assertTrue(model.getDoneList().isEmpty());
         assertEquals(TEST_LIST, model.getToDoList());
     }
- /*   
+   
     @Test(expected = InvalidTransferException.class)
     public void testSetDoneInvalidIndex1() {
         model.setDone(-1);
     }
  
-    
+
     @Test(expected = InvalidTransferException.class)
     public void testSetDoneInvalidIndex2() {
         model.setDone(model.getToDoList().size());
@@ -174,5 +174,5 @@ public class ModelTest {
         assertTrue(model.getToDoList().size() == TEST_LIST.size() - 2);
         assertEquals(doneList, model.getDoneList());
     }
-*/
+
 }
