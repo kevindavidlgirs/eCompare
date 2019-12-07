@@ -28,7 +28,6 @@ public class Model {
     }
 
     public Model(List<String> t) {
-
         for (int i = 0; i < t.size(); ++i) {
             if (t.get(i).length() >= 3) {
                 if (!toDoList.contains(t.get(i))) {
