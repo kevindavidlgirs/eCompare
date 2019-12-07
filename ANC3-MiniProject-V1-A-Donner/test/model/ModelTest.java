@@ -68,7 +68,7 @@ public class ModelTest {
     public void testDoneListImmutable() {
         model.getDoneList().add("Erreur");
     }
-    
+  
     @Test
     public void testSetDoneSimple() {
         int initSize = model.getToDoList().size();                
@@ -78,7 +78,7 @@ public class ModelTest {
         assertEquals(TEST_LIST.get(0), model.getDoneList().get(0));
         assertEquals(TEST_LIST.get(1), model.getToDoList().get(0));
     }
- 
+/*
     @Test
     public void testSetDoneAll() {
         while(!model.getToDoList().isEmpty())
@@ -87,6 +87,7 @@ public class ModelTest {
         assertEquals(new HashSet<>(TEST_LIST), new HashSet<>(model.getDoneList()));
     }
        
+ 
     @Test
     public void testSetDoneAllSetToDoAll() {
         while(!model.getToDoList().isEmpty())
@@ -101,12 +102,13 @@ public class ModelTest {
     public void testSetDoneInvalidIndex1() {
         model.setDone(-1);
     }
-  
+ 
+    
     @Test(expected = InvalidTransferException.class)
     public void testSetDoneInvalidIndex2() {
         model.setDone(model.getToDoList().size());
     }
- /*     
+     
     @Test(expected = InvalidTransferException.class)
     public void testSetToDoInvalidIndex1() {
         model.setToDo(0);
