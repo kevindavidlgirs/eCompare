@@ -113,13 +113,13 @@ public class ModelTest {
     public void testSetToDoInvalidIndex1() {
         model.setToDo(0);
     }
-/*    
+    
     @Test(expected = InvalidTransferException.class)
     public void testSetToDoInvalidIndex2() {
         model.setDone(0);
         model.setToDo(-1);
     }
-    
+/*    
     @Test(expected = InvalidTransferException.class)
     public void testSetToDoInvalidIndex3() {
         model.setDone(0);
