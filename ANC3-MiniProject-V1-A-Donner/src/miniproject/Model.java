@@ -32,18 +32,18 @@ public class Model {
     }
     
     public void setDone(int index){
-        if(index >= 0 && index < this.doneList.size()){
+        if(index >= 0 && index < this.toDoList.size()){
             this.doneList.add(this.toDoList.remove(index));
         }else{
-            throw new InvalidTransferException("Not possible !");
+            throw new InvalidTransferException();
         }     
     }
     
      public void setToDo(int index){
-        if(index >= 0 && index < this.toDoList.size()){
+        if(index >= 0 && index < this.doneList.size()){
             this.toDoList.add(this.doneList.remove(index));
         }else{
-            throw new InvalidTransferException("Not possible !");
+            throw new InvalidTransferException();
         }
     }
    
