@@ -103,12 +103,12 @@ public class ModelTest {
         model.setDone(-1);
     }
  
-/*    
+
     @Test(expected = InvalidTransferException.class)
     public void testSetDoneInvalidIndex2() {
         model.setDone(model.getToDoList().size());
     }
-     
+/*     
     @Test(expected = InvalidTransferException.class)
     public void testSetToDoInvalidIndex1() {
         model.setToDo(0);
