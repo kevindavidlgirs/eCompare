@@ -155,7 +155,7 @@ public class ModelTest {
         assertFalse(model.getToDoList().contains(TXT));
         assertTrue(model.getDoneList().isEmpty());
     }
-/*
+
     @Test
     public void testAddToDoExisting1() {
         final String TXT = model.getToDoList().get(0);
@@ -163,7 +163,7 @@ public class ModelTest {
         assertEquals(TEST_LIST, model.getToDoList());
         assertTrue(model.getDoneList().isEmpty());
     }
-
+/*
     @Test
     public void testAddToDoExisting2() {
         model.setDone(0);
