@@ -125,7 +125,7 @@ public class ModelTest {
         model.setDone(0);
         model.setToDo(model.getDoneList().size());
     }
-/*    
+    
     @Test
     public void testAddToDoNormal() {
         int initSize = model.getToDoList().size(); 
@@ -135,7 +135,7 @@ public class ModelTest {
         assertEquals(TXT, model.getToDoList().get(initSize));
         assertTrue(model.getDoneList().isEmpty());
     }
-
+/*
     @Test
     public void testAddToDoEmptyString() {
         int initSize = model.getToDoList().size(); 
