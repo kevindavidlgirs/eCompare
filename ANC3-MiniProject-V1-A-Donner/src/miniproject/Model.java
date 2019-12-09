@@ -9,6 +9,7 @@ package miniproject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javafx.scene.control.ListView;
 
 /**
  *
@@ -64,11 +65,14 @@ public class Model {
         return false;
     }
 
-    /*
-    private static void transfer(ListView<String> fromList, ListView<String> toList) {
-        final int idxSel = fromList.getSelectionModel().getSelectedIndex();
-        if (idxSel != -1) {
-            toList.getItems().add(fromList.getItems().remove(idxSel));
+    public void transfer(String toDoOrDone,int index,List<String> fromList, List<String> toList) {
+        System.out.println("index "+index);
+        if (index != -1) {            
+            if(">>".equals(toDoOrDone)){
+                setDone(index);
+            }else{
+                setToDo(index);
+            }
         }
     }
    
@@ -80,5 +84,4 @@ public class Model {
         }
         return temp;
     }
-     */
 }
