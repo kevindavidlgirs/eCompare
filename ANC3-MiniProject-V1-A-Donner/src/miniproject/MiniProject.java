@@ -91,14 +91,14 @@ public class MiniProject extends Application {
     private void configListeners() {
         setDone.setOnAction(e -> {
            int idxSel = toDoList.getSelectionModel().getSelectedIndex();
-            model.transfer(">>",idxSel,model.getToDoList(), model.getDoneList());
+            model.transfer(">>",idxSel);
             toDoList.getItems().setAll(model.getToDoList());
             doneList.getItems().setAll(model.getDoneList());
         });
 
         setToDo.setOnAction(e -> {
             int idxSel = doneList.getSelectionModel().getSelectedIndex();
-            model.transfer("<<",idxSel,model.getDoneList(), model.getToDoList());
+            model.transfer("<<",idxSel);
             toDoList.getItems().setAll(model.getToDoList());
             doneList.getItems().setAll(model.getDoneList());
         });
@@ -106,7 +106,7 @@ public class MiniProject extends Application {
         toDoList.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
             int idxSel = toDoList.getSelectionModel().getSelectedIndex();
-            model.transfer(">>",idxSel,model.getToDoList(), model.getDoneList());
+            model.transfer(">>",idxSel);
             toDoList.getItems().setAll(model.getToDoList());
             doneList.getItems().setAll(model.getDoneList());
             System.out.println(" taille todoList : "+model.getToDoList().size());
@@ -116,7 +116,7 @@ public class MiniProject extends Application {
         doneList.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
                 int idxSel = doneList.getSelectionModel().getSelectedIndex();
-                model.transfer("<<",idxSel,model.getDoneList(), model.getToDoList());
+                model.transfer("<<",idxSel);
                 toDoList.getItems().setAll(model.getToDoList());
                 doneList.getItems().setAll(model.getDoneList());
                 System.out.println(" taille doneList : "+model.getDoneList().size());
@@ -130,17 +130,21 @@ public class MiniProject extends Application {
         doneList.getSelectionModel().selectedIndexProperty().addListener((obs, old, act) -> {
             setToDo.setDisable((int) act == -1);
         });
-/*
-        addButton.setOnAction(e -> {
-            addToDo(addText.getText());
-        });
 
+        addButton.setOnAction(e -> {            
+            model.addToDo(addText.getText());
+            toDoList.getItems().setAll(model.getToDoList());
+            addText.setText("");
+        });
+        
         addText.setOnKeyPressed(e -> {
             if (e.getCode().equals(KeyCode.ENTER)) {
-                addToDo(addText.getText());
+                model.addToDo(addText.getText());
+                toDoList.getItems().setAll(model.getToDoList());
+                addText.setText("");
             }
         });
-*/        
+  
         addText.textProperty().addListener((obs, old, act) -> {
             addButton.setDisable(act.length() <= 2);
         });
