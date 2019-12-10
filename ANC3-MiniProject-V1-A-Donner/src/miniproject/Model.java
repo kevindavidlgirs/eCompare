@@ -66,7 +66,6 @@ public class Model {
     }
 
     public void transfer(String toDoOrDone,int index) {
-        System.out.println("index "+index);
         if (index != -1) {            
             if(">>".equals(toDoOrDone)){
                 setDone(index);
