@@ -65,7 +65,7 @@ public class Model {
         return false;
     }
 
-    public void transfer(String toDoOrDone,int index,List<String> fromList, List<String> toList) {
+    public void transfer(String toDoOrDone,int index) {
         System.out.println("index "+index);
         if (index != -1) {            
             if(">>".equals(toDoOrDone)){
