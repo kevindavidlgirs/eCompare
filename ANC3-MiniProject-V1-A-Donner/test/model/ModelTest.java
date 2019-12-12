@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import miniproject.InvalidTransferException;
-import miniproject.Model;
+import miniproject.model.Model;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;

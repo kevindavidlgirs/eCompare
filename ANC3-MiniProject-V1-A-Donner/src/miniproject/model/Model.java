@@ -3,20 +3,28 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package miniproject;
+package miniproject.model;
 
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javafx.beans.InvalidationListener;
 import javafx.scene.control.ListView;
+import miniproject.InvalidTransferException;
+import java.util.Observable;
 
 /**
  *
  * @author 2207hembilo
  */
-public class Model {
+public class Model extends Observable{
 
+    public enum TypeNotif {
+        INIT, LINE_SELECTED, LINE__UNSELECTED, LINE_UPDATED, LINE_ADDED 
+    }
+    
+    private static final int MIN_WORD_LENGTH = 3;
     private final List<String> toDoList = new ArrayList<>();
     private final List<String> doneList = new ArrayList<>();
 
@@ -82,5 +90,10 @@ public class Model {
             temp += toDoList.get(i);
         }
         return temp;
+    }
+    
+    public void notif(TypeNotif typeNotif){
+        setChanged();
+        notifyObservers(typeNotif);
     }
 }
