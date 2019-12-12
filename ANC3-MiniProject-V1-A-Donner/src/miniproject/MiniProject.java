@@ -30,13 +30,30 @@ public class MiniProject extends Application {
     private final VBox cBox = new VBox();
     private final VBox rBox = new VBox();
     private final VBox addBox = new VBox();
+    private final Model model;
+    
+    public MiniProject(){
+        model = new Model(INIT_DATA);
+        toDoList.getItems().setAll(model.getToDoList());
+        doneList.getItems().setAll(model.getDoneList());
+    }
 
+    private static final List<String> INIT_DATA = Arrays.asList(
+            "Jouer à SuperMario",
+            "Traîner sur FaceBook",
+            "Revoir Pro2",
+            "Twitter",
+            "Travailler au projet Anc3",
+            "Regarder du foot",
+            "Ecouter de la musique"
+    );
+    
 
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) {      
         configComponents();
-        //configListeners();
+        configListeners();
 
         Parent root = setRoot();
         Scene scene = new Scene(root, 800, 400);
@@ -47,7 +64,6 @@ public class MiniProject extends Application {
     }
 
     
-
     private void configComponents() {
         lBox.getChildren().addAll(toDoLabel, toDoList);
         lBox.setAlignment(Pos.CENTER);
@@ -71,25 +87,39 @@ public class MiniProject extends Application {
         setDone.setDisable(true);
         addButton.setDisable(true);
     }
-/*
+    
     private void configListeners() {
         setDone.setOnAction(e -> {
-            transfer(toDoList, doneList);
+           int idxSel = toDoList.getSelectionModel().getSelectedIndex();
+            model.transfer(">>",idxSel);
+            toDoList.getItems().setAll(model.getToDoList());
+            doneList.getItems().setAll(model.getDoneList());
         });
 
         setToDo.setOnAction(e -> {
-            transfer(doneList, toDoList);
+            int idxSel = doneList.getSelectionModel().getSelectedIndex();
+            model.transfer("<<",idxSel);
+            toDoList.getItems().setAll(model.getToDoList());
+            doneList.getItems().setAll(model.getDoneList());
         });
 
         toDoList.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
-                transfer(toDoList, doneList);
+            int idxSel = toDoList.getSelectionModel().getSelectedIndex();
+            model.transfer(">>",idxSel);
+            toDoList.getItems().setAll(model.getToDoList());
+            doneList.getItems().setAll(model.getDoneList());
+            System.out.println(" taille todoList : "+model.getToDoList().size());
             }
         });
 
         doneList.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
-                transfer(doneList, toDoList);
+                int idxSel = doneList.getSelectionModel().getSelectedIndex();
+                model.transfer("<<",idxSel);
+                toDoList.getItems().setAll(model.getToDoList());
+                doneList.getItems().setAll(model.getDoneList());
+                System.out.println(" taille doneList : "+model.getDoneList().size());
             }
         });
 
@@ -101,16 +131,20 @@ public class MiniProject extends Application {
             setToDo.setDisable((int) act == -1);
         });
 
-        addButton.setOnAction(e -> {
-            addToDo(addText.getText());
-        });
-
-        addText.setOnKeyPressed(e -> {
-            if (e.getCode().equals(KeyCode.ENTER)) {
-                addToDo(addText.getText());
-            }
+        addButton.setOnAction(e -> {            
+            model.addToDo(addText.getText());
+            toDoList.getItems().setAll(model.getToDoList());
+            addText.setText("");
         });
         
+        addText.setOnKeyPressed(e -> {
+            if (e.getCode().equals(KeyCode.ENTER)) {
+                model.addToDo(addText.getText());
+                toDoList.getItems().setAll(model.getToDoList());
+                addText.setText("");
+            }
+        });
+  
         addText.textProperty().addListener((obs, old, act) -> {
             addButton.setDisable(act.length() <= 2);
         });
@@ -121,7 +155,7 @@ public class MiniProject extends Application {
         });
 
     }
-*/
+    
     private Parent setRoot() {
         HBox root = new HBox();
         root.setPadding(new Insets(10));
@@ -129,9 +163,8 @@ public class MiniProject extends Application {
         root.getChildren().addAll(addBox, lBox, cBox, rBox);
         return root;
     }
-
+    
     public static void main(String[] args) {
         launch(args);
     }
-
 }
