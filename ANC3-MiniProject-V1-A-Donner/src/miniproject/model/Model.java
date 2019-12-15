@@ -21,7 +21,7 @@ import java.util.Observable;
 public class Model extends Observable{
 
     public enum TypeNotif {
-        INIT, LINE_SELECTED, LINE__UNSELECTED, LINE_UPDATED, LINE_ADDED 
+        INIT, TEXT_ADDED 
     }
     
     private static final int MIN_WORD_LENGTH = 3;
@@ -66,8 +66,9 @@ public class Model extends Observable{
     }
 
     public boolean addToDo(String text) {
-        if (text.length() > 2 && !toDoList.contains(text) && !doneList.contains(text)) {
+        if (text.length() >= MIN_WORD_LENGTH && !toDoList.contains(text) && !doneList.contains(text)) {
             toDoList.add(text);
+            notif(TypeNotif.TEXT_ADDED);
             return true;
         }
         return false;

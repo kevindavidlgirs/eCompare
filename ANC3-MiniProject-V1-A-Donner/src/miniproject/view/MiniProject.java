@@ -1,8 +1,12 @@
 package miniproject.view;
 
 import miniproject.model.Model;
+import miniproject.ctrl.Ctrl;
+
 import java.util.Arrays;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -17,7 +21,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class MiniProject extends Application {
+public class MiniProject extends VBox implements Observer{
     private final ListView<String> toDoList = new ListView<>();
     private final ListView<String> doneList = new ListView<>();
     private final Label toDoLabel = new Label("À faire");
@@ -31,12 +35,19 @@ public class MiniProject extends Application {
     private final VBox cBox = new VBox();
     private final VBox rBox = new VBox();
     private final VBox addBox = new VBox();
-    private final Model model;
+    private final Ctrl ctrl;
     
-    public MiniProject(){
-        model = new Model(INIT_DATA);
-        toDoList.getItems().setAll(model.getToDoList());
-        doneList.getItems().setAll(model.getDoneList());
+    public MiniProject(Stage primaryStage, Ctrl ctrl){
+        this.ctrl = ctrl;
+        configComponents();
+        configListeners();
+        configListenerAddToDoEnter();
+        configListenerAddToDoButton();
+        
+        Parent root = setRoot();
+        Scene scene = new Scene(root, 800, 400);
+        primaryStage.setTitle("MiniProject V2 - MVC");
+        primaryStage.setScene(scene);
     }
 
     private static final List<String> INIT_DATA = Arrays.asList(
@@ -48,21 +59,6 @@ public class MiniProject extends Application {
             "Regarder du foot",
             "Ecouter de la musique"
     );
-    
-
-
-    @Override
-    public void start(Stage primaryStage) {      
-        configComponents();
-        configListeners();
-
-        Parent root = setRoot();
-        Scene scene = new Scene(root, 800, 400);
-
-        primaryStage.setTitle("MiniProject V0");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-    }
 
     
     private void configComponents() {
@@ -90,6 +86,7 @@ public class MiniProject extends Application {
     }
     
     private void configListeners() {
+    /*
         setDone.setOnAction(e -> {
            int idxSel = toDoList.getSelectionModel().getSelectedIndex();
             model.transfer(">>",idxSel);
@@ -130,22 +127,9 @@ public class MiniProject extends Application {
 
         doneList.getSelectionModel().selectedIndexProperty().addListener((obs, old, act) -> {
             setToDo.setDisable((int) act == -1);
-        });
-
-        addButton.setOnAction(e -> {            
-            model.addToDo(addText.getText());
-            toDoList.getItems().setAll(model.getToDoList());
-            addText.setText("");
-        });
-        
-        addText.setOnKeyPressed(e -> {
-            if (e.getCode().equals(KeyCode.ENTER)) {
-                model.addToDo(addText.getText());
-                toDoList.getItems().setAll(model.getToDoList());
-                addText.setText("");
-            }
-        });
-  
+        });        
+        */
+    
         addText.textProperty().addListener((obs, old, act) -> {
             addButton.setDisable(act.length() <= 2);
         });
@@ -154,8 +138,23 @@ public class MiniProject extends Application {
             if(!act)
                 addText.requestFocus();
         });
-
     }
+    
+    
+    private void configListenerAddToDoEnter(){
+        addText.setOnKeyPressed(e -> {
+            if (e.getCode().equals(KeyCode.ENTER)) {
+                ctrl.addToDo(addText.getText());
+            }
+        });   
+       }
+    
+    private void configListenerAddToDoButton(){
+            addButton.setOnAction(e -> {            
+               ctrl.addToDo(addText.getText());
+            });
+        }
+
     
     private Parent setRoot() {
         HBox root = new HBox();
@@ -165,7 +164,17 @@ public class MiniProject extends Application {
         return root;
     }
     
-    public static void main(String[] args) {
-        launch(args);
+    public void update(Observable o, Object arg){
+        Model model = (Model)o;
+        Model.TypeNotif typeNotif= (Model.TypeNotif) arg;
+        switch(typeNotif){
+            case INIT:
+                toDoList.getItems().setAll(model.getToDoList());
+                break;
+            case TEXT_ADDED:
+                toDoList.getItems().add(model.getToDoList().get(model.getToDoList().size()-1));
+                addText.setText("");
+                break;
+        }
     }
 }

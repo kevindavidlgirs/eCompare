@@ -5,10 +5,19 @@
  */
 package miniproject.ctrl;
 
+import miniproject.model.Model;
 /**
  *
  * @author lasynsec
  */
 public class Ctrl {
+    private final Model model;
     
+    public Ctrl(Model model){
+        this.model = model;
+    }
+    
+    public void addToDo(String txt){
+        model.addToDo(txt);
+    }
 }
