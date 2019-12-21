@@ -58,7 +58,7 @@ public class MiniProject extends Application {
         Parent root = setRoot();
         Scene scene = new Scene(root, 800, 400);
 
-        primaryStage.setTitle("MiniProject V0");
+        primaryStage.setTitle("MiniProject V1");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
