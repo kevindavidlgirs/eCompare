@@ -1,31 +1,27 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package miniproject.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import miniproject.InvalidTransferException;
-import java.util.Observable;
 
-/**
- *
- * @author 2207hembilo
- */
-public class Model extends Observable {
-
-    public enum TypeNotif {
-        INIT, LINE_SELECTED, LINE__UNSELECTED, MOVE_LINE_RIGHT, MOVE_LINE_LEFT, TEXT_ADDED;
-    }
+public class Model {
+    
+    //Ajout
+    private final ObservableList<String> lines = FXCollections.observableArrayList();
 
     private static final int MIN_WORD_LENGTH = 3;
     private final List<String> toDoList = new ArrayList<>();
     private final List<String> doneList = new ArrayList<>();
 
+    //Ajout
+    public ObservableList<String> getLines() {
+        return FXCollections.unmodifiableObservableList(lines);
+    }
+    
+    
     public Model() {
     }
 

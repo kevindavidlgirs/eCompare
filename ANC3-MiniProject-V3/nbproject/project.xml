@@ -13,8 +13,7 @@
             </extension>
         </buildExtensions>
         <data xmlns="http://www.netbeans.org/ns/j2se-project/3">
-            <name>MiniProject V2 - MVC</name>
-            <explicit-platform explicit-source-supported="true"/>
+            <name>MiniProject V3 - MVVM</name>
             <source-roots>
                 <root id="src.dir"/>
             </source-roots>

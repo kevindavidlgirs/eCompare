@@ -1,22 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package miniproject.main;
 
 import java.util.Arrays;
 import java.util.List;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import miniproject.ctrl.Ctrl;
+import miniproject.mvvm.ViewModel;
 import miniproject.model.Model;
 import miniproject.view.View;
 
-/**
- *
- * @author lasynsec
- */
+
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -30,12 +22,10 @@ public class Main extends Application {
             "Regarder du foot",
             "Ecouter de la musique"
     );
-    
+        //Modification
         Model model = new Model(INIT_DATA);
-        Ctrl ctrl = new Ctrl(model);
-        View view = new View(primaryStage, ctrl);
-        model.addObserver(view);
-        model.notif(Model.TypeNotif.INIT);
+        ViewModel viewModel = new ViewModel(model);
+        View view = new View(primaryStage, viewModel);
         primaryStage.show();
     }
     public static void main(String[] args) {

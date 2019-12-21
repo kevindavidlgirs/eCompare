@@ -1,21 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package miniproject.ctrl;
+package miniproject.mvvm;
 
 import miniproject.model.Model;
 
-/**
- *
- * @author lasynsec
- */
-public class Ctrl {
+//modification
+public class ViewModel {
 
     private final Model model;
 
-    public Ctrl(Model model) {
+    public ViewModel(Model model) {
         this.model = model;
     }
 
@@ -28,8 +20,8 @@ public class Ctrl {
             }
         }
     }
-    
-    public void addToDo(String txt){
+
+    public void addToDo(String txt) {
         model.addToDo(txt);
     }
 }

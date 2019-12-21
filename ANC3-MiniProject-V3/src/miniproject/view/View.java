@@ -1,10 +1,7 @@
 package miniproject.view;
 
 import miniproject.model.Model;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Observable;
-import java.util.Observer;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -17,11 +14,10 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import miniproject.ctrl.Ctrl;
+import miniproject.mvvm.ViewModel;
 
-//Les professeurs avaient ajouté dans la View ANC3-Demo-V2-MVC 'extends VBox'
-//mais je pense que ce n'est pas nécessaire pour nous... A voir !
-public class View implements Observer {
+
+public class View  {
 
     private final ListView<String> toDoList = new ListView<>();
     private final ListView<String> doneList = new ListView<>();
@@ -36,15 +32,17 @@ public class View implements Observer {
     private final VBox cBox = new VBox();
     private final VBox rBox = new VBox();
     private final VBox addBox = new VBox();
-    private final Ctrl ctrl;
+    //Ajout
+    private final ViewModel viewModel;
 
-    public View(Stage primaryStage, Ctrl ctrl) throws Exception {
-        this.ctrl = ctrl;
+    public View(Stage primaryStage, ViewModel viewModel) throws Exception {
+        //Ajout
+        this.viewModel = viewModel;
         configComponents();
         configListeners();
         Parent root = setRoot();
         Scene scene = new Scene(root, 800, 400);
-        primaryStage.setTitle("MiniProject V2");
+        primaryStage.setTitle("MiniProject V3");
         primaryStage.setScene(scene);
     }
 
