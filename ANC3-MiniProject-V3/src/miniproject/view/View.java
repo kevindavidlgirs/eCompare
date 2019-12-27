@@ -1,7 +1,7 @@
 package miniproject.view;
 
-import miniproject.model.Model;
-import java.util.Observable;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionModel;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
@@ -16,8 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import miniproject.mvvm.ViewModel;
 
-
-public class View  {
+public class View {
 
     private final ListView<String> toDoList = new ListView<>();
     private final ListView<String> doneList = new ListView<>();
@@ -32,18 +32,34 @@ public class View  {
     private final VBox cBox = new VBox();
     private final VBox rBox = new VBox();
     private final VBox addBox = new VBox();
-    //Ajout
+    
+/*    
+    J'ai ajouté ces lignes pour prendre exemple sur la DEMO. Mais elles ne sont 
+    pas nécessaires car ca fonctionne sans ! J'ai peut-être fait une erreur, attention !  
+    
+    private final IntegerProperty numLineSelectedToDoList = new SimpleIntegerProperty();
+    private final IntegerProperty numLineSelectedDoneList = new SimpleIntegerProperty();
+    
+*/    
     private final ViewModel viewModel;
 
     public View(Stage primaryStage, ViewModel viewModel) throws Exception {
-        //Ajout
         this.viewModel = viewModel;
         configComponents();
+        configBindings();
         configListeners();
         Parent root = setRoot();
         Scene scene = new Scene(root, 800, 400);
         primaryStage.setTitle("MiniProject V3");
         primaryStage.setScene(scene);
+    }
+
+    private Parent setRoot() {
+        HBox root = new HBox();
+        root.setPadding(new Insets(10));
+        root.setSpacing(10);
+        root.getChildren().addAll(addBox, lBox, cBox, rBox);
+        return root;
     }
 
     private void configComponents() {
@@ -70,52 +86,72 @@ public class View  {
         addButton.setDisable(true);
     }
 
+    private void configBindings() {
+        configDataBindings();
+        configActionsBindings();
+        configViewModelBindings();
+    }
+
+    private void configDataBindings() {
+        toDoList.itemsProperty().bind(viewModel.toDoListProperty());
+        doneList.itemsProperty().bind(viewModel.doneListProperty());
+        addText.textProperty().bindBidirectional(viewModel.addTextProperty());
+    }
+
+    private void configActionsBindings() {
+/*      
+        J'ai ajouté ces lignes pour prendre exemple sur la DEMO. Mais elles ne sont 
+        pas nécessaires car ca fonctionne sans ! J'ai peut-être fait une erreur, attention !
+       
+        numLineSelectedToDoList.bind(viewModel.numLineSelectedToDoListProperty());
+        numLineSelectedDoneList.bind(viewModel.numLineSelectedDoneListProperty());
+*/      
+        setDone.disableProperty().bind(viewModel.itemTransferableDoneListProperty());
+        setToDo.disableProperty().bind(viewModel.itemTransferableToDoListProperty());
+        addButton.disableProperty().bind(viewModel.itemAddableToDoList());
+    }
+
+    private void configViewModelBindings() {
+        viewModel.numLineSelectedToDoListProperty().bind(getToDoListModel().selectedIndexProperty());
+        viewModel.numLineSelectedDoneListProperty().bind(getDoneListModel().selectedIndexProperty());
+    }
+
+    
+
     private void configListeners() {
         setDone.setOnAction(e -> {
             int idxSel = toDoList.getSelectionModel().getSelectedIndex();
-            ctrl.transfer(">>", idxSel);
+            viewModel.transfer(">>", idxSel);
         });
 
         setToDo.setOnAction(e -> {
             int idxSel = doneList.getSelectionModel().getSelectedIndex();
-            ctrl.transfer("<<", idxSel);
+            viewModel.transfer("<<", idxSel);
 
         });
 
         toDoList.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
                 int idxSel = toDoList.getSelectionModel().getSelectedIndex();
-                ctrl.transfer(">>", idxSel);
+                viewModel.transfer(">>", idxSel);
             }
         });
 
         doneList.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
                 int idxSel = doneList.getSelectionModel().getSelectedIndex();
-                ctrl.transfer("<<", idxSel);
+                viewModel.transfer("<<", idxSel);
             }
         });
 
-        toDoList.getSelectionModel().selectedIndexProperty().addListener((obs, old, act) -> {
-            setDone.setDisable((int) act == -1);
-        });
-
-        doneList.getSelectionModel().selectedIndexProperty().addListener((obs, old, act) -> {
-            setToDo.setDisable((int) act == -1);
-        });
-
         addButton.setOnAction(e -> {
-            ctrl.addToDo(addText.getText());
+            viewModel.addToDo(addText.getText());
         });
 
         addText.setOnKeyPressed(e -> {
             if (e.getCode().equals(KeyCode.ENTER)) {
-                 ctrl.addToDo(addText.getText());
+                viewModel.addToDo(addText.getText());
             }
-        });
-        
-        addText.textProperty().addListener((obs, old, act) -> {
-            addButton.setDisable(act.length() <= 2);
         });
 
         addText.focusedProperty().addListener((obs, old, act) -> {
@@ -123,39 +159,39 @@ public class View  {
                 addText.requestFocus();
             }
         });
+        
+/*      
+        J'ai ajouté ces lignes pour prendre exemple sur la DEMO. Mais elles ne sont 
+        pas nécessaires car ca fonctionne sans ! J'ai peut-être fait une erreur, attention !
+        
+        numLineSelectedToDoList.addListener((o, old, newV) -> {
+            selectLineToDoList(newV.intValue());
+         });
+         
+        numLineSelectedDoneList.addListener((o, old, newV) -> {
+            selectLineDoneList(newV.intValue());
+         });
+*/       
 
     }
-
-    private Parent setRoot() {
-        HBox root = new HBox();
-        root.setPadding(new Insets(10));
-        root.setSpacing(10);
-        root.getChildren().addAll(addBox, lBox, cBox, rBox);
-        return root;
+    
+    private SelectionModel<String> getToDoListModel() {
+        return toDoList.getSelectionModel();
     }
 
-    @Override
-    public void update(Observable o, Object arg) {
-        Model model = (Model) o;
-        Model.TypeNotif typeNotif = (Model.TypeNotif) arg;
-        switch (typeNotif) {
-            case INIT:
-               toDoList.getItems().setAll(model.getToDoList());
-                break;
-            case MOVE_LINE_RIGHT:
-                toDoList.getItems().setAll(model.getToDoList());
-                doneList.getItems().setAll(model.getDoneList());
-                System.out.println(" taille todoList : " + model.getToDoList().size());
-                break;
-            case MOVE_LINE_LEFT:
-                toDoList.getItems().setAll(model.getToDoList());
-                doneList.getItems().setAll(model.getDoneList());
-                System.out.println(" taille doneList : " + model.getDoneList().size());
-                break;
-             case TEXT_ADDED:
-                toDoList.getItems().add(model.getToDoList().get(model.getToDoList().size()-1));
-                addText.setText("");
-                break;
-        }
+    private SelectionModel<String> getDoneListModel() {
+        return doneList.getSelectionModel();
     }
+
+/*  
+    J'ai ajouté ces lignes pour prendre exemple sur la DEMO. Mais elles ne sont 
+    pas nécessaires car ca fonctionne sans ! J'ai peut-être fait une erreur, attention !
+ 
+    private void selectLineToDoList(int index) {
+         getToDoListModel().select(index);
+    }
+    private void selectLineDoneList(int index) {
+        getDoneListModel().select(index);
+    }
+*/
 }
