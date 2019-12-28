@@ -33,14 +33,7 @@ public class View {
     private final VBox rBox = new VBox();
     private final VBox addBox = new VBox();
     
-/*    
-    J'ai ajouté ces lignes pour prendre exemple sur la DEMO. Mais elles ne sont 
-    pas nécessaires car ca fonctionne sans ! J'ai peut-être fait une erreur, attention !  
     
-    private final IntegerProperty numLineSelectedToDoList = new SimpleIntegerProperty();
-    private final IntegerProperty numLineSelectedDoneList = new SimpleIntegerProperty();
-    
-*/    
     private final ViewModel viewModel;
 
     public View(Stage primaryStage, ViewModel viewModel) throws Exception {
@@ -98,14 +91,7 @@ public class View {
         addText.textProperty().bindBidirectional(viewModel.addTextProperty());
     }
 
-    private void configActionsBindings() {
-/*      
-        J'ai ajouté ces lignes pour prendre exemple sur la DEMO. Mais elles ne sont 
-        pas nécessaires car ca fonctionne sans ! J'ai peut-être fait une erreur, attention !
-       
-        numLineSelectedToDoList.bind(viewModel.numLineSelectedToDoListProperty());
-        numLineSelectedDoneList.bind(viewModel.numLineSelectedDoneListProperty());
-*/      
+    private void configActionsBindings() {    
         setDone.disableProperty().bind(viewModel.itemTransferableDoneListProperty());
         setToDo.disableProperty().bind(viewModel.itemTransferableToDoListProperty());
         addButton.disableProperty().bind(viewModel.itemAddableToDoList());
@@ -119,31 +105,29 @@ public class View {
     
 
     private void configListeners() {
+        //Plus besoin de récupérer l'index pour le mettre en paramètre dans la fonction"transfer",
+        //Celui-ci se trouve désormais dans la fonction transfère.
         setDone.setOnAction(e -> {
-            int idxSel = toDoList.getSelectionModel().getSelectedIndex();
-            viewModel.transfer(">>", idxSel);
+            viewModel.transfer(">>");
         });
 
         setToDo.setOnAction(e -> {
-            int idxSel = doneList.getSelectionModel().getSelectedIndex();
-            viewModel.transfer("<<", idxSel);
+            viewModel.transfer("<<");
 
         });
 
         toDoList.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
-                int idxSel = toDoList.getSelectionModel().getSelectedIndex();
-                viewModel.transfer(">>", idxSel);
+                viewModel.transfer(">>");
             }
         });
 
         doneList.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
-                int idxSel = doneList.getSelectionModel().getSelectedIndex();
-                viewModel.transfer("<<", idxSel);
+                viewModel.transfer("<<");
             }
         });
-
+        
         addButton.setOnAction(e -> {
             viewModel.addToDo(addText.getText());
         });
@@ -160,19 +144,7 @@ public class View {
             }
         });
         
-/*      
-        J'ai ajouté ces lignes pour prendre exemple sur la DEMO. Mais elles ne sont 
-        pas nécessaires car ca fonctionne sans ! J'ai peut-être fait une erreur, attention !
-        
-        numLineSelectedToDoList.addListener((o, old, newV) -> {
-            selectLineToDoList(newV.intValue());
-         });
-         
-        numLineSelectedDoneList.addListener((o, old, newV) -> {
-            selectLineDoneList(newV.intValue());
-         });
-*/       
-
+ 
     }
     
     private SelectionModel<String> getToDoListModel() {
@@ -182,16 +154,4 @@ public class View {
     private SelectionModel<String> getDoneListModel() {
         return doneList.getSelectionModel();
     }
-
-/*  
-    J'ai ajouté ces lignes pour prendre exemple sur la DEMO. Mais elles ne sont 
-    pas nécessaires car ca fonctionne sans ! J'ai peut-être fait une erreur, attention !
- 
-    private void selectLineToDoList(int index) {
-         getToDoListModel().select(index);
-    }
-    private void selectLineDoneList(int index) {
-        getDoneListModel().select(index);
-    }
-*/
 }

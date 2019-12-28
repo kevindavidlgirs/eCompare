@@ -65,16 +65,19 @@ public class ViewModel {
 
     public IntegerProperty numLineSelectedDoneListProperty() {
         return this.numLineSelectedDoneList;
-    }
-
-    public void transfer(String toDoOrDone, int index) {
-        if (index != -1) {
+    } 
+    
+    //Suppression du paramètre index. La valeur de l'index provient de numLineSelectedToDoList.get().
+    public void transfer(String toDoOrDone) {
+        int index = -1;
+        System.out.println(index);
             if (">>".equals(toDoOrDone)) {
+                index = numLineSelectedToDoList.get();
                 model.setDone(index);
             } else {
+               index = numLineSelectedDoneList.get();
                 model.setToDo(index);
             }
-        }
     }
 
     //Modification
