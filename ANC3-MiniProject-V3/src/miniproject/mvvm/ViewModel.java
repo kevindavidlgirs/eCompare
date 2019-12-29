@@ -70,7 +70,6 @@ public class ViewModel {
     //Suppression du paramètre index. La valeur de l'index provient de numLineSelectedToDoList.get().
     public void transfer(String toDoOrDone) {
         int index = -1;
-        System.out.println(index);
             if (">>".equals(toDoOrDone)) {
                 index = numLineSelectedToDoList.get();
                 model.setDone(index);
