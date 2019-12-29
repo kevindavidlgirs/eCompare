@@ -1,10 +1,5 @@
 package miniproject.view;
 
-import miniproject.model.Model;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -12,16 +7,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionModel;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import miniproject.ctrl.Ctrl;
+import miniproject.mvvm.ViewModel;
 
-
-public class View implements Observer {
-
+public class View {
     private final ListView<String> toDoList = new ListView<>();
     private final ListView<String> doneList = new ListView<>();
     private final Label toDoLabel = new Label("À faire");
@@ -35,16 +29,27 @@ public class View implements Observer {
     private final VBox cBox = new VBox();
     private final VBox rBox = new VBox();
     private final VBox addBox = new VBox();
-    private final Ctrl ctrl;
+    
+    
+    private final ViewModel viewModel;
 
-    public View(Stage primaryStage, Ctrl ctrl) throws Exception {
-        this.ctrl = ctrl;
+    public View(Stage primaryStage, ViewModel viewModel) throws Exception {
+        this.viewModel = viewModel;
         configComponents();
+        configBindings();
         configListeners();
         Parent root = setRoot();
         Scene scene = new Scene(root, 800, 400);
-        primaryStage.setTitle("MiniProject V2");
+        primaryStage.setTitle("MiniProject V3");
         primaryStage.setScene(scene);
+    }
+
+    private Parent setRoot() {
+        HBox root = new HBox();
+        root.setPadding(new Insets(10));
+        root.setSpacing(10);
+        root.getChildren().addAll(addBox, lBox, cBox, rBox);
+        return root;
     }
 
     private void configComponents() {
@@ -71,52 +76,63 @@ public class View implements Observer {
         addButton.setDisable(true);
     }
 
+    private void configBindings() {
+        configDataBindings();
+        configActionsBindings();
+        configViewModelBindings();
+    }
+
+    private void configDataBindings() {
+        toDoList.itemsProperty().bind(viewModel.toDoListProperty());
+        doneList.itemsProperty().bind(viewModel.doneListProperty());
+        addText.textProperty().bindBidirectional(viewModel.addTextProperty());
+    }
+
+    private void configActionsBindings() {    
+        setDone.disableProperty().bind(viewModel.itemTransferableDoneListProperty());
+        setToDo.disableProperty().bind(viewModel.itemTransferableToDoListProperty());
+        addButton.disableProperty().bind(viewModel.itemAddableToDoList());
+    }
+
+    private void configViewModelBindings() {
+        viewModel.numLineSelectedToDoListProperty().bind(getToDoListModel().selectedIndexProperty());
+        viewModel.numLineSelectedDoneListProperty().bind(getDoneListModel().selectedIndexProperty());
+    }
+
+    
+
     private void configListeners() {
+        //Plus besoin de récupérer l'index pour le mettre en paramètre dans la fonction"transfer",
+        //Celui-ci se trouve désormais dans la fonction transfère.
         setDone.setOnAction(e -> {
-            int idxSel = toDoList.getSelectionModel().getSelectedIndex();
-            ctrl.transfer(">>", idxSel);
+            viewModel.transfer(">>");
         });
 
         setToDo.setOnAction(e -> {
-            int idxSel = doneList.getSelectionModel().getSelectedIndex();
-            ctrl.transfer("<<", idxSel);
+            viewModel.transfer("<<");
 
         });
 
         toDoList.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
-                int idxSel = toDoList.getSelectionModel().getSelectedIndex();
-                ctrl.transfer(">>", idxSel);
+                viewModel.transfer(">>");
             }
         });
 
         doneList.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
-                int idxSel = doneList.getSelectionModel().getSelectedIndex();
-                ctrl.transfer("<<", idxSel);
+                viewModel.transfer("<<");
             }
         });
-
-        toDoList.getSelectionModel().selectedIndexProperty().addListener((obs, old, act) -> {
-            setDone.setDisable((int) act == -1);
-        });
-
-        doneList.getSelectionModel().selectedIndexProperty().addListener((obs, old, act) -> {
-            setToDo.setDisable((int) act == -1);
-        });
-
+        
         addButton.setOnAction(e -> {
-            ctrl.addToDo(addText.getText());
+            viewModel.addToDo(addText.getText());
         });
 
         addText.setOnKeyPressed(e -> {
             if (e.getCode().equals(KeyCode.ENTER)) {
-                 ctrl.addToDo(addText.getText());
+                viewModel.addToDo(addText.getText());
             }
-        });
-        
-        addText.textProperty().addListener((obs, old, act) -> {
-            addButton.setDisable(act.length() <= 2);
         });
 
         addText.focusedProperty().addListener((obs, old, act) -> {
@@ -124,39 +140,15 @@ public class View implements Observer {
                 addText.requestFocus();
             }
         });
-
+        
+ 
+    }
+    
+    private SelectionModel<String> getToDoListModel() {
+        return toDoList.getSelectionModel();
     }
 
-    private Parent setRoot() {
-        HBox root = new HBox();
-        root.setPadding(new Insets(10));
-        root.setSpacing(10);
-        root.getChildren().addAll(addBox, lBox, cBox, rBox);
-        return root;
-    }
-
-    @Override
-    public void update(Observable o, Object arg) {
-        Model model = (Model) o;
-        Model.TypeNotif typeNotif = (Model.TypeNotif) arg;
-        switch (typeNotif) {
-            case INIT:
-               toDoList.getItems().setAll(model.getToDoList());
-                break;
-            case MOVE_LINE_RIGHT:
-                toDoList.getItems().setAll(model.getToDoList());
-                doneList.getItems().setAll(model.getDoneList());
-                System.out.println(" taille todoList : " + model.getToDoList().size());
-                break;
-            case MOVE_LINE_LEFT:
-                toDoList.getItems().setAll(model.getToDoList());
-                doneList.getItems().setAll(model.getDoneList());
-                System.out.println(" taille doneList : " + model.getDoneList().size());
-                break;
-             case TEXT_ADDED:
-                toDoList.getItems().add(model.getToDoList().get(model.getToDoList().size()-1));
-                addText.setText("");
-                break;
-        }
+    private SelectionModel<String> getDoneListModel() {
+        return doneList.getSelectionModel();
     }
 }
