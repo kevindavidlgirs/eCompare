@@ -10,9 +10,11 @@ package File;
  * @author 2207hembilo
  */
 public class SimpleFile extends File{
-
-    public SimpleFile(String name) {
+    private final int size;
+    
+    public SimpleFile(String name, int size) {
         super(name);
+        this.size = size;
     }
 
     @Override
@@ -22,6 +24,16 @@ public class SimpleFile extends File{
 
     @Override
     public int getSize() {
+        return this.size;
+    }
+    
+    @Override
+    protected String displayFormat(int offset) {
+        return super.displayFormat(offset) + getName() + " - size : " + getSize() + "\n";
+    }
+    
+    @Override
+    public void addFile(File f) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

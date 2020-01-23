@@ -5,11 +5,16 @@
  */
 package File;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author 2207hembilo
  */
 public class Directory extends File {
+    private final List<File> files = new ArrayList<>();
+    
     Directory(String s){
         super(s);
     }   
@@ -21,7 +26,15 @@ public class Directory extends File {
 
     @Override
     public int getSize() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int res = 0;
+        for (File f : files)
+            res += f.getSize();
+        return res;
+    }
+
+    @Override
+    public void addFile(File f) {
+       files.add(f);
     }
 
 }

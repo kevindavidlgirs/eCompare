@@ -10,7 +10,7 @@ package File;
  * @author 2207hembilo
  */
 public abstract class File {
-    private String name;
+    private final String name;
     private String modificationDate;
     enum status {ORPHAN,SAME,NEWER,OLDER,PARTIAL_SAME}
  
@@ -21,7 +21,7 @@ public abstract class File {
      * @return the name
      */
     public String getName() {
-        return name;
+        return this.name;
     }
 
     /**
@@ -30,8 +30,22 @@ public abstract class File {
     public String getModificationDate() {
         return modificationDate;
     }
-
+    
+    protected String displayFormat(int offset) {
+        String res = "";
+        for (int i = 0; i < offset; ++i)
+            res += "\t";
+        return res;
+    }
+    
+    @Override
+    public String toString() {
+        return displayFormat(0);
+    }
+    
     public abstract boolean isDirectory();
     
     public abstract int getSize();
+    
+    public abstract void addFile(File f);
 }
