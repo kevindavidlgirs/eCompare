@@ -94,15 +94,15 @@ public class Directory extends File {
                                 je voulais utiliser ici la méthode "scan_child_and_set_status"
                                 Pour que les dossiers parents puissent appeler cette 
                                 fonction et déterminé quel est son statut en 
-                                sortant de toutes ses récursions sur ses sous-dossiers et fichiers
+                                sortant de toutes les récursions sur ses sous-dossiers et fichiers
                              */
                         }
                     }
                 }
             }
         } else {
-            //Je pensais faire la comparaison de fichier ici ou appeler la fonction "compare" de "SimpleFile"
-            //et donc la redéfinir.
+            //Je pensais faire la comparaison de fichier ici grâce à d'autres méthodes (à créer)
+
             //ATTENTION De nouvelles méthodes sont disponibles dans la classe "File" pour la comparaison.
         }
     }
