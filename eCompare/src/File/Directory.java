@@ -5,7 +5,12 @@
  */
 package File;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -69,33 +74,27 @@ public class Directory extends File {
 
     //L'idée est d'assigner ORPHAN en premier lieu à chaque dossier/fichier pour se concentrer 
     //par la suite sur la comparaison.
-    @Override
+    //@Override
     public void compare(File f) {
         if (this.isDirectory() && f.isDirectory() && this.getSize() > 0 && f.getSize() > 0) {
-            for (File f1 : this.getList()) {
-                if (f1.isOrphan(f.getList())) {
-                    set_status_for_all(f1, Status.ORPHAN);
-                }
-            }
-            for (File f2 : f.getList()) {
-                if (f2.isOrphan(this.getList())) {
+            /*for (File f1 : this.getList()) {
+                if (f1.isOrphan(f.getList())) {*/
+                    set_status_for_all(this, Status.ORPHAN);
+                 /*}
+           }*/
+            /*for (File f2 : f.getList()) {
+                if (f2.isOrphan(this.getList())) {*/
                     set_status_for_all(f, Status.ORPHAN);
-                }
-            }
+                /*}
+            }*/
             
             //Troisème boucle  prévue pour la récursion
-            for (File f3 : this.getList()) {
+              for (File f3 : this.getList()) {
                 for (File f4 : f.getList()) {
                     if (f3.getName().compareTo(f4.getName()) == 0) {
                         if (f3.getSize() == f4.getSize()) {
                             f3.compare(f4);
-                            //......
-                            /*
-                                je voulais utiliser ici la méthode "scan_child_and_set_status"
-                                Pour que les dossiers parents puissent appeler cette 
-                                fonction et déterminé quel est son statut en 
-                                sortant de toutes les récursions sur ses sous-dossiers et fichiers
-                             */
+                            f3.getSize();
                         }
                     }
                 }
@@ -106,5 +105,20 @@ public class Directory extends File {
             //ATTENTION De nouvelles méthodes sont disponibles dans la classe "File" pour la comparaison.
         }
     }
-
+    
+    @Override
+    protected String displayFormat(int offset){
+        StringBuilder res = new StringBuilder();
+        
+        res.append(super.displayFormat(offset))
+            .append(this.getName())
+            .append(((this.isDirectory()) ? " D " : " F "))
+            .append(getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")))
+            .append(" "+this.getSize()+" ")
+            .append(getStatus() +" ").append("\n");
+        for(File f : files){
+            res.append(f.displayFormat(offset + 1));
+        }
+        return res.toString();
+    }
 }

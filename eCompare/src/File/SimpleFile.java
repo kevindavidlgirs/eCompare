@@ -6,6 +6,7 @@
 package File;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -25,7 +26,11 @@ public class SimpleFile extends File {
 
     @Override
     protected String displayFormat(int offset) {
-        return super.displayFormat(offset) + getName() + " - size : " + getSize() + "\n";
+        return super.displayFormat(offset) + getName()
+                + ((this.isDirectory()) ? " D " : " F ")
+                + getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")) +""                
+                + getSize() +" "
+                + getStatus()+ "\n";
     }
 
     @Override

@@ -16,11 +16,13 @@ import java.nio.file.Paths;
 public class Program {
 
     public static void main(String[] args) throws IOException {
-        Path path = Paths.get("TestBC\\TestBC\\RootBC_Left").toRealPath();
-        Path path1 = Paths.get("TestBC\\TestBC\\RootBC_Right").toRealPath();
+        Path path = Paths.get("TestBC","TestBC","RootBC_Left").toRealPath();
+        Path path1 = Paths.get("TestBC","TestBC","RootBC_Right").toRealPath();
         File f = FileBuilder.make(path);
         File f1 = FileBuilder.make(path1);
         f.compare(f1);
+        System.out.println(f);
+        System.out.println(f1);
     }
 
 }
