@@ -93,8 +93,8 @@ public abstract class File {
         }
         return false;
     }
-    
-    public boolean dirIsNewer(File f){
+
+        public boolean dirIsNewer(File f){
          if(f.isDirectory()){
             int cpt = 0;
             while(f.getList().size() > cpt && f.getList().get(cpt).getStatus() != status.NEWER){
@@ -117,7 +117,7 @@ public abstract class File {
         }
         return false;
      }
-     
+
     public void set_status(Status s) {
         this.status = s;
     }

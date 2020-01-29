@@ -11,6 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -51,6 +52,7 @@ public class Directory extends File {
     public List<File> getList() {
         return Collections.unmodifiableList(files);
     }
+    
 
     //Est sensé donner le même statut à un segment déterminé de l'arborescence
     //A tester !!!
@@ -63,6 +65,7 @@ public class Directory extends File {
         f.set_status(s);
     }
 
+
     private void set_default_status(File f, Status s) {
         if (f.getStatus() == null) {
             if (f.isDirectory()) {
@@ -73,21 +76,19 @@ public class Directory extends File {
             f.set_status(s);
         }
     }
-
     //Est sensé scanner l'ensemble des enfants d'un dossier pour déterminer son statut
     //Devrait aussi vérifier que le correspondant à le même nombre de "fichier" 
     //dans un dossier donné ? Pour assigner l'état SAME notamment...
-    public void scan_child_and_set_status(File f) {
-        if (f.isDirectory()) {
-            for (File f1 : f.getList()) {
-              
-            }
+    /*public void scan_child_and_set_status(File f) {
+        for (File f1 : f.getList()) {
+            //........
         }
-    }
+    }*/
+
 
     //L'idée est d'assigner ORPHAN en premier lieu à chaque dossier/fichier pour se concentrer 
     //par la suite sur la comparaison.
-    //@Override
+
     public void compare(File f) {
         if (this.isDirectory() && f.isDirectory() && this.getSize() > 0 && f.getSize() > 0) {
 
@@ -97,7 +98,6 @@ public class Directory extends File {
             //Troisème boucle  prévue pour la récursion
             for (File f3 : this.getList()) {
                 for (File f4 : f.getList()) {
-
                     f3.compare(f4);
                      // Reste à terminer pour finir compare.
                     if (f3.getName().compareTo(f4.getName()) == 0) {

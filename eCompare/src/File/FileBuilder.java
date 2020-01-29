@@ -13,7 +13,6 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-
 /**
  *
  * @author herve
@@ -32,7 +31,7 @@ public class FileBuilder {
                 }
             }
         } else {
-           return result = new SimpleFile(path.getFileName().toString(), ldt, attrs.size(), path.toAbsolutePath().toString());
+            return result = new SimpleFile(path.getFileName().toString(), ldt, attrs.size(), path.toAbsolutePath().toString());
         }
         return result;
     }
