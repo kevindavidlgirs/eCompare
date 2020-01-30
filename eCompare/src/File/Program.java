@@ -20,6 +20,7 @@ public class Program {
         Path path1 = Paths.get("TestBC","RootBC_Right").toRealPath();
         File f = FileBuilder.make(path);
         File f1 = FileBuilder.make(path1);
+        
         f.compare(f1);
         System.out.println(f);
         System.out.println(f1);

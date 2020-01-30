@@ -93,20 +93,44 @@ public abstract class File {
         }
         return false;
     }
-
-        public boolean dirIsNewer(File f){
+    
+    public boolean dirIsNoOlder(File f){
+        if(f.isDirectory()){
+            int cpt = 0;
+            while(f.getList().size() > cpt && f.getList().get(cpt).getStatus() != status.OLDER){
+                ++cpt;
+            }
+           return (f.getList().size() == cpt);
+        }
+        return false;
+    }
+    
+    public boolean dirIsNewer(File f){
          if(f.isDirectory()){
             int cpt = 0;
             while(f.getList().size() > cpt && f.getList().get(cpt).getStatus() != status.NEWER){
                 ++cpt;
             }
-            
            return (f.getList().size() > cpt);
         }
         return false;
     }
     
-     public boolean dirHasOneOrMoreSame(File f){
+    public boolean dirIsOrphan(File f){
+         if(f.isDirectory()){
+            int cpt = 0;
+            while(f.getList().size() > cpt && f.getList().get(cpt).getStatus() == status.ORPHAN){  
+                ++cpt;
+            }
+            
+           return (f.getList().size() == cpt);
+        }
+        return false;
+    }
+    
+    
+    
+    public boolean dirHasOneOrMoreSame(File f){
          if(f.isDirectory()){
             int cpt = 0;
             while(f.getList().size() > cpt && f.getList().get(cpt).getStatus() != status.SAME){

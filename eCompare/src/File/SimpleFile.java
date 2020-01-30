@@ -47,7 +47,7 @@ public class SimpleFile extends File {
     public void compare(File f) {
         if (!f.isDirectory()) {
             if (this.getName().compareTo(f.getName()) == 0) {
-                if (this.isSame(f)) {
+                if (this.isSame(f)) {                  
                    this.set_status(Status.SAME);
                     f.set_status(Status.SAME);
                 } else if (this.isNewer(f)) {
