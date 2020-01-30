@@ -24,6 +24,15 @@ public class Program {
         f.compare(f1);
         System.out.println(f);
         System.out.println(f1);
+        
+        /**
+         * Le code ci-dessus sera remplacé par celui du design pattern Façade.
+         * J'ai commencé à l'implémenter dans la classe Façade. Vois ce que tu peux faire. 
+         * N'hésite pas à y apporter tes idées.
+         * Peux tu, avant d'implémenter Façade, executer le main et me dire si tout est OK au niveau de la comparaison des fichiers et dossiers ?
+         * Amuses-toi bien Kévin, Ce n'est pas facile, mais c'est super kiffant la programmation !!!
+         */
+       
     }
 
 }

@@ -94,6 +94,23 @@ public abstract class File {
         return false;
     }
     
+     public void set_default_partial_same(File f){
+        if(f.isDirectory()){
+            if(f.getStatus() == Status.ORPHAN && !dirIsOrphan(f)){
+                f.set_status(Status.PARTIAL_SAME);
+            }
+              
+            int cpt = 0;
+            while(f.getList().size() > cpt){
+                if(f.getList().get(cpt).isDirectory() && f.getList().get(cpt).getStatus() == Status.ORPHAN && !dirIsOrphan(f.getList().get(cpt))){
+                    f.getList().get(cpt).set_status(Status.PARTIAL_SAME);
+                }
+                ++cpt;
+            }
+        }
+    }
+    
+    
     public boolean dirIsNoOlder(File f){
         if(f.isDirectory()){
             int cpt = 0;
@@ -116,15 +133,29 @@ public abstract class File {
         return false;
     }
     
-    public boolean dirIsOrphan(File f){
-         if(f.isDirectory()){
-            int cpt = 0;
-            while(f.getList().size() > cpt && f.getList().get(cpt).getStatus() == status.ORPHAN){  
-                ++cpt;
+    public boolean dir_has_orphan_element(File f){
+        if(f.isDirectory()){
+                int cpt = 0;
+                while(f.getList().size() > cpt && f.getList().get(cpt).getStatus() != status.ORPHAN){
+                    ++cpt;
+                }
+
+               return (f.getList().size() > cpt);
             }
-            
-           return (f.getList().size() == cpt);
-        }
+         
+        return false;
+    }
+    
+    public boolean dirIsOrphan(File f){
+            if(f.isDirectory()){
+                int cpt = 0;
+                while(f.getList().size() > cpt && f.getList().get(cpt).getStatus() == status.ORPHAN){
+                    ++cpt;
+                }
+
+               return (f.getList().size() == cpt);
+            }
+         
         return false;
     }
     

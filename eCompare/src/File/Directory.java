@@ -53,19 +53,6 @@ public class Directory extends File {
     public List<File> getList() {
         return Collections.unmodifiableList(files);
     }
-    
-
-    //Est sensé donner le même statut à un segment déterminé de l'arborescence
-    //A tester !!!
-    private void set_status_for_all(File f, Status s) {
-        if (f.isDirectory()) {
-            for (File f1 : f.getList()) {
-                set_status_for_all(f1, s);
-            }
-        }
-        f.set_status(s);
-    }
-
 
     private void set_default_SFile_status(File f, Status s) {
         if (f.getStatus() == null) {
@@ -87,53 +74,44 @@ public class Directory extends File {
                 for (File f1 : f.getList()) {
                     set_default_Dir_status(f1, s);
                 }
-                
                 f.set_status(s);
             }
         }
     }
     
-    //Est sensé scanner l'ensemble des enfants d'un dossier pour déterminer son statut
-    //Devrait aussi vérifier que le correspondant à le même nombre de "fichier" 
-    //dans un dossier donné ? Pour assigner l'état SAME notamment...
-    public void scan_child_and_set_status(File f) {
-        for (File f1 : f.getList()) {
-            //........
-        }
-    }
-    
-
     public void compare(File f) {
         
         if (this.isDirectory() && f.isDirectory() && this.getSize() > 0 && f.getSize() > 0) {
             
-            //Mettons par défaut tous les fichiers en ORPHAN
+            //Mettons par défaut tous les fichiers en ORPHAN.
             set_default_SFile_status(this, Status.ORPHAN);
             set_default_SFile_status(f, Status.ORPHAN);
             
-            //Mettons par défaut tous les rep en PARTIAL_SAME 
-            set_default_Dir_status(this, Status.PARTIAL_SAME);
-            set_default_Dir_status(f, Status.PARTIAL_SAME);
+            //Mettons par défaut tous les reps en ORPHAN. 
+            set_default_Dir_status(this, Status.ORPHAN);
+            set_default_Dir_status(f, Status.ORPHAN);
+            
             
             //Troisème boucle  prévue pour la récursion
-            for (File f3 : this.getList()) {
+            int cpt = 0;// Le compteur, pour qu'à la première itération les reps correspondants soient mis, par défaut, en PARTIAL_SAME.
+            for (File f3 : this.getList()) {              
                 for (File f4 : f.getList()) {
-                    f3.compare(f4);
-                    
-                    if (f3.getName().compareTo(f4.getName()) == 0) {                     
+                    f3.compare(f4);                   
+                    if (f3.getName().compareTo(f4.getName()) == 0) {
+                                          
                         if (f3.getSize() == f4.getSize()) {
                             if (dirIsSame(f4) && dirIsSame(f3)) {
                                 f4.set_status(Status.SAME);
-                                f3.set_status(Status.SAME);                                
+                                f3.set_status(Status.SAME);
                             }                           
                         }
                         
-                        if(dirIsNewer(f3) && dirIsNoOlder(f3)){
-                               f3.set_status(Status.NEWER);
-                               f4.set_status(Status.OLDER);
-                        }else if(dirIsNewer(f4) && dirIsNoOlder(f4)){
-                             f4.set_status(Status.NEWER);
-                             f3.set_status(Status.OLDER);
+                        if(dirIsNewer(f3) && dirIsNoOlder(f3) && !dir_has_orphan_element(f3)){
+                            f3.set_status(Status.NEWER);
+                            f4.set_status(Status.OLDER);
+                        }else if(dirIsNewer(f4) && dirIsNoOlder(f4)&& !dir_has_orphan_element(f4)){
+                            f4.set_status(Status.NEWER);
+                            f3.set_status(Status.OLDER);
                         }
                         
                         if(dirIsOrphan(f3)){
@@ -143,8 +121,14 @@ public class Directory extends File {
                         if(dirIsOrphan(f4)){
                             f4.set_status(Status.ORPHAN);
                         }
+                        
+                        if (cpt == 0) {
+                            set_default_partial_same(f3);
+                            set_default_partial_same(f4);
+                        }                           
                     }
                 }
+                ++cpt;
             }
         }
     }
