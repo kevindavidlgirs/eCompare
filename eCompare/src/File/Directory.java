@@ -1,0 +1,167 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package File;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import jdk.nashorn.internal.ir.BreakNode;
+
+/**
+ *
+ * @author 2207hembilo
+ */
+public class Directory extends File {
+
+    private final List<File> files = new ArrayList<>();
+
+    public Directory(String name, LocalDateTime date, long size, String path) {
+        super(name, date, size, path);
+
+    }
+
+    @Override
+    public boolean isDirectory() {
+        return true;
+    }
+
+    @Override
+    public long getSize() {
+        int res = 0;
+        for (File f : files) {
+            res += f.getSize();
+        }
+        return res;
+    }
+
+    @Override
+    public void addFile(File f) {
+        files.add(f);
+    }
+
+    @Override
+    public List<File> getList() {
+        return Collections.unmodifiableList(files);
+    }
+    
+
+    //Est sensé donner le même statut à un segment déterminé de l'arborescence
+    //A tester !!!
+    private void set_status_for_all(File f, Status s) {
+        if (f.isDirectory()) {
+            for (File f1 : f.getList()) {
+                set_status_for_all(f1, s);
+            }
+        }
+        f.set_status(s);
+    }
+
+
+    private void set_default_SFile_status(File f, Status s) {
+        if (f.getStatus() == null) {
+            if (f.isDirectory()) {
+                for (File f1 : f.getList()) {
+                    set_default_SFile_status(f1, s);
+                }
+            }
+            
+            if(!f.isDirectory()){
+                f.set_status(s);
+            }   
+        }
+    }
+    
+    private void set_default_Dir_status(File f, Status s) {
+        if (f.getStatus() == null) {
+            if (f.isDirectory()) {
+                for (File f1 : f.getList()) {
+                    set_default_Dir_status(f1, s);
+                }
+                
+                f.set_status(s);
+            }
+        }
+    }
+    
+    //Est sensé scanner l'ensemble des enfants d'un dossier pour déterminer son statut
+    //Devrait aussi vérifier que le correspondant à le même nombre de "fichier" 
+    //dans un dossier donné ? Pour assigner l'état SAME notamment...
+    public void scan_child_and_set_status(File f) {
+        for (File f1 : f.getList()) {
+            //........
+        }
+    }
+    
+
+    public void compare(File f) {
+        
+        if (this.isDirectory() && f.isDirectory() && this.getSize() > 0 && f.getSize() > 0) {
+            
+            //Mettons par défaut tous les fichiers en ORPHAN
+            set_default_SFile_status(this, Status.ORPHAN);
+            set_default_SFile_status(f, Status.ORPHAN);
+            
+            //Mettons par défaut tous les rep en PARTIAL_SAME 
+            set_default_Dir_status(this, Status.PARTIAL_SAME);
+            set_default_Dir_status(f, Status.PARTIAL_SAME);
+            
+            //Troisème boucle  prévue pour la récursion
+            for (File f3 : this.getList()) {
+                for (File f4 : f.getList()) {
+                    f3.compare(f4);
+                    
+                    if (f3.getName().compareTo(f4.getName()) == 0) {                     
+                        if (f3.getSize() == f4.getSize()) {
+                            if (dirIsSame(f4) && dirIsSame(f3)) {
+                                f4.set_status(Status.SAME);
+                                f3.set_status(Status.SAME);                                
+                            }                           
+                        }
+                        
+                        if(dirIsNewer(f3) && dirIsNoOlder(f3)){
+                               f3.set_status(Status.NEWER);
+                               f4.set_status(Status.OLDER);
+                        }else if(dirIsNewer(f4) && dirIsNoOlder(f4)){
+                             f4.set_status(Status.NEWER);
+                             f3.set_status(Status.OLDER);
+                        }
+                        
+                        if(dirIsOrphan(f3)){
+                            f3.set_status(Status.ORPHAN);      
+                        }
+                        
+                        if(dirIsOrphan(f4)){
+                            f4.set_status(Status.ORPHAN);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    protected String displayFormat(int offset) {
+        StringBuilder res = new StringBuilder();
+
+        res.append(super.displayFormat(offset))
+                .append(this.getName())
+                .append(((this.isDirectory()) ? " D " : " F "))
+                .append(getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")))
+                .append(" " + this.getSize() + " ")
+                .append(getStatus() + " ").append("\n");
+        for (File f : files) {
+            res.append(f.displayFormat(offset + 1));
+        }
+        return res.toString();
+    }
+}
