@@ -12,7 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
+
 /**
  *
  * @author herve
@@ -24,14 +24,14 @@ public class FileBuilder {
         LocalDateTime ldt = attrs.lastModifiedTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
         File result;
         if (Files.isDirectory(path)) {
-            result = new Directory(path.getFileName().toString(), ldt, attrs.size(), path.toAbsolutePath().toString());
+            result = new Directory(path.getFileName().toString(), ldt, attrs.size(), path.toAbsolutePath().toAbsolutePath());
             try (DirectoryStream<Path> dir = Files.newDirectoryStream(path)) {
                 for (Path p : dir) {
                     result.addFile(make(p));
                 }
             }
         } else {
-            return result = new SimpleFile(path.getFileName().toString(), ldt, attrs.size(), path.toAbsolutePath().toString());
+            return result = new SimpleFile(path.getFileName().toString(), ldt, attrs.size(), path.toAbsolutePath().toAbsolutePath());
         }
         return result;
     }

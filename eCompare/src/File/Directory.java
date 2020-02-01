@@ -5,17 +5,12 @@
  */
 package File;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import jdk.nashorn.internal.ir.BreakNode;
 
 /**
  *
@@ -25,7 +20,7 @@ public class Directory extends File {
 
     private final List<File> files = new ArrayList<>();
 
-    public Directory(String name, LocalDateTime date, long size, String path) {
+    public Directory(String name, LocalDateTime date, long size, Path path) {
         super(name, date, size, path);
 
     }
@@ -54,42 +49,112 @@ public class Directory extends File {
         return Collections.unmodifiableList(files);
     }
 
-    private void set_default_SFile_status(File f, Status s) {
+    private void set_default_status_orphan(File f, Status s) {
         if (f.getStatus() == null) {
             if (f.isDirectory()) {
                 for (File f1 : f.getList()) {
-                    set_default_SFile_status(f1, s);
+                    set_default_status_orphan(f1, s);
                 }
             }
-            
-            if(!f.isDirectory()){
-                f.set_status(s);
-            }   
+            f.set_status(s);
+
         }
     }
-    
-    private void set_default_Dir_status(File f, Status s) {
-        if (f.getStatus() == null) {
-            if (f.isDirectory()) {
-                for (File f1 : f.getList()) {
-                    set_default_Dir_status(f1, s);
+
+    private boolean dirIsSame(File f) {
+        if (f.isDirectory()) {
+            int cpt = 0;
+            while (f.getList().size() > cpt && f.getList().get(cpt).getStatus() == getStatus().SAME) {
+                ++cpt;
+            }
+
+            return (f.getList().size() == cpt);
+        }
+        return false;
+    }
+
+    private void set_default_partial_same(File f) {
+        if (f.isDirectory()) {
+            if (f.getStatus() == Status.ORPHAN && !dirIsOrphan(f)) {
+                f.set_status(Status.PARTIAL_SAME);
+            }
+
+            int cpt = 0;
+            while (f.getList().size() > cpt) {
+                if (f.getList().get(cpt).isDirectory() && f.getList().get(cpt).getStatus() == Status.ORPHAN && !dirIsOrphan(f.getList().get(cpt))) {
+                    f.getList().get(cpt).set_status(Status.PARTIAL_SAME);
                 }
-                f.set_status(s);
+                ++cpt;
             }
         }
     }
+
+    private boolean dirIsNoOlder(File f) {
+        if (f.isDirectory()) {
+            int cpt = 0;
+            while (f.getList().size() > cpt && f.getList().get(cpt).getStatus() != getStatus().OLDER) {
+                ++cpt;
+            }
+            return (f.getList().size() == cpt);
+        }
+        return false;
+    }
+
+    private boolean dirIsNewer(File f) {
+        if (f.isDirectory()) {
+            int cpt = 0;
+            while (f.getList().size() > cpt && f.getList().get(cpt).getStatus() != getStatus().NEWER) {
+                ++cpt;
+            }
+            return (f.getList().size() > cpt);
+        }
+        return false;
+    }
+
+    private boolean dir_has_orphan_element(File f) {
+        if (f.isDirectory()) {
+            int cpt = 0;
+            while (f.getList().size() > cpt && f.getList().get(cpt).getStatus() != getStatus().ORPHAN) {
+                ++cpt;
+            }
+
+            return (f.getList().size() > cpt);
+        }
+
+        return false;
+    }
+
+    private boolean dirIsOrphan(File f) {
+        if (f.isDirectory()) {
+            int cpt = 0;
+            while (f.getList().size() > cpt && f.getList().get(cpt).getStatus() == getStatus().ORPHAN) {
+                ++cpt;
+            }
+
+            return (f.getList().size() == cpt);
+        }
+
+        return false;
+    }
+
+    private boolean dirHasOneOrMoreSame(File f) {
+        if (f.isDirectory()) {
+            int cpt = 0;
+            while (f.getList().size() > cpt && f.getList().get(cpt).getStatus() != getStatus().SAME) {
+                ++cpt;
+            }
+
+            return (f.getList().size() > cpt);
+        }
+        return false;
+    }
     
+    @Override
     public void compare(File f) {
         
         if (this.isDirectory() && f.isDirectory() && this.getSize() > 0 && f.getSize() > 0) {
-            
-            //Mettons par défaut tous les fichiers en ORPHAN.
-            set_default_SFile_status(this, Status.ORPHAN);
-            set_default_SFile_status(f, Status.ORPHAN);
-            
-            //Mettons par défaut tous les reps en ORPHAN. 
-            set_default_Dir_status(this, Status.ORPHAN);
-            set_default_Dir_status(f, Status.ORPHAN);
+            set_default_status_orphan(this, Status.ORPHAN);
+            set_default_status_orphan(f, Status.ORPHAN);
             
             
             //Troisème boucle  prévue pour la récursion
@@ -136,13 +201,20 @@ public class Directory extends File {
     @Override
     protected String displayFormat(int offset) {
         StringBuilder res = new StringBuilder();
+        if (offset == 0) {
+            res.append(this.getPath().getParent().getFileName())
+                    .append("/")
+                    .append(this.getPath().getFileName())
+                    .append("\n");
+        } else {
+            res.append(super.displayFormat(offset))
+                    .append(this.getName())
+                    .append(((this.isDirectory()) ? " D " : " F "))
+                    .append(getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")))
+                    .append(" " + this.getSize() + " ")
+                    .append(getStatus() + " ").append("\n");
+        }
 
-        res.append(super.displayFormat(offset))
-                .append(this.getName())
-                .append(((this.isDirectory()) ? " D " : " F "))
-                .append(getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")))
-                .append(" " + this.getSize() + " ")
-                .append(getStatus() + " ").append("\n");
         for (File f : files) {
             res.append(f.displayFormat(offset + 1));
         }
