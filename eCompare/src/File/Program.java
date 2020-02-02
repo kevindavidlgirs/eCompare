@@ -6,8 +6,7 @@
 package File;
 
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+
 
 /**
  *
@@ -16,14 +15,12 @@ import java.nio.file.Paths;
 public class Program {
 
     public static void main(String[] args) throws IOException {
-        Path path = Paths.get("TestBC","RootBC_Left").toRealPath();
-        Path path1 = Paths.get("TestBC","RootBC_Right").toRealPath();
-        File f = FileBuilder.make(path);
-        File f1 = FileBuilder.make(path1);
+        String r = "TestBC";
+        String s = "RootBC_Left";
+        String s1 = "RootBC_Right";
         
-        f.compare(f1);
-        System.out.println(f);
-        System.out.println(f1);
+        FacadeECompare Fe = new FacadeECompare(r,s, s1);
+        Fe.compare();
     }
 
 }
