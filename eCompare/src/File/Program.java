@@ -12,6 +12,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.BorderPane;
@@ -26,21 +27,40 @@ import javafx.stage.Stage;
  */
 public class Program extends Application{
     
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws IOException {
+        
+        FacadeECompare fe = new FacadeECompare("TestBC","RootBC_Left","RootBC_Right");
+        fe.compare();
+        
+        /*
+        * Méthode get pour la récupération des sytèmes de fichier.
+        * Je me dis pourquoi pas tenter d'inserer ces méthodes dans treeTableViewLeft et treeTableViewRight;
+        * A toi de voir Kévin. Enjoy !!!
+        */
+        fe.get_compared_left_struct_file();
+        fe.get_compared_right_struct_file();
+        
+        //Nom,type de fichier, date de modif,taille, status
         TreeTableView treeTableViewLeft = new TreeTableView();
         TreeTableView treeTableViewRight = new TreeTableView();
         
         TreeTableColumn<File, File>
         nameCol = new TreeTableColumn<>("Name"),
-        sizeCol = new TreeTableColumn<>("Size");
+        typeCol = new TreeTableColumn<>("Type"),
+        dateModifCol = new TreeTableColumn<>("Date modif"),
+        sizeCol = new TreeTableColumn<>("Size"),
+        statusCol = new TreeTableColumn<>("Status");
     
         nameCol.setCellValueFactory(r -> new SimpleObjectProperty<>(r.getValue().getValue()));
+        typeCol.setCellValueFactory(r -> new SimpleObjectProperty<>(r.getValue().getValue()));
+        dateModifCol.setCellValueFactory(r -> new SimpleObjectProperty<>(r.getValue().getValue()));
         sizeCol.setCellValueFactory(r -> new SimpleObjectProperty<>(r.getValue().getValue()));
+        statusCol.setCellValueFactory(r -> new SimpleObjectProperty<>(r.getValue().getValue()));
         
-        nameCol.setPrefWidth(250);
+        dateModifCol.setPrefWidth(150);
         
-        treeTableViewLeft.getColumns().setAll(nameCol, sizeCol);
-        treeTableViewRight.getColumns().setAll(nameCol, sizeCol);
+        treeTableViewLeft.getColumns().setAll(nameCol, typeCol, dateModifCol, sizeCol, statusCol);
+        treeTableViewRight.getColumns().setAll(nameCol, typeCol, dateModifCol, sizeCol, statusCol);
         
         Group root = new Group();
         BorderPane mainContainer = new BorderPane();
@@ -50,10 +70,16 @@ public class Program extends Application{
         leftPane.getChildren().add(treeTableViewLeft);
         rightPane.getChildren().add(treeTableViewRight);
          
+        leftPane.setPrefSize(475, 450);
+        rightPane.setPrefSize(475, 450);
+        
+        leftPane.setPadding(new Insets(5,5,5,5));
+        rightPane.setPadding(new Insets(5,5,5,5));
+        
         mainContainer.setLeft(leftPane);
         mainContainer.setRight(rightPane);
         
-        Scene scene = new Scene(root, 750, 450);
+        Scene scene = new Scene(root, 950, 450);
         
         primaryStage.setTitle("eCompare");
         primaryStage.setScene(scene);
@@ -61,13 +87,19 @@ public class Program extends Application{
         primaryStage.show();
     }
     
-    public static void main(String[] args) throws IOException {
-       /* String r = "TestBC";
-        String s = "RootBC_Left";
-        String s1 = "RootBC_Right";
+        public TreeItem<File> makeTreeRoot(File root) {
+
+        TreeItem<File> res = new TreeItem<>(root);
+        res.setExpanded(true);
+        if (root.isDirectory()) {
+            root.getList().forEach(se -> {
+                res.getChildren().add(makeTreeRoot(se));
+            });
+        }
         
-        FacadeECompare Fe = new FacadeECompare(r,s, s1);
-        Fe.compare();*/
+        return res;
+    }
+    public static void main(String[] args) throws IOException {
         launch(args);
     }
 }
