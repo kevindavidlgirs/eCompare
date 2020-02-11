@@ -22,8 +22,8 @@ public class FacadeECompare {
     }
     public void compare(){
         file_structure_left.compare(file_structure_right);
-        //System.out.println(file_structure_left);
-        //System.out.println(file_structure_right);
+        System.out.println(file_structure_left);
+        System.out.println(file_structure_right);
     }
     
     public File get_compared_left_struct_file(){

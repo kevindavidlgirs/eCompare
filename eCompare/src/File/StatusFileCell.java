@@ -7,8 +7,13 @@ package File;
 
 /**
  *
- * @author 2207hembilo
+ * @author kevin
  */
-class args {
+public class StatusFileCell extends FileCell{
+
+    @Override
+    String texte(File elem) {
+        return ""+elem.getStatus();
+    }
     
 }

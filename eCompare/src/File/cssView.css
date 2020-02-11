@@ -1,0 +1,28 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 11-févr.-2020, 20:48:33
+    Author     : kevin
+*/
+.ORPHAN {
+    -fx-text-fill: blueviolet;
+}
+
+.SAME {
+    -fx-text-fill: green;
+}
+
+.PARTIAL_SAME{
+    -fx-text-fill: orange;
+}
+
+.NEWER{
+    -fx-text-fill : red;
+}
+
+.OLDER{
+    -fx-text-fill : brown;
+}
