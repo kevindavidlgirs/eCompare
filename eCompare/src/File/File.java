@@ -66,11 +66,17 @@ public abstract class File {
     }
 
     public abstract boolean isDirectory();
+    
+    public abstract boolean isSame(File f1);
+        
+    public abstract boolean isOrphan(File f);
+    
+    public abstract boolean isNewer(File f);
 
     public abstract void addFile(File f);
 
     public abstract void compare(File f);
-
+    
     public abstract List<File> getList();
 
 }

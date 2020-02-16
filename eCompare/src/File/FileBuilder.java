@@ -21,7 +21,7 @@ public class FileBuilder {
 
     public static File make(Path path) throws IOException {
         BasicFileAttributes attrs = Files.readAttributes(path, BasicFileAttributes.class);
-        LocalDateTime ldt = attrs.lastModifiedTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        LocalDateTime ldt = attrs.lastModifiedTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().withNano(0);//withNano pour enlever les millisecondes
         File result;
         if (Files.isDirectory(path)) {
             result = new Directory(path.getFileName().toString(), ldt, attrs.size(), path.toAbsolutePath().toAbsolutePath());

@@ -5,11 +5,13 @@
  */
 package File;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -26,11 +28,6 @@ public class Directory extends File {
     }
 
     @Override
-    public boolean isDirectory() {
-        return true;
-    }
-
-    @Override
     public long getSize() {
         int res = 0;
         for (File f : files) {
@@ -40,162 +37,134 @@ public class Directory extends File {
     }
 
     @Override
+    public List<File> getList() {
+        return Collections.unmodifiableList(files);
+    }
+
+    @Override
     public void addFile(File f) {
         files.add(f);
     }
 
     @Override
-    public List<File> getList() {
-        return Collections.unmodifiableList(files);
+    public boolean isDirectory() {
+        return true;
     }
 
-    private void set_default_status_orphan(File f, Status s) {
-        if (f.getStatus() == null) {
-            if (f.isDirectory()) {
-                for (File f1 : f.getList()) {
-                    set_default_status_orphan(f1, s);
-                }
-            }
-            f.set_status(s);
-
-        }
-    }
-
-    private boolean dirIsSame(File f) {
-        if (f.isDirectory()) {
-            int cpt = 0;
-            while (f.getList().size() > cpt && f.getList().get(cpt).getStatus() == getStatus().SAME) {
-                ++cpt;
-            }
-
-            return (f.getList().size() == cpt);
-        }
-        return false;
-    }
-
-    private void set_default_partial_same(File f) {
-        if (f.isDirectory()) {
-            if (f.getStatus() == Status.ORPHAN && !dirIsOrphan(f)) {
-                f.set_status(Status.PARTIAL_SAME);
-            }
-
-            int cpt = 0;
-            while (f.getList().size() > cpt) {
-                if (f.getList().get(cpt).isDirectory() && f.getList().get(cpt).getStatus() == Status.ORPHAN && !dirIsOrphan(f.getList().get(cpt))) {
-                    f.getList().get(cpt).set_status(Status.PARTIAL_SAME);
-                }
-                ++cpt;
-            }
-        }
-    }
-
-    private boolean dirIsNoOlder(File f) {
-        if (f.isDirectory()) {
-            int cpt = 0;
-            while (f.getList().size() > cpt && f.getList().get(cpt).getStatus() != getStatus().OLDER) {
-                ++cpt;
-            }
-            return (f.getList().size() == cpt);
-        }
-        return false;
-    }
-
-    private boolean dirIsNewer(File f) {
-        if (f.isDirectory()) {
-            int cpt = 0;
-            while (f.getList().size() > cpt && f.getList().get(cpt).getStatus() != getStatus().NEWER) {
-                ++cpt;
-            }
-            return (f.getList().size() > cpt);
-        }
-        return false;
-    }
-
-    private boolean dir_has_orphan_element(File f) {
-        if (f.isDirectory()) {
-            int cpt = 0;
-            while (f.getList().size() > cpt && f.getList().get(cpt).getStatus() != getStatus().ORPHAN) {
-                ++cpt;
-            }
-
-            return (f.getList().size() > cpt);
-        }
-
-        return false;
-    }
-
-    private boolean dirIsOrphan(File f) {
-        if (f.isDirectory()) {
-            int cpt = 0;
-            while (f.getList().size() > cpt && f.getList().get(cpt).getStatus() == getStatus().ORPHAN) {
-                ++cpt;
-            }
-
-            return (f.getList().size() == cpt);
-        }
-
-        return false;
-    }
-
-    private boolean dirHasOneOrMoreSame(File f) {
-        if (f.isDirectory()) {
-            int cpt = 0;
-            while (f.getList().size() > cpt && f.getList().get(cpt).getStatus() != getStatus().SAME) {
-                ++cpt;
-            }
-
-            return (f.getList().size() > cpt);
-        }
-        return false;
-    }
-    
     @Override
-    public void compare(File f) {
-        
-        if (this.isDirectory() && f.isDirectory() && this.getSize() > 0 && f.getSize() > 0) {
-            set_default_status_orphan(this, Status.ORPHAN);
-            set_default_status_orphan(f, Status.ORPHAN);
-            
-            
-            //Troisème boucle  prévue pour la récursion
-            int cpt = 0;// Le compteur, pour qu'à la première itération les reps correspondants soient mis, par défaut, en PARTIAL_SAME.
-            for (File f3 : this.getList()) {              
-                for (File f4 : f.getList()) {
-                    f3.compare(f4);                   
-                    if (f3.getName().compareTo(f4.getName()) == 0) {
-                                          
-                        if (f3.getSize() == f4.getSize()) {
-                            if (dirIsSame(f4) && dirIsSame(f3)) {
-                                f4.set_status(Status.SAME);
-                                f3.set_status(Status.SAME);
-                            }                           
+    public boolean isSame(File f) {
+        if (this.getList().size() == f.getList().size()
+                && this.getName().compareTo(f.getName()) == 0
+                && this.getDate().isEqual(f.getDate())) {
+            for (int i = 0; i < this.getList().size(); ++i) {
+                if (!(this.getList().get(i).getStatus() == Status.SAME && f.getList().get(i).getStatus() == Status.SAME)) {
+                    return false;
+                }
+            }
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean isNewer(File f) {
+        //Gestion Directory SAME OR NEWER
+        if (this.getList().size() == f.getList().size() && this.getName().compareTo(f.getName()) == 0) {
+            for (int i = 0; i < this.getList().size(); ++i) {
+                if (this.getList().get(i).getStatus() == Status.NEWER) {
+                    for (int y = 0; i < this.getList().size(); ++i) {
+                        if (this.getList().get(y).getStatus() != Status.SAME
+                                && this.getList().get(y).getStatus() != Status.NEWER) {
+                            return false;
                         }
-                        
-                        if(dirIsNewer(f3) && dirIsNoOlder(f3) && !dir_has_orphan_element(f3)){
-                            f3.set_status(Status.NEWER);
-                            f4.set_status(Status.OLDER);
-                        }else if(dirIsNewer(f4) && dirIsNoOlder(f4)&& !dir_has_orphan_element(f4)){
-                            f4.set_status(Status.NEWER);
-                            f3.set_status(Status.OLDER);
-                        }
-                        
-                        if(dirIsOrphan(f3)){
-                            f3.set_status(Status.ORPHAN);      
-                        }
-                        
-                        if(dirIsOrphan(f4)){
-                            f4.set_status(Status.ORPHAN);
-                        }
-                        
-                        if (cpt == 0) {
-                            set_default_partial_same(f3);
-                            set_default_partial_same(f4);
-                        }                           
+                    }
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    //Gestion d'un dossier vide ?  ?
+    //Dossier vide et seul OPRHAN ?
+    @Override
+    public boolean isOrphan(File f) {
+//        if(f.isDirectory() && f.getList().size() == 0){
+//            return false;
+//        }
+        for (File f1 : f.getList()) {
+            if (f1.getStatus() != Status.ORPHAN) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+//    private boolean isPartialSame(File f1, File f2){
+//        Directory f = (Directory)f1;
+//        return f.isPartialSame(f2);
+//    }
+    
+    private boolean isPartialSame(File f) {
+        if (this.getStatus() == Status.PARTIAL_SAME) {
+            return true;
+        }
+        if (f.getList().size() > 1) {
+            Status s = f.getList().get(0).getStatus();
+            for (File f1 : f.getList()) {
+                if (f1.getStatus() != s) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private void check_and_setStatus(File f) {
+        if (this.isDirectory() && f.isDirectory()) {
+            if (this.isSame(f)) {
+                this.set_status(Status.SAME);
+                f.set_status(Status.SAME);
+            } else {
+                if (this.isNewer(f)) {
+                    this.set_status(Status.NEWER);
+                    f.set_status(Status.OLDER);
+                } else if (f.isNewer(this)) {
+                    this.set_status(Status.OLDER);
+                    f.set_status(Status.NEWER);
+                } else {
+                    if (isOrphan(this)) {
+                        this.set_status(Status.ORPHAN);
+                    } else if (isPartialSame(this)) {
+                        this.set_status(Status.PARTIAL_SAME);
+                    }
+                    if (isOrphan(f)) {
+                        f.set_status(Status.ORPHAN);
+//                  } else if (isPartialSame(f2, f1)) {
+                    } else if (isPartialSame(f)) {
+                        f.set_status(Status.PARTIAL_SAME);
                     }
                 }
-                ++cpt;
+            }
+        } 
+        if (!this.isDirectory() && this.getStatus() == null) 
+            this.set_status(Status.ORPHAN);
+        if (!f.isDirectory() && f.getStatus() == null) 
+            f.set_status(Status.ORPHAN);
+        
+    }
+
+    @Override
+    public void compare(File f) {
+        if (this.isDirectory() && f.isDirectory() ) {
+            for (File f3 : this.getList()) {
+                for (File f4 : f.getList()) {
+                        f3.compare(f4);
+                }
             }
         }
+       check_and_setStatus(f);
     }
 
     @Override
@@ -220,4 +189,10 @@ public class Directory extends File {
         }
         return res.toString();
     }
+
+//    public static void main(String[] args) throws IOException {
+//        FacadeECompare fe = new FacadeECompare("TestBC", "RootBC_Left", "RootBC_Right");
+//        fe.compare();
+//    }
+
 }

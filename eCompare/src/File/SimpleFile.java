@@ -26,6 +26,47 @@ public class SimpleFile extends File {
     }
 
     @Override
+    public boolean isSame(File f1) {
+        if (this.getDate().isEqual(f1.getDate())) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isNewer(File f) {
+        if (this.getDate().isAfter(f.getDate())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public void compare(File f) {
+        if (!f.isDirectory()) {
+            if (this.getStatus() == null) {
+                this.set_status(Status.ORPHAN);
+            }
+            if (f.getStatus() == null) {
+                f.set_status(Status.ORPHAN);
+            }
+            if (this.getName().compareTo(f.getName()) == 0) {
+                if (this.isSame(f)) {
+                    this.set_status(Status.SAME);
+                    f.set_status(Status.SAME);
+                } else if (this.isNewer(f)) {
+                    this.set_status(Status.NEWER);
+                    f.set_status(Status.OLDER);
+                } else if (f.isNewer(this)) {
+                    f.set_status(Status.NEWER);
+                    this.set_status(Status.OLDER);
+                }
+            }
+        }
+    }
+
+    @Override
     protected String displayFormat(int offset) {
         return super.displayFormat(offset) + getName()
                 + ((this.isDirectory()) ? " D " : " F ")
@@ -34,60 +75,11 @@ public class SimpleFile extends File {
                 + getStatus() + "\n";
     }
 
-    private boolean isSame(File f1) {
-        if (this.getDate().isEqual(f1.getDate())) {
-            return true;
-        }
-        return false;
-    }
-
-    private boolean isOlder(File f1) {
-        if (this.getDate().isBefore(f1.getDate())) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private boolean isNewer(File f1) {
-        if (this.getDate().isAfter(f1.getDate())) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private boolean isOrphan(List<File> ls) {
-        for (File f : ls) {
-            if (f.getName().compareTo(this.getName()) == 0
-                    && f.isDirectory() && this.isDirectory()
-                    || !f.isDirectory() && !this.isDirectory()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    
-
     @Override
-    public void compare(File f) {
-        if (!f.isDirectory()) {
-            if (this.getName().compareTo(f.getName()) == 0) {
-                if (this.isSame(f)) {
-                    this.set_status(Status.SAME);
-                    f.set_status(Status.SAME);
-                } else if (this.isNewer(f)) {
-                    this.set_status(Status.NEWER);
-                    f.set_status(Status.OLDER);
-                } else if (this.isOlder(f)) {
-                    this.set_status(Status.OLDER);
-                    f.set_status(Status.NEWER);
-                }
-            }
-        }
+    public boolean isOrphan(File f) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public void addFile(File f) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -97,4 +89,5 @@ public class SimpleFile extends File {
     public List<File> getList() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
 }
