@@ -43,26 +43,28 @@ public class SimpleFile extends File {
     }
 
     @Override
+    public void compare(File f1, File f2) {
+        compare(f2);
+    }
+
+    @Override
     public void compare(File f) {
-        if (!f.isDirectory()) {
-            if (this.getStatus() == null) {
-                this.set_status(Status.ORPHAN);
-            }
-            if (f.getStatus() == null) {
-                f.set_status(Status.ORPHAN);
-            }
-            if (this.getName().compareTo(f.getName()) == 0) {
-                if (this.isSame(f)) {
-                    this.set_status(Status.SAME);
-                    f.set_status(Status.SAME);
-                } else if (this.isNewer(f)) {
-                    this.set_status(Status.NEWER);
-                    f.set_status(Status.OLDER);
-                } else if (f.isNewer(this)) {
-                    f.set_status(Status.NEWER);
-                    this.set_status(Status.OLDER);
-                }
-            }
+        if (!this.isDirectory() && !f.isDirectory()) {
+            check_and_setStatus(f);
+        }
+    }
+
+    @Override
+    public void check_and_setStatus(File f) {
+        if (this.isSame(f)) {
+            this.set_status(Status.SAME);
+            f.set_status(Status.SAME);
+        } else if (this.isNewer(f)) {
+            this.set_status(Status.NEWER);
+            f.set_status(Status.OLDER);
+        } else if (f.isNewer(this)) {
+            f.set_status(Status.NEWER);
+            this.set_status(Status.OLDER);
         }
     }
 

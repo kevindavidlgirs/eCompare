@@ -75,8 +75,14 @@ public abstract class File {
 
     public abstract void addFile(File f);
 
+    public abstract void compare(File f1, File f2);
+    
     public abstract void compare(File f);
     
     public abstract List<File> getList();
+    
+    public abstract void check_and_setStatus(File f);
+
+    
 
 }

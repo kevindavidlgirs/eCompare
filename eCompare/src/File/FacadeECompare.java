@@ -21,7 +21,9 @@ public class FacadeECompare {
         file_structure_right = FileBuilder.make(Paths.get(root,path1).toRealPath());
     }
     public void compare(){
-        file_structure_left.compare(file_structure_right);
+        //Je pense que ceci est à changer
+        file_structure_left.compare(file_structure_left, file_structure_right);
+        //Je pense que ceci est à changer
         System.out.println(file_structure_left);
         System.out.println(file_structure_right);
     }

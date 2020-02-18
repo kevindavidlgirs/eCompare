@@ -27,6 +27,24 @@ public class Directory extends File {
 
     }
 
+    private void set_all_status_orphan(File f) {
+        for (File f1 : f.getList()) {
+            if (f1.isDirectory()) {
+                set_all_status_orphan(f1);
+            } else {
+                f1.set_status(Status.ORPHAN);
+            }
+        }
+        f.set_status(Status.ORPHAN);
+    }
+
+    private boolean isPartialSame(File f) {
+        if (!isOrphan(f)) {
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public long getSize() {
         int res = 0;
@@ -53,9 +71,9 @@ public class Directory extends File {
 
     @Override
     public boolean isSame(File f) {
-        if (this.getList().size() == f.getList().size()
-                && this.getName().compareTo(f.getName()) == 0
-                && this.getDate().isEqual(f.getDate())) {
+        if (this.getName().compareTo(f.getName()) == 0
+                && this.getList().size() == f.getList().size()
+                && this.getList().size() > 0 && f.getList().size() > 0) {
             for (int i = 0; i < this.getList().size(); ++i) {
                 if (!(this.getList().get(i).getStatus() == Status.SAME && f.getList().get(i).getStatus() == Status.SAME)) {
                     return false;
@@ -69,11 +87,12 @@ public class Directory extends File {
 
     @Override
     public boolean isNewer(File f) {
-        //Gestion Directory SAME OR NEWER
-        if (this.getList().size() == f.getList().size() && this.getName().compareTo(f.getName()) == 0) {
+        if (this.getList().size() == f.getList().size()
+                && this.getName().compareTo(f.getName()) == 0
+                && this.getList().size() > 0 && f.getList().size() > 0) {
             for (int i = 0; i < this.getList().size(); ++i) {
                 if (this.getList().get(i).getStatus() == Status.NEWER) {
-                    for (int y = 0; i < this.getList().size(); ++i) {
+                    for (int y = 0; y < this.getList().size(); ++y) {
                         if (this.getList().get(y).getStatus() != Status.SAME
                                 && this.getList().get(y).getStatus() != Status.NEWER) {
                             return false;
@@ -86,17 +105,16 @@ public class Directory extends File {
         return false;
     }
 
-    //Gestion d'un dossier vide ?  ?
-    //Dossier vide et seul OPRHAN ?
     @Override
     public boolean isOrphan(File f) {
-//        if(f.isDirectory() && f.getList().size() == 0){
-//            return false;
-//        }
-        for (File f1 : f.getList()) {
-            if (f1.getStatus() != Status.ORPHAN) {
-                return false;
+        if (f.getList().size() > 0) {
+            for (File f1 : f.getList()) {
+                if (f1.getStatus() != Status.ORPHAN) {
+                    return false;
+                }
             }
+        } else {
+            return false;
         }
         return true;
     }
@@ -105,23 +123,29 @@ public class Directory extends File {
 //        Directory f = (Directory)f1;
 //        return f.isPartialSame(f2);
 //    }
-    
-    private boolean isPartialSame(File f) {
-        if (this.getStatus() == Status.PARTIAL_SAME) {
-            return true;
-        }
-        if (f.getList().size() > 1) {
-            Status s = f.getList().get(0).getStatus();
-            for (File f1 : f.getList()) {
-                if (f1.getStatus() != s) {
-                    return true;
+    @Override
+    public void compare(File f1, File f2) {
+        set_all_status_orphan(f1);
+        set_all_status_orphan(f2);
+        compare(f2);
+    }
+
+    @Override
+    public void compare(File f) {
+        if (this.isDirectory() && f.isDirectory()) {
+            for (File f3 : this.getList()) {
+                for (File f4 : f.getList()) {
+                    if (f3.getName().compareTo(f4.getName()) == 0) {
+                        f3.compare(f4);
+                    }
                 }
             }
         }
-        return false;
+        check_and_setStatus(f);
     }
 
-    private void check_and_setStatus(File f) {
+    @Override
+    public void check_and_setStatus(File f) {
         if (this.isDirectory() && f.isDirectory()) {
             if (this.isSame(f)) {
                 this.set_status(Status.SAME);
@@ -134,37 +158,13 @@ public class Directory extends File {
                     this.set_status(Status.OLDER);
                     f.set_status(Status.NEWER);
                 } else {
-                    if (isOrphan(this)) {
-                        this.set_status(Status.ORPHAN);
-                    } else if (isPartialSame(this)) {
+                    if (this.isPartialSame(f)) {
                         this.set_status(Status.PARTIAL_SAME);
-                    }
-                    if (isOrphan(f)) {
-                        f.set_status(Status.ORPHAN);
-//                  } else if (isPartialSame(f2, f1)) {
-                    } else if (isPartialSame(f)) {
                         f.set_status(Status.PARTIAL_SAME);
                     }
                 }
             }
-        } 
-        if (!this.isDirectory() && this.getStatus() == null) 
-            this.set_status(Status.ORPHAN);
-        if (!f.isDirectory() && f.getStatus() == null) 
-            f.set_status(Status.ORPHAN);
-        
-    }
-
-    @Override
-    public void compare(File f) {
-        if (this.isDirectory() && f.isDirectory() ) {
-            for (File f3 : this.getList()) {
-                for (File f4 : f.getList()) {
-                        f3.compare(f4);
-                }
-            }
         }
-       check_and_setStatus(f);
     }
 
     @Override
@@ -189,10 +189,5 @@ public class Directory extends File {
         }
         return res.toString();
     }
-
-//    public static void main(String[] args) throws IOException {
-//        FacadeECompare fe = new FacadeECompare("TestBC", "RootBC_Left", "RootBC_Right");
-//        fe.compare();
-//    }
 
 }
