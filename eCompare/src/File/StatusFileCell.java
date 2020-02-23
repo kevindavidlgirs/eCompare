@@ -13,7 +13,7 @@ public class StatusFileCell extends FileCell{
 
     @Override
     String texte(File elem) {
-        return  (elem.getPath().getParent().getFileName().toString().equals("TestBC")) ? "" :" "+elem.getStatus();
+        return  (elem.getPath().getParent().getFileName().toString().equals("TestBC")) ? null :" "+elem.getStatus();
     }
     
 }

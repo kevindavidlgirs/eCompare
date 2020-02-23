@@ -11,10 +11,12 @@ package File;
  */
 public class NameFileCell extends FileCell{
 
-
     @Override
     String texte(File elem) {
-        return elem.getName();
+            setText(null);
+            graphicProperty().unbind();
+            setGraphic(null);
+        return  (elem.getPath().getParent().getFileName().toString().equals("TestBC")) ? null :" "+elem.getName();
     }
     
 }

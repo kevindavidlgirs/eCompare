@@ -12,27 +12,28 @@ import javafx.scene.control.cell.TextFieldTreeTableCell;
  * @author kevin
  */
 public abstract class FileCell extends TextFieldTreeTableCell<File, File> {
-    
+
     private static final String CSSPATH = "File/cssView.css";
-    
-    public FileCell(){
+
+    public FileCell() {
         getStylesheets().add(CSSPATH);
     }
-    
+
     @Override
     public void updateItem(File elem, boolean isEmpty) {
         super.updateItem(elem, isEmpty);
-        if (elem == null) {
+        if (elem == null || isEmpty) {
+            
             return;
         }
+        
         this.setText(texte(elem));
-        this.getStyleClass().set(0, elem.getStatus() == Status.ORPHAN ? "ORPHAN" 
-                : elem.getStatus() == Status.SAME ? "SAME" 
-                : elem.getStatus() == Status.PARTIAL_SAME ? "PARTIAL_SAME" 
+        this.getStyleClass().set(0, elem.getStatus() == Status.ORPHAN ? "ORPHAN"
+                : elem.getStatus() == Status.SAME ? "SAME"
+                : elem.getStatus() == Status.PARTIAL_SAME ? "PARTIAL_SAME"
                 : elem.getStatus() == Status.NEWER ? "NEWER" : "OLDER");
     }
-    
+
     abstract String texte(File elem);
 
-    
 }

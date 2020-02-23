@@ -9,6 +9,7 @@ import java.io.IOException;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.EventType;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -35,7 +36,12 @@ public class Program extends Application {
 
         TreeTableView treeTableViewLeft = new TreeTableView(makeTreeRoot(fe.get_compared_left_struct_file()));
         TreeTableView treeTableViewRight = new TreeTableView(makeTreeRoot(fe.get_compared_right_struct_file()));
-
+        
+        treeTableViewLeft.setRoot(makeTreeRoot(fe.get_compared_left_struct_file()));
+        treeTableViewRight.setRoot(makeTreeRoot(fe.get_compared_right_struct_file()));
+        treeTableViewLeft.setShowRoot(false);
+        treeTableViewRight.setShowRoot(false);
+        
         //CREATION D'UNE METHODE OU CLASS POUR LES DEUX TREETABLECOLUMN SUIVANTS
         TreeTableColumn<File, File> nameCol = new TreeTableColumn<>("Name"),
                 typeCol = new TreeTableColumn<>("Type"),
@@ -134,13 +140,14 @@ public class Program extends Application {
 
         TreeItem<File> res = new TreeItem<>(root);
         res.setExpanded(true);
-
+        
         if (root.isDirectory()) {
+            
             root.getList().forEach(se -> {
                 res.getChildren().add(makeTreeRoot(se));
             });
         }
-
+        
         return res;
     }
 
