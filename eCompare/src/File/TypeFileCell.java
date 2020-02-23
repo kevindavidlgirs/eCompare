@@ -13,6 +13,7 @@ public class TypeFileCell extends FileCell{
 
     @Override
     String texte(File elem) {
-        return elem.isDirectory() ? "D" : "F";
+        String D_or_F = elem.isDirectory() ? "D" : "F";
+        return  (elem.getPath().getParent().getFileName().toString().equals("TestBC")) ? "" :" "+D_or_F;
     }   
 }

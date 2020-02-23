@@ -13,7 +13,7 @@ public class SizeFileCell extends FileCell{
 
     @Override
     String texte(File elem) {
-        return ""+elem.getSize();
+        return  (elem.getPath().getParent().getFileName().toString().equals("TestBC")) ? "" :" "+elem.getSize();
     }
     
 }

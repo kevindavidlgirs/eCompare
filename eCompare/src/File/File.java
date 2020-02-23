@@ -27,7 +27,7 @@ public abstract class File {
         this.size = size;
         this.path = path;
     }
-
+    
     public String getName() {
         return this.name;
     }

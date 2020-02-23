@@ -134,13 +134,13 @@ public class Program extends Application {
 
         TreeItem<File> res = new TreeItem<>(root);
         res.setExpanded(true);
-        
+
         if (root.isDirectory()) {
             root.getList().forEach(se -> {
                 res.getChildren().add(makeTreeRoot(se));
             });
         }
-        
+
         return res;
     }
 

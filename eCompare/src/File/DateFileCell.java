@@ -15,7 +15,8 @@ public class DateFileCell extends FileCell{
 
     @Override
     String texte(File elem) {
-        return ""+elem.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+         return  (elem.getPath().getParent().getFileName().toString().equals("TestBC")) ? "" :" "+
+                 elem.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
     
 }
