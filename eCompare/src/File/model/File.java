@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package File;
+package File.model;
 
 import java.nio.file.Path;
 import java.time.LocalDateTime;
@@ -27,7 +27,7 @@ public abstract class File {
         this.size = size;
         this.path = path;
     }
-
+    
     public String getName() {
         return this.name;
     }
@@ -66,11 +66,23 @@ public abstract class File {
     }
 
     public abstract boolean isDirectory();
+    
+    public abstract boolean isSame(File f1);
+        
+    public abstract boolean isOrphan(File f);
+    
+    public abstract boolean isNewer(File f);
 
     public abstract void addFile(File f);
 
+    public abstract void compare(File f1, File f2);
+    
     public abstract void compare(File f);
-
+    
     public abstract List<File> getList();
+    
+    public abstract void check_and_setStatus(File f);
+
+    
 
 }

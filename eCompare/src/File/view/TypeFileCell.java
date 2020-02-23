@@ -3,14 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package File;
+package File.view;
+
+import File.model.File;
 
 /**
  *
  * @author kevin
  */
-public enum Status {
+public class TypeFileCell extends FileCell{
 
-    ORPHAN, SAME, NEWER, OLDER, PARTIAL_SAME
+    @Override
+    String texte(File elem) {
+        return elem.isDirectory() ? "D" : "F";
+    }   
 
 }
