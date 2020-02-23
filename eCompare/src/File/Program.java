@@ -11,15 +11,19 @@ import static javafx.application.Application.launch;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.event.EventType;
 import javafx.geometry.Insets;
-import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
 /**
@@ -111,28 +115,55 @@ public class Program extends Application {
         treeTableViewLeft.getColumns().setAll(nameCol, typeCol, dateModifCol, sizeCol, statusCol);
         treeTableViewRight.getColumns().setAll(nameCol1, typeCol1, dateModifCol1, sizeCol1, statusCol1);
 
-        Group root = new Group();
-        BorderPane mainContainer = new BorderPane();
-        StackPane leftPane = new StackPane();
-        StackPane rightPane = new StackPane();
+        BorderPane root = new BorderPane();
+        VBox vbRight = new VBox();
+        VBox vbLeft = new VBox();
+        VBox footer = new VBox();
+        
+        vbRight.setPadding(new Insets(3));
+        vbLeft.setPadding(new Insets(3));
+        vbRight.setPrefWidth(600);
+        vbLeft.setPrefWidth(600);
+        footer.setPrefWidth(1200);
 
-        leftPane.getChildren().add(treeTableViewLeft);
-        rightPane.getChildren().add(treeTableViewRight);
+        Text labelTxtLeft = new Text(fe.get_compared_left_struct_file().getPath().toAbsolutePath().toString());
+        Text labelTxtRight = new Text(fe.get_compared_right_struct_file().getPath().toAbsolutePath().toString());
+        labelTxtLeft.setStyle("-fx-font-weight: bold");
+        labelTxtRight.setStyle("-fx-font-weight: bold");
+        
+        /*
+            NE FONCTIONNE PAS.
+            labelTxtRight.setTextAlignment(TextAlignment.CENTER);
+            labelTxtLeft.setTextAlignment(TextAlignment.CENTER);
+        */
+        
+        Text ORPHAN = new Text("ORPHAN   ");
+        Text SAME = new Text("SAME   ");
+        Text PARTIAL_SAME = new Text("PARTIAL_SAME   ");
+        Text NEWER = new Text("NEWER   ");
+        Text OLDER = new Text("OLDER");
 
-        leftPane.setPrefSize(600, 550);
-        rightPane.setPrefSize(600, 550);
+        ORPHAN.setFill(Color.BLUEVIOLET);
+        SAME.setFill(Color.GREEN);
+        PARTIAL_SAME.setFill(Color.ORANGE);
+        NEWER.setFill(Color.RED);
+        OLDER.setFill(Color.BROWN);
 
-        leftPane.setPadding(new Insets(5, 5, 5, 5));
-        rightPane.setPadding(new Insets(5, 5, 5, 5));
+        TextFlow footerStatus = new TextFlow();
+        footerStatus.getChildren().addAll(ORPHAN, SAME, PARTIAL_SAME, NEWER, OLDER);
+        footerStatus.setTextAlignment(TextAlignment.CENTER);
+        footerStatus.setPadding(new Insets(10));
 
-        mainContainer.setLeft(leftPane);
-        mainContainer.setRight(rightPane);
+        vbLeft.getChildren().addAll(labelTxtLeft, treeTableViewLeft);
+        vbRight.getChildren().addAll(labelTxtRight, treeTableViewRight);
+        root.setLeft(vbLeft);
+        root.setRight(vbRight);
+        root.setBottom(footerStatus);
 
-        Scene scene = new Scene(root, 1200, 550);
+        Scene scene = new Scene(root);
 
         primaryStage.setTitle("eCompare");
         primaryStage.setScene(scene);
-        root.getChildren().add(mainContainer);
         primaryStage.show();
     }
 
