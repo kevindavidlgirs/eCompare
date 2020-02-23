@@ -11,7 +11,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 /**
  *
@@ -24,7 +26,10 @@ public class FileBuilder {
         LocalDateTime ldt = attrs.lastModifiedTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().withNano(0);//withNano pour enlever les millisecondes
         File result;
         if (Files.isDirectory(path)) {
-            result = new Directory(path.getFileName().toString(), ldt, attrs.size(), path.toAbsolutePath().toAbsolutePath());
+            
+            LocalDateTime dldt = lastModificationTime(path);
+            result = new Directory(path.getFileName().toString(), dldt, attrs.size(), path.toAbsolutePath().toAbsolutePath());
+            
             try (DirectoryStream<Path> dir = Files.newDirectoryStream(path)) {
                 for (Path p : dir) {
                     result.addFile(make(p));
@@ -35,5 +40,34 @@ public class FileBuilder {
         }
         return result;
     }
-
+    
+    static LocalDateTime lastModificationTime(Path path) throws IOException {
+        BasicFileAttributes attrs = Files.readAttributes(path, BasicFileAttributes.class);
+        LocalDateTime result = attrs.lastModifiedTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().withNano(0);
+        if (Files.isDirectory(path)) {
+            // Par defaut le lastModifiedTime est pour les repertoires non vide la date Unix. Ceci afin de faire fonctionner isAfter
+            //dans le cas ou le directory serait plus récent que les éléments qu'il contient.
+            if(!isDirEmpty(path)){
+                result = LocalDateTime.of(1900, Month.JANUARY, 1, 0, 0, 0);
+            }
+            
+            try (DirectoryStream<Path> dir = Files.newDirectoryStream(path)) {
+                for (Path p : dir) {
+                    LocalDateTime tmp = lastModificationTime(p);
+                    
+                    if (tmp.isAfter(result)) {
+                        result = tmp;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+    
+    //Permet de checker si un directory est vide.
+    private static boolean isDirEmpty(final Path directory) throws IOException {
+        try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(directory)) {
+            return !dirStream.iterator().hasNext();
+        }
+    }
 }
