@@ -20,12 +20,17 @@ public abstract class File {
     private final long size;
     private final Path path;
     private Status status;
+    private Boolean selected;
 
     public File(String name, LocalDateTime date, long size, Path path) {
         this.name = name;
         this.date = date;
         this.size = size;
         this.path = path;
+    }
+    
+    public boolean getSelected(){
+        return selected;
     }
     
     public String getName() {
@@ -51,7 +56,11 @@ public abstract class File {
     public void set_status(Status s) {
         this.status = s;
     }
-
+    
+    public void set_selected(boolean selected){
+        this.selected = selected;
+    }
+    
     protected String displayFormat(int offset) {
         String res = "";
         for (int i = 0; i < offset; ++i) {
