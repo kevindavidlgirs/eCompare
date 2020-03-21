@@ -9,7 +9,7 @@ import File.model.File;
 
 /**
  *
- * @author kevin
+ * @author k)^;,  evin
  */
 public class TypeFileCell extends FileCell{
 

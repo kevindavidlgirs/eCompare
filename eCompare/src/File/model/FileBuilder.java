@@ -24,15 +24,13 @@ import java.time.ZoneId;
  */
 public class FileBuilder {
 
-    public static File make(Path path) throws IOException, FileNotFoundException {
+    public static File make(Path path) throws IOException{
         BasicFileAttributes attrs = Files.readAttributes(path, BasicFileAttributes.class);
         LocalDateTime ldt = attrs.lastModifiedTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().withNano(0);//withNano pour enlever les millisecondes
         File result;
         if (Files.isDirectory(path)) {
-            
             LocalDateTime dldt = lastModificationTime(path);
             result = new Directory(path.getFileName().toString(), dldt, attrs.size(), path.toAbsolutePath().toAbsolutePath());
-            
             try (DirectoryStream<Path> dir = Files.newDirectoryStream(path)) {
                 for (Path p : dir) {
                     result.addFile(make(p));

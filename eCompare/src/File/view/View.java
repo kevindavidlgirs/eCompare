@@ -29,14 +29,16 @@ public class View{
     private final CompareBoxView left_vbstruct_folder;
     private final CompareBoxView right_vbstruct_folder;
     private final ButtonsBoxView buttons_view;
+
+
     public View(Stage primaryStage, ViewModel vm) {
-        
+
         BorderPane root = new BorderPane();
-        
         buttons_view = new ButtonsBoxView(vm);
-        
-        left_vbstruct_folder = new CompareBoxView(vm.get_left_treeItem());
-        right_vbstruct_folder = new CompareBoxView(vm.get_right_treeItem());
+
+        //Nous devrions changer le paramètre name. (trouver un moyen plus propre?)
+        left_vbstruct_folder = new CompareBoxView(vm.get_left_treeItem(), primaryStage, vm, "left");
+        right_vbstruct_folder = new CompareBoxView(vm.get_right_treeItem(), primaryStage, vm, "right");
         
         Text ORPHAN = new Text("ORPHAN   ");
         Text SAME = new Text("SAME   ");

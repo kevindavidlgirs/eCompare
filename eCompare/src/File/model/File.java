@@ -20,7 +20,7 @@ public abstract class File {
     private final long size;
     private final Path path;
     private Status status;
-    private Boolean selected;
+    private Boolean selected = true;
 
     public File(String name, LocalDateTime date, long size, Path path) {
         this.name = name;
@@ -60,6 +60,8 @@ public abstract class File {
     public void set_selected(boolean selected){
         this.selected = selected;
     }
+
+    public boolean isSelected(){return selected;}
     
     protected String displayFormat(int offset) {
         String res = "";
@@ -91,7 +93,4 @@ public abstract class File {
     public abstract List<File> getList();
     
     public abstract void check_and_setStatus(File f);
-
-    
-
 }

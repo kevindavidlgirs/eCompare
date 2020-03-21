@@ -19,24 +19,15 @@ import File.viewModel.ViewModel;
  * @author kevin
  */
 
-// J'ai factorisé au maximum le code, afin de le rendre lisible et l'adapter à l'architecture MVVM.
-// J'ai aussi avancé sur le model et la viewModel.
-// Je te laisse regarder ce que j'ai fait.
-// On se capte en fin de semaine, pour faire le point.
-// Si tu veux me laisser un morceau pour finir, je suis OK Gars !!
-
-// Enjoy!!
-
 public class Main extends Application {
 
+    //Je me suis dit que la facade pouvait être à cet endroit à voir dans l'itération 4..
     @Override
-    public void start(Stage primaryStage) throws Exception, FileNotFoundException {
-        Model model = new Model("TestBC", "RootBC_Left", "RootBC_Right");
-        ViewModel viewmodel = new ViewModel(model);
-        View view = new View(primaryStage, viewmodel);
+    public void start(Stage primaryStage) throws Exception {
+        FacadeECompare fe = new FacadeECompare(primaryStage, "eCompare/TestBC/RootBC_Left", "eCompare/TestBC/RootBC_Right");
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         launch(args);
     }
 }
