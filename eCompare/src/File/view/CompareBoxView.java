@@ -21,6 +21,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 
 
 /**
@@ -33,6 +35,7 @@ public class CompareBoxView extends VBox{
     private final TreeTableColumn<File, File> dateModifCol = new TreeTableColumn<>("Date modif");
     private final TreeTableColumn<File, File> sizeCol = new TreeTableColumn<>("Size");
     private final TreeTableColumn<File, File> statusCol = new TreeTableColumn<>("Status");
+    private final BooleanProperty struct_folders_has_changed = new SimpleBooleanProperty(false);
     private final Button directoryButton = new Button();
     private TreeTableView treeTableViews;
     private Text labelPathText;
@@ -41,6 +44,8 @@ public class CompareBoxView extends VBox{
 
     //A changer il me semble que ce n'est pas très propre car item et vm sont liés.
     public CompareBoxView(TreeItem<File> item, Stage primaryStage, ViewModel vm, String name){
+        struct_folders_has_changed.bindBidirectional(vm.struct_folders_has_changed());
+        
         createTreeTableView(item, name);
         createCells();
         configTreeTableView();
@@ -59,6 +64,17 @@ public class CompareBoxView extends VBox{
                     treeTableViews.setRoot(vm.get_right_treeItem());
             } catch (IOException ex) {
                 ex.printStackTrace();
+            }
+        });
+        
+        struct_folders_has_changed.addListener((observable, oldValue, newValue)
+        -> {
+                if(newValue){
+                    if(name.equals("left")) {
+                        treeTableViews.setRoot(vm.get_left_treeItem());
+                    }else{
+                        treeTableViews.setRoot(vm.get_right_treeItem());
+                    }
             }
         });
     }

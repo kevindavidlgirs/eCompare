@@ -175,6 +175,7 @@ public class Directory extends File {
                     .append(((this.isDirectory()) ? " D " : " F "))
                     .append(getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")))
                     .append(" " + this.getSize() + " ")
+                    .append(((this.getSelected()) ? " TRUE " : " FALSE ") + " ")
                     .append(getStatus() + " ").append("\n");
         }
 

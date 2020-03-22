@@ -20,6 +20,9 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import File.viewModel.ViewModel;
+import java.util.Observable;
+import javafx.collections.ObservableList;
+import javafx.event.EventType;
 
 /**
  *
@@ -35,10 +38,10 @@ public class View{
 
         BorderPane root = new BorderPane();
         buttons_view = new ButtonsBoxView(vm);
-
-        //Nous devrions changer le paramètre name. (trouver un moyen plus propre?)
+        
         left_vbstruct_folder = new CompareBoxView(vm.get_left_treeItem(), primaryStage, vm, "left");
         right_vbstruct_folder = new CompareBoxView(vm.get_right_treeItem(), primaryStage, vm, "right");
+        
         
         Text ORPHAN = new Text("ORPHAN   ");
         Text SAME = new Text("SAME   ");

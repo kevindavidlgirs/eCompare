@@ -31,6 +31,8 @@ public class ButtonsBoxView extends HBox{
     }
     
     public ButtonsBoxView(ViewModel vm){
+        newer_right_button.setToggleGroup(newer_left_right);
+        newer_left_button.setToggleGroup(newer_left_right);
         setSpacing(10);
         setPadding(new Insets(10));
         setAlignment(Pos.CENTER);
@@ -43,13 +45,12 @@ public class ButtonsBoxView extends HBox{
         
         newer_right_button.setOnAction(e -> {
             vm.set_selected_items(newer_right_button.getText(), newer_right_button.isSelected());
-            newer_right_button.setToggleGroup(newer_left_right);
+            //newer_right_button.setToggleGroup(newer_left_right);
 
         });
         
         newer_left_button.setOnAction(e -> {
-            vm.set_selected_items(newer_left_button.getText(), newer_left_button.isSelected());
-            newer_left_button.setToggleGroup(newer_left_right);
+                vm.set_selected_items(newer_left_button.getText(), newer_left_button.isSelected());
        });
         
         orphans_button.setOnAction(e -> {

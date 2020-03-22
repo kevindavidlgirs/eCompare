@@ -16,8 +16,8 @@ import java.io.IOException;
  *
  * @author herve
  */
-
 public class ViewModel {
+
     private final Model model;
     private TreeItem<File> left_tree_item;
     private TreeItem<File> right_tree_item;
@@ -27,16 +27,19 @@ public class ViewModel {
     private final BooleanProperty orphans_button = new SimpleBooleanProperty(false);
     private final BooleanProperty same_button = new SimpleBooleanProperty(false);
     private final BooleanProperty folders_only = new SimpleBooleanProperty(false);
+    private final BooleanProperty struct_folders_has_changed = new SimpleBooleanProperty(false);
 
     public ViewModel(Model model) {
         this.model = model;
         left_tree_item = makeTreeRoot(model.get_left_struct_folder());
         right_tree_item = makeTreeRoot(model.get_right_struct_folder());
+        
     }
 
     public TreeItem<File> get_left_treeItem() {
         return left_tree_item;
     }
+
     public TreeItem<File> get_right_treeItem() {
         return right_tree_item;
     }
@@ -86,6 +89,10 @@ public class ViewModel {
     public BooleanProperty folders_only() {
         return folders_only;
     }
+    
+    public BooleanProperty struct_folders_has_changed() {
+        return struct_folders_has_changed;
+    }
 
     private void set_all_buttons_status_false() {
         newer_left_button.setValue(false);
@@ -97,23 +104,28 @@ public class ViewModel {
 
     public void set_selected_items(String status, Boolean buttons) {
         if (buttons && status.compareTo("All") != 0) {
+            System.out.println(buttons.toString() + " " + status.toString());
             add_status_to_edit(status);
             all_button.setValue(false);
+            struct_folders_has_changed.setValue(true);
         } else if(!buttons){
             remove_status_to_edit(status);
             if(get_nb_status() == 0){
                 all_button.setValue(true);
                 model.clear_statusList();
                 add_status_to_edit("All");
+                struct_folders_has_changed.setValue(true);
             }
         } else if(status.compareTo("All") == 0 || get_nb_status() == 0) {
             add_status_to_edit(status);
             model.clear_statusList();
             all_button.setValue(true);
             set_all_buttons_status_false();
+            struct_folders_has_changed.setValue(true);
         }
         left_tree_item = makeTreeRoot(model.get_left_struct_folder());
         right_tree_item = makeTreeRoot(model.get_right_struct_folder());
+        struct_folders_has_changed.setValue(false);
     }
 
     private TreeItem<File> makeTreeRoot(File root) {
@@ -122,7 +134,7 @@ public class ViewModel {
         if (root.isDirectory()) {
             root.getList().forEach(se -> {
                 //Ajout de cette condition pour la reconstuction des TreeItem après selection d'un bouton
-                if(se.isSelected()){
+                if (se.isSelected()) {
                     res.getChildren().add(makeTreeRoot(se));
                 }
             });

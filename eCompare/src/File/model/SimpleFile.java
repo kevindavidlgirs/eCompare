@@ -74,6 +74,7 @@ public class SimpleFile extends File {
                 + ((this.isDirectory()) ? " D " : " F ")
                 + getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")) + " "
                 + getSize() + " "
+                + ((getSelected()) ? "TRUE" : "FALSE") + " "
                 + getStatus() + "\n";
     }
 
