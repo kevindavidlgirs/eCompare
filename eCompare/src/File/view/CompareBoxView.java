@@ -53,6 +53,8 @@ public class CompareBoxView extends VBox{
         createDirectorychooser();
 
         label_paht_and_dir.getChildren().addAll(labelPathText, directoryButton);
+        label_paht_and_dir.setMargin(directoryButton,new Insets(0,0,10,10));
+        label_paht_and_dir.setMargin(labelPathText,new Insets(10,0,0,0));
         
         getChildren().addAll(label_paht_and_dir,treeTableViews);
         
@@ -84,7 +86,7 @@ public class CompareBoxView extends VBox{
 
     private void createDirectorychooser() {
         Image img = new Image(String.valueOf(getClass().getResource("img/folder.png")));
-        directoryButton.setGraphic(new ImageView(img));
+        directoryButton.setGraphic(new ImageView(img)); 
     }
 
     private void createLabelPath(TreeItem<File> item) {
