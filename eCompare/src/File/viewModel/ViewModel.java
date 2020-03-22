@@ -19,8 +19,10 @@ import java.io.IOException;
 public class ViewModel {
 
     private final Model model;
+    //Nous pensions à faire de ces "TreeItem" des "observables" et ajouter des écouteurs depuis la "view"...
     private TreeItem<File> left_tree_item;
     private TreeItem<File> right_tree_item;
+    //Nous pensions à faire de ces "TreeItem" des "observables" et ajouter des écouteurs depuis la "view"...
     private final BooleanProperty all_button = new SimpleBooleanProperty(true);
     private final BooleanProperty newer_left_button = new SimpleBooleanProperty(false);
     private final BooleanProperty newer_right_button = new SimpleBooleanProperty(false);
@@ -33,7 +35,6 @@ public class ViewModel {
         this.model = model;
         left_tree_item = makeTreeRoot(model.get_left_struct_folder());
         right_tree_item = makeTreeRoot(model.get_right_struct_folder());
-        
     }
 
     public TreeItem<File> get_left_treeItem() {
@@ -104,13 +105,13 @@ public class ViewModel {
 
     public void set_selected_items(String status, Boolean buttons) {
         if (buttons && status.compareTo("All") != 0) {
-            System.out.println(buttons.toString() + " " + status.toString());
             add_status_to_edit(status);
             all_button.setValue(false);
             struct_folders_has_changed.setValue(true);
         } else if(!buttons){
             System.out.println(buttons.toString() + " " + status.toString());
             remove_status_to_edit(status);
+            struct_folders_has_changed.setValue(true);
             if(get_nb_status() == 0){
                 all_button.setValue(true);
                 model.clear_statusList();
@@ -134,7 +135,6 @@ public class ViewModel {
         res.setExpanded(true);
         if (root.isDirectory()) {
             root.getList().forEach(se -> {
-                //Ajout de cette condition pour la reconstuction des TreeItem après selection d'un bouton
                 if (se.isSelected()) {
                     res.getChildren().add(makeTreeRoot(se));
                 }

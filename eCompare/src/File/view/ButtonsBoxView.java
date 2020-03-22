@@ -45,12 +45,10 @@ public class ButtonsBoxView extends HBox{
         
         newer_right_button.setOnAction(e -> {
             vm.set_selected_items(newer_right_button.getText(), newer_right_button.isSelected());
-            //newer_right_button.setToggleGroup(newer_left_right);
-
         });
         
         newer_left_button.setOnAction(e -> {
-                vm.set_selected_items(newer_left_button.getText(), newer_left_button.isSelected());
+            vm.set_selected_items(newer_left_button.getText(), newer_left_button.isSelected());
        });
         
         orphans_button.setOnAction(e -> {
