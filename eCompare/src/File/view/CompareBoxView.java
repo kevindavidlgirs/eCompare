@@ -23,6 +23,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.scene.layout.HBox;
 
 
 /**
@@ -39,6 +40,7 @@ public class CompareBoxView extends VBox{
     private final Button directoryButton = new Button();
     private TreeTableView treeTableViews;
     private Text labelPathText;
+    HBox label_paht_and_dir = new HBox();
     //A changer il me semble que ce n'est pas très propre.
     private String name;
 
@@ -50,8 +52,10 @@ public class CompareBoxView extends VBox{
         createLabelPath(item);
         createDirectorychooser();
 
-        getChildren().addAll(labelPathText, directoryButton, treeTableViews);
-
+        label_paht_and_dir.getChildren().addAll(labelPathText, directoryButton);
+        
+        getChildren().addAll(label_paht_and_dir,treeTableViews);
+        
         directoryButton.setOnAction(e -> {
             labelPathText.setText(DirChooser.selectDirectory(primaryStage));
             try {
@@ -91,7 +95,7 @@ public class CompareBoxView extends VBox{
     private void configTreeTableView() {
         treeTableViews.getColumns().setAll(nameCol, typeCol, dateModifCol, sizeCol, statusCol);
         setPadding(new Insets(3));
-        setPrefWidth(600);
+        setPrefWidth(750);
     }
 
     private void createCells() {
