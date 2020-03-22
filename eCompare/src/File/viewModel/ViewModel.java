@@ -109,6 +109,7 @@ public class ViewModel {
             all_button.setValue(false);
             struct_folders_has_changed.setValue(true);
         } else if(!buttons){
+            System.out.println(buttons.toString() + " " + status.toString());
             remove_status_to_edit(status);
             if(get_nb_status() == 0){
                 all_button.setValue(true);
