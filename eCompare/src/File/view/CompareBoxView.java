@@ -44,8 +44,6 @@ public class CompareBoxView extends VBox{
 
     //A changer il me semble que ce n'est pas très propre car item et vm sont liés.
     public CompareBoxView(TreeItem<File> item, Stage primaryStage, ViewModel vm, String name){
-        struct_folders_has_changed.bindBidirectional(vm.struct_folders_has_changed());
-        
         createTreeTableView(item, name);
         createCells();
         configTreeTableView();
@@ -66,10 +64,11 @@ public class CompareBoxView extends VBox{
                 ex.printStackTrace();
             }
         });
-        
+
+        struct_folders_has_changed.bindBidirectional(vm.struct_folders_has_changed());
         struct_folders_has_changed.addListener((observable, oldValue, newValue)
         -> {
-                if(newValue){
+                if(!newValue){
                     if(name.equals("left")) {
                         treeTableViews.setRoot(vm.get_left_treeItem());
                     }else{
