@@ -42,7 +42,6 @@ public class View{
         left_vbstruct_folder = new CompareBoxView(vm.get_left_treeItem(), primaryStage, vm, "left");
         right_vbstruct_folder = new CompareBoxView(vm.get_right_treeItem(), primaryStage, vm, "right");
         
-        
         Text ORPHAN = new Text("ORPHAN   ");
         Text SAME = new Text("SAME   ");
         Text PARTIAL_SAME = new Text("PARTIAL_SAME   ");

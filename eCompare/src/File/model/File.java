@@ -29,9 +29,7 @@ public abstract class File {
         this.path = path;
     }
     
-    public boolean getSelected(){
-        return selected;
-    }
+    public boolean getSelected(){ return selected; }
     
     public String getName() {
         return this.name;

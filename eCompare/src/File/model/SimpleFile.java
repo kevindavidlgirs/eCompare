@@ -16,8 +16,26 @@ import java.util.List;
  */
 public class SimpleFile extends File {
 
-    public SimpleFile(String name, LocalDateTime date, long size, Path path) {
+    private String FileContents;
+
+    //Utiliser par un fichier texte. Si ce n'est pas un fichier texte alors utilisé directement dans le FileBuilder
+    public SimpleFile(String name, LocalDateTime date, long size, Path path){
         super(name, date, size, path);
+    }
+
+    //Si c'est un fichier texte
+    public SimpleFile(String name, LocalDateTime date, long size, Path path, String FileContents) {
+        this(name, date, size, path);
+        //A voir si cette condition est nécessaire !
+        if(FileContents.length() == 0){
+            this.FileContents = "";
+        }else{
+            this.FileContents = FileContents;
+        }
+    }
+
+    public String getFileContents(){
+        return FileContents;
     }
 
     @Override
@@ -75,6 +93,7 @@ public class SimpleFile extends File {
                 + getDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")) + " "
                 + getSize() + " "
                 + ((getSelected()) ? "TRUE" : "FALSE") + " "
+                + getFileContents() + " "
                 + getStatus() + "\n";
     }
 
