@@ -45,7 +45,7 @@ public class ViewModel {
 
     public ViewModel(Model model) {
         this.model = model;
-        editor = new EditVM(this);
+        editor = new EditVM(this,this.model);
         left_tree_item = makeTreeRoot(model.get_left_struct_folder());
         right_tree_item = makeTreeRoot(model.get_right_struct_folder());
         set_leftRoot();
@@ -60,11 +60,11 @@ public class ViewModel {
         });
     }
     
-    private void set_leftRoot() {
-        root_left.setValue(left_tree_item);
+    public void set_leftRoot() {
+        root_left.setValue(makeTreeRoot(model.get_left_struct_folder()));
     }
-    private void set_rightRoot() {
-        root_right.setValue(right_tree_item);
+    public void set_rightRoot() {
+        root_right.setValue(makeTreeRoot(model.get_right_struct_folder()));
     }
     
     public ObjectProperty<TreeItem<File>> root_left_property() {
@@ -86,10 +86,12 @@ public class ViewModel {
     public void set_treeItem(String path, String name) throws IOException {
         if (name.equals("left")) {
             model.set_left_struct_folder(path);
-            left_tree_item = makeTreeRoot(model.get_left_struct_folder());
+            set_leftRoot();
+            //left_tree_item = makeTreeRoot(model.get_left_struct_folder());
         } else {
             model.set_right_struct_folder(path);
-            right_tree_item = makeTreeRoot(model.get_right_struct_folder());
+            set_rightRoot();
+            //right_tree_item = makeTreeRoot(model.get_right_struct_folder());
         }
     }
 
@@ -163,8 +165,10 @@ public class ViewModel {
             set_all_buttons_status_false();
             struct_folders_has_changed.setValue(true);
         }
-        left_tree_item = makeTreeRoot(model.get_left_struct_folder());
-        right_tree_item = makeTreeRoot(model.get_right_struct_folder());
+        set_leftRoot();
+        set_rightRoot();
+        //left_tree_item = makeTreeRoot(model.get_left_struct_folder());
+        //right_tree_item = makeTreeRoot(model.get_right_struct_folder());
         struct_folders_has_changed.setValue(false);
     }
 
@@ -190,7 +194,6 @@ public class ViewModel {
     }
     
     public void openSelectedFile() {
-        System.out.println("selected_file_property : "+selected_file_property.getValue().getName());
         if(!selected_file_property.getValue().isDirectory()){
             editor.set_selected_file_name(selected_file_property.getValue().getName());
             editor.setText(selected_file_property.getValue().getFileContents());

@@ -9,6 +9,9 @@ import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableStringValue;
 
 /**
  *
@@ -16,28 +19,33 @@ import java.util.List;
  */
 public class SimpleFile extends File {
 
-    private String FileContents;
+    private final SimpleStringProperty FileContents;
 
     //Utiliser par un fichier texte. Si ce n'est pas un fichier texte alors utilisé directement dans le FileBuilder
     public SimpleFile(String name, LocalDateTime date, long size, Path path){
         super(name, date, size, path);
+        this.FileContents = new SimpleStringProperty("");
     }
 
     //Si c'est un fichier texte
     public SimpleFile(String name, LocalDateTime date, long size, Path path, String FileContents) {
         this(name, date, size, path);
         //A voir si cette condition est nécessaire !
+        this.FileContents.setValue(FileContents);
+        /*
         if(FileContents.length() == 0){
             this.FileContents = "";
         }else{
-            this.FileContents = FileContents;
-        }
+            this.FileContentsnew = new SimpleStringProperty(FileContents);
+        }*/
     }
 
-    public String getFileContents(){
-        return FileContents;
+    public String getFileContents(){return FileContents.getValue();}
+    public ObservableStringValue FileContentsProperty() { return FileContents;}
+    
+    public void set_file_content(String content){
+        FileContents.setValue(content);
     }
-
     @Override
     public boolean isDirectory() {
         return false;

@@ -21,6 +21,7 @@ public class Model {
     public Model(String path1, String path2) throws IOException {
         file_structure_left = FileBuilder.make(Paths.get(path1).toRealPath());
         file_structure_right = FileBuilder.make(Paths.get(path2).toRealPath());
+
         file_structure_left.compare(file_structure_left, file_structure_right);
     }
 
@@ -165,8 +166,5 @@ public class Model {
             result = "D";
         }
         return result;
-    }
-    
-    public void update_items_size(File file) {
     }
 }

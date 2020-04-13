@@ -49,7 +49,7 @@ public class EditView extends Stage {
         });
         
         saveButton.setOnAction(e -> {
-            System.out.println("OOKOKO");
+            editVM.update();
         });
          
         Scene scene = new Scene(root, 600, 400);
