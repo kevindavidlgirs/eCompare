@@ -46,7 +46,7 @@ public abstract class File {
     public long getSize() {
         return this.size;
     }
-
+    
     public Path getPath() {
         return this.path;
     }
@@ -91,4 +91,8 @@ public abstract class File {
     public abstract List<File> getList();
     
     public abstract void check_and_setStatus(File f);
+
+    public Object concat(String __) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

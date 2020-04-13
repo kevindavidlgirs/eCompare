@@ -7,10 +7,17 @@ package File.viewModel;
 
 import File.model.Model;
 import File.model.File;
+import File.model.SimpleFile;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.TreeItem;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+
 
 /**
  *
@@ -30,13 +37,44 @@ public class ViewModel {
     private final BooleanProperty same_button = new SimpleBooleanProperty(false);
     private final BooleanProperty folders_only = new SimpleBooleanProperty(false);
     private final BooleanProperty struct_folders_has_changed = new SimpleBooleanProperty(false);
+    private final ObjectProperty<SimpleFile> selected_file_property = new SimpleObjectProperty<>();
+    private final ObjectProperty<TreeItem<File>> root_left = new SimpleObjectProperty<>();
+    private final ObjectProperty<TreeItem<File>> root_right = new SimpleObjectProperty<>();
+    
+    private final EditVM editor;
 
     public ViewModel(Model model) {
         this.model = model;
+        editor = new EditVM(this);
         left_tree_item = makeTreeRoot(model.get_left_struct_folder());
         right_tree_item = makeTreeRoot(model.get_right_struct_folder());
+        set_leftRoot();
+        set_rightRoot();
+       
+        struct_folders_has_changed.addListener((observable, oldValue, newValue)
+        -> {
+                if(!newValue){
+                    set_leftRoot();
+                    set_rightRoot();
+                }
+        });
     }
-
+    
+    private void set_leftRoot() {
+        root_left.setValue(left_tree_item);
+    }
+    private void set_rightRoot() {
+        root_right.setValue(right_tree_item);
+    }
+    
+    public ObjectProperty<TreeItem<File>> root_left_property() {
+        return root_left;
+    }
+    
+    public ObjectProperty<TreeItem<File>> root_right_property() {
+        return root_right;
+    }
+    
     public TreeItem<File> get_left_treeItem() {
         return left_tree_item;
     }
@@ -67,27 +105,27 @@ public class ViewModel {
         model.remove_status_to_edit(status);
     }
 
-    public BooleanProperty newer_left_button() {
+    public BooleanProperty newer_left_button_Property() {
         return newer_left_button;
     }
 
-    public BooleanProperty newer_right_button() {
+    public BooleanProperty newer_right_button_Property() {
         return newer_right_button;
     }
 
-    public BooleanProperty orphans_button() {
+    public BooleanProperty orphans_button_Property() {
         return orphans_button;
     }
 
-    public BooleanProperty same_button() {
+    public BooleanProperty same_button_Property() {
         return same_button;
     }
 
-    public BooleanProperty all_button() {
+    public BooleanProperty all_button_Property() {
         return all_button;
     }
 
-    public BooleanProperty folders_only() {
+    public BooleanProperty folders_only_Property() {
         return folders_only;
     }
     
@@ -141,5 +179,26 @@ public class ViewModel {
             });
         }
         return res;
+    }
+    
+    public ObjectProperty<SimpleFile> selected_file_property() {
+        return selected_file_property;
+    }
+    
+    public void set_selected_file(File file){
+        selected_file_property.setValue((SimpleFile) file);
+    }
+    
+    public void openSelectedFile() {
+        System.out.println("selected_file_property : "+selected_file_property.getValue().getName());
+        if(!selected_file_property.getValue().isDirectory()){
+            editor.set_selected_file_name(selected_file_property.getValue().getName());
+            editor.setText(selected_file_property.getValue().getFileContents());
+            editor.setVisible(true);
+        }
+    }
+
+    public EditVM getEditVM() {
+        return editor;
     }
 }

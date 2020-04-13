@@ -128,11 +128,11 @@ public class ButtonsBoxView extends HBox{
     }
 
     private void setBinding(ViewModel vm) {
-        all_button.selectedProperty().bindBidirectional(vm.all_button());
-        newer_right_button.selectedProperty().bindBidirectional(vm.newer_right_button());
-        newer_left_button.selectedProperty().bindBidirectional(vm.newer_left_button());
-        orphans_button.selectedProperty().bindBidirectional(vm.orphans_button());
-        same_button.selectedProperty().bindBidirectional(vm.same_button());
-        folders_only.selectedProperty().bindBidirectional(vm.folders_only());
+        all_button.selectedProperty().bindBidirectional(vm.all_button_Property());
+        newer_right_button.selectedProperty().bindBidirectional(vm.newer_right_button_Property());
+        newer_left_button.selectedProperty().bindBidirectional(vm.newer_left_button_Property());
+        orphans_button.selectedProperty().bindBidirectional(vm.orphans_button_Property());
+        same_button.selectedProperty().bindBidirectional(vm.same_button_Property());
+        folders_only.selectedProperty().bindBidirectional(vm.folders_only_Property());
     }
 }

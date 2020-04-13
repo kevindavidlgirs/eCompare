@@ -35,7 +35,8 @@ public class View{
 
 
     public View(Stage primaryStage, ViewModel vm) {
-
+        new EditView(primaryStage, vm.getEditVM());
+        
         BorderPane root = new BorderPane();
         buttons_view = new ButtonsBoxView(vm);
         

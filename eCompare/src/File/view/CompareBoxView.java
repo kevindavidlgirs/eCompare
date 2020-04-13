@@ -12,6 +12,7 @@ import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
 import javafx.scene.control.TreeItem;
 import File.model.File;
+import File.model.SimpleFile;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
@@ -22,6 +23,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.layout.HBox;
 
@@ -38,7 +40,7 @@ public class CompareBoxView extends VBox{
     private final TreeTableColumn<File, File> statusCol = new TreeTableColumn<>("Status");
     private final BooleanProperty struct_folders_has_changed = new SimpleBooleanProperty(false);
     private final Button directoryButton = new Button();
-    private TreeTableView treeTableViews;
+    private TreeTableView<File> treeTableViews;
     private Text labelPathText;
     HBox label_paht_and_dir = new HBox();
     //A changer il me semble que ce n'est pas très propre.
@@ -51,6 +53,8 @@ public class CompareBoxView extends VBox{
         configTreeTableView();
         createLabelPath(item);
         createDirectorychooser();
+        setBindingAndListeners(vm);
+        
 
         label_paht_and_dir.getChildren().addAll(labelPathText, directoryButton);
         label_paht_and_dir.setMargin(directoryButton,new Insets(0,0,10,10));
@@ -68,18 +72,6 @@ public class CompareBoxView extends VBox{
                     treeTableViews.setRoot(vm.get_right_treeItem());
             } catch (IOException ex) {
                 ex.printStackTrace();
-            }
-        });
-
-        struct_folders_has_changed.bindBidirectional(vm.struct_folders_has_changed());
-        struct_folders_has_changed.addListener((observable, oldValue, newValue)
-        -> {
-                if(!newValue){
-                    if(name.equals("left")) {
-                        treeTableViews.setRoot(vm.get_left_treeItem());
-                    }else{
-                        treeTableViews.setRoot(vm.get_right_treeItem());
-                    }
             }
         });
     }
@@ -133,5 +125,28 @@ public class CompareBoxView extends VBox{
         treeTableViews.setRoot(item);
         treeTableViews.setShowRoot(false);
         this.name = name;
+    }
+    
+    private void setBindingAndListeners(ViewModel vm) {
+        /** Ce bind peut pose des problème, en refusant de fonctionner chez moi. peut-être le feras tu fonctionner.
+         Du coup j'ai trouvé une solution temporaire de contournement : vm.set_selected_file().
+         **/
+        //vm.selected_file_property().bind(treeTableViews.getSelectionModel().selectedItemProperty()); 
+        struct_folders_has_changed.bindBidirectional(vm.struct_folders_has_changed());
+       
+       if(name.equals("left")) {
+            treeTableViews.rootProperty().bind(vm.root_left_property());
+        }else{
+            treeTableViews.rootProperty().bind(vm.root_right_property());
+        }
+        
+       
+        treeTableViews.setOnMousePressed(e -> {
+            // Solution de contournement du binding qui ne fonctionne pas chez moi, à enlever dès que sa fonctionne.
+            vm.set_selected_file(treeTableViews.getSelectionModel().selectedItemProperty().getValue().getValue());
+            if (e.getClickCount() == 2) {
+               vm.openSelectedFile();
+            }
+        });
     }
 }
