@@ -87,11 +87,9 @@ public class ViewModel {
         if (name.equals("left")) {
             model.set_left_struct_folder(path);
             set_leftRoot();
-            //left_tree_item = makeTreeRoot(model.get_left_struct_folder());
         } else {
             model.set_right_struct_folder(path);
             set_rightRoot();
-            //right_tree_item = makeTreeRoot(model.get_right_struct_folder());
         }
     }
 
@@ -167,8 +165,6 @@ public class ViewModel {
         }
         set_leftRoot();
         set_rightRoot();
-        //left_tree_item = makeTreeRoot(model.get_left_struct_folder());
-        //right_tree_item = makeTreeRoot(model.get_right_struct_folder());
         struct_folders_has_changed.setValue(false);
     }
 

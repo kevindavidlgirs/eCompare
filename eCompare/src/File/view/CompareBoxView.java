@@ -128,10 +128,7 @@ public class CompareBoxView extends VBox{
     }
     
     private void setBindingAndListeners(ViewModel vm) {
-        /** Ce bind peut pose des problème, en refusant de fonctionner chez moi. peut-être le feras tu fonctionner.
-         Du coup j'ai trouvé une solution temporaire de contournement : vm.set_selected_file().
-         **/
-        //vm.selected_file_property().bind(treeTableViews.getSelectionModel().selectedItemProperty()); 
+        //vm.selected_file_property().bind(treeTableViews.getSelectionModel().selectedItemProperty()); //Nous n'avons pas pu le faire fonctionner.
         struct_folders_has_changed.bindBidirectional(vm.struct_folders_has_changed());
        
        if(name.equals("left")) {
@@ -142,7 +139,7 @@ public class CompareBoxView extends VBox{
         
        
         treeTableViews.setOnMousePressed(e -> {
-            // Solution de contournement du binding qui ne fonctionne pas chez moi, à enlever dès que sa fonctionne.
+            // Solution de contournement du binding qui ne fonctionne pas, à enlever dès que ça fonctionne.
             vm.set_selected_file(treeTableViews.getSelectionModel().selectedItemProperty().getValue().getValue());
             if (e.getClickCount() == 2) {
                vm.openSelectedFile();
