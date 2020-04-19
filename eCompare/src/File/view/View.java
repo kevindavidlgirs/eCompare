@@ -35,13 +35,13 @@ public class View{
 
 
     public View(Stage primaryStage, ViewModel vm) {
-
+        new EditView(primaryStage, vm.getEditVM());
+        
         BorderPane root = new BorderPane();
         buttons_view = new ButtonsBoxView(vm);
         
         left_vbstruct_folder = new CompareBoxView(vm.get_left_treeItem(), primaryStage, vm, "left");
         right_vbstruct_folder = new CompareBoxView(vm.get_right_treeItem(), primaryStage, vm, "right");
-        
         
         Text ORPHAN = new Text("ORPHAN   ");
         Text SAME = new Text("SAME   ");

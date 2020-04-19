@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javafx.beans.Observable;
+import javafx.beans.binding.ObjectBinding;
 
 /**
  *
@@ -19,10 +21,17 @@ import java.util.List;
 public class Directory extends File {
 
     private final List<File> files = new ArrayList<>();
+    private final SizeBinding sizeBinding = new SizeBinding();
+    private final DateTimeBinding dateTimeBinding = new DateTimeBinding();
 
     public Directory(String name, LocalDateTime date, long size, Path path) {
         super(name, date, size, path);
-
+        
+        addToSizeBinding(getChildren()); 
+        addToDateTimeBinding(getChildren());
+        
+        bindSizeTo(sizeBinding);
+        bindDateTimeTo(dateTimeBinding);
     }
 
     private void set_all_status_orphan(File f) {
@@ -59,7 +68,10 @@ public class Directory extends File {
 
     @Override
     public void addFile(File f) {
+        addToSizeBinding(f.sizeProperty());
+        addToDateTimeBinding(f.dateTimeProperty());
         files.add(f);
+        _addFile(f);
     }
 
     @Override
@@ -160,7 +172,43 @@ public class Directory extends File {
             }
         }
     }
+    
+    private void addToSizeBinding(Observable obs) {
+        sizeBinding.addBinding(obs);
+        sizeBinding.invalidate();
+    }
+    
+   
+    private void addToDateTimeBinding(Observable obs) {
+        dateTimeBinding.addBinding(obs);
+        dateTimeBinding.invalidate();
+    }
+    
+    private class SizeBinding extends ObjectBinding<Long> {
+        
+        @Override 
+        protected Long computeValue() {
+            return getChildren().stream().map(f -> f.getValue().getSize()).reduce(0L, (s1, s2) -> s1 + s2);
+        }
+        
+        void addBinding(Observable obs) {
+            super.bind(obs);
+        }
+        
+    }
+    
+    private class DateTimeBinding extends ObjectBinding<LocalDateTime> {
 
+        @Override 
+        protected LocalDateTime computeValue() {
+            return getChildren().isEmpty() ? LocalDateTime.now() : getChildren().stream().map(f -> f.getValue().getDate()).max(LocalDateTime::compareTo).get();
+        }
+        void addBinding(Observable obs) {
+            super.bind(obs);
+        }
+        
+    }
+    
     @Override
     protected String displayFormat(int offset) {
         StringBuilder res = new StringBuilder();

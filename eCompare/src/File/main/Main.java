@@ -19,7 +19,6 @@ import File.viewModel.ViewModel;
  */
 public class Main extends Application {
 
-    //Je me suis dit que la facade pouvait être à cet endroit à voir dans l'itération 4..
     @Override
     public void start(Stage primaryStage) throws Exception {
         FacadeECompare fe = new FacadeECompare(primaryStage, "TestBC/RootBC_Left", "TestBC/RootBC_Right");

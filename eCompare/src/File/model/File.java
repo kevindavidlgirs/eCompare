@@ -8,60 +8,79 @@ package File.model;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.List;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.LongProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyLongProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableStringValue;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.TreeItem;
 
 /**
  *
  * @author 2207hembilo
  */
-public abstract class File {
+public abstract class File  extends TreeItem<File>{
 
-    private final String name;
-    private final LocalDateTime date;
-    private final long size;
-    private final Path path;
-    private Status status;
-    private Boolean selected = true;
+    private final StringProperty name;
+    private final ObjectProperty<LocalDateTime>  date;
+    private final LongProperty size;
+    private final ObjectProperty<Path> path;
+    private ObjectProperty<Status> status;
+    private final BooleanProperty selected = new SimpleBooleanProperty(true);
 
     public File(String name, LocalDateTime date, long size, Path path) {
-        this.name = name;
-        this.date = date;
-        this.size = size;
-        this.path = path;
+        this.name = new SimpleStringProperty(name);
+        this.date =  new SimpleObjectProperty<>(date);
+        this.size = new SimpleLongProperty(size);
+        this.path = new SimpleObjectProperty<>(path);
+        this.status =  new SimpleObjectProperty(null);
+        setExpanded(true);
+        setValue(this);
     }
     
-    public boolean getSelected(){
-        return selected;
-    }
+    public String getName() {return this.name.get();}
+    public ObservableStringValue nameProperty() { return name;}
     
-    public String getName() {
-        return this.name;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public LocalDateTime getDate() {
-        return date;
-    }
-
-    public long getSize() {
-        return this.size;
-    }
-
-    public Path getPath() {
-        return this.path;
-    }
-
+    public LocalDateTime getDate() { return date.getValue();}
+    public ReadOnlyObjectProperty<LocalDateTime> dateTimeProperty() { return date;}
+    
+    public long getSize() {return this.size.get();}
+    public ReadOnlyLongProperty sizeProperty() {return size;}
+    
+    public Path getPath() { return this.path.getValue();}
+    public ReadOnlyObjectProperty pathProperty() {return path;}
+    
+    public Status getStatus() {return status.getValue();}
+    public ReadOnlyObjectProperty statusProperty() {return path;}
+    
+    public boolean getSelected(){return selected.get();}
+    public boolean isSelected(){return selected.get();}
+    public BooleanProperty isSelectedProperty(){return selected;}
+    
     public void set_status(Status s) {
-        this.status = s;
+        this.status.setValue(s);
     }
     
     public void set_selected(boolean selected){
-        this.selected = selected;
+        this.selected.setValue(selected);
     }
 
-    public boolean isSelected(){return selected;}
+    public void set_size(long size){
+        this.size.setValue(size);
+    }
+    
+    public void set_date(LocalDateTime date){
+        this.date.setValue(date);
+    }
     
     protected String displayFormat(int offset) {
         String res = "";
@@ -84,8 +103,17 @@ public abstract class File {
     
     public abstract boolean isNewer(File f);
 
-    public abstract void addFile(File f);
-
+    abstract void addFile(File f);
+    
+    final void _addFile(File f){
+        super.getChildren().add(f);
+    }
+    
+    @Override
+    public final ObservableList<TreeItem<File>> getChildren() {
+        return FXCollections.unmodifiableObservableList(super.getChildren());
+    }
+    
     public abstract void compare(File f1, File f2);
     
     public abstract void compare(File f);
@@ -93,4 +121,17 @@ public abstract class File {
     public abstract List<File> getList();
     
     public abstract void check_and_setStatus(File f);
+    
+    // Folder devra binder size et dateTime au résultat d'un calcul
+    final void bindSizeTo(ObservableValue<Long> value) {
+        size.bind(value);
+    }
+
+    final void bindDateTimeTo(ObservableValue<LocalDateTime> value) {
+        date.bind(value);
+    }
+
+    public Object concat(String __) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

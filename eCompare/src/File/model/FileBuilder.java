@@ -37,7 +37,12 @@ public class FileBuilder {
                 }
             }
         } else {
-            return result = new SimpleFile(path.getFileName().toString(), ldt, attrs.size(), path.toAbsolutePath().toAbsolutePath());
+            if(path.getFileName().toString().endsWith(".txt")){
+                String contents =  new String(Files.readAllBytes(path));
+                return result = new SimpleFile(path.getFileName().toString(), ldt, contents.length(), path.toAbsolutePath().toAbsolutePath(), contents);
+            }else{
+                return result = new SimpleFile(path.getFileName().toString(), ldt, attrs.size(), path.toAbsolutePath().toAbsolutePath());
+            }
         }
         return result;
     }
