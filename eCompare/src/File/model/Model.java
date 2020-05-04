@@ -21,7 +21,6 @@ public class Model {
     public Model(String path1, String path2) throws IOException {
         file_structure_left = FileBuilder.make(Paths.get(path1).toRealPath());
         file_structure_right = FileBuilder.make(Paths.get(path2).toRealPath());
-
         file_structure_left.compare(file_structure_left, file_structure_right);
     }
 
@@ -42,11 +41,15 @@ public class Model {
     public void set_left_struct_folder(String path) throws IOException{
         file_structure_left = FileBuilder.make(Paths.get(path).toRealPath());
         file_structure_left.compare(file_structure_left, file_structure_right);
+        set_struct_selected_items(file_structure_left, "left");
+        set_struct_selected_items(file_structure_right, "right");
     }
 
     public void set_right_struct_folder(String path) throws IOException{
         file_structure_right = FileBuilder.make(Paths.get(path).toRealPath());
-        file_structure_left.compare(file_structure_left, file_structure_right);
+        file_structure_right.compare(file_structure_left, file_structure_right);
+        set_struct_selected_items(file_structure_right, "right");
+        set_struct_selected_items(file_structure_left, "left");
     }
 
     public void add_status_to_edit(String s){
@@ -113,7 +116,7 @@ public class Model {
     }
 
     public void set_struct_selected_items(File f, String side){
-        if(f.isDirectory() && f.getList().size() != 0){
+        if(f.isDirectory() && f.getList().size() != 0 && !statusSelectedForView.isEmpty()){
             for(File f1 : f.getList()){
                 set_struct_selected_items(f1, side);
             }
@@ -121,8 +124,6 @@ public class Model {
         set_status(f, side);
     }
 
-    // La partie entourée de "*" n'est pas propre pour moi. Je suis absolument certain qu'une meilleure méthode existe....
-    // Pour moi c'est surtout le fait de devoir envoyer "side" qui pose problème, c'est un peu crade...
     private void set_status(File f, String side){
         if(f.isDirectory() && f.getList().size() != 0) {
             f.set_selected(false);
@@ -136,7 +137,6 @@ public class Model {
                     }
                 }
             }
-        //**************************************************************************************************************
         }else if(statusSelectedForView.contains("NEWERL") && ((side.equals("left") && f.getStatus().toString().equals("NEWER"))
                                                                 || side.equals("right") && f.getStatus().toString().equals("OLDER"))) {
             f.set_selected(true);
@@ -148,8 +148,6 @@ public class Model {
         }else {
             f.set_selected(false);
         }
-        //**************************************************************************************************************
-
     }
 
     public String status_converter(String s){
@@ -167,4 +165,5 @@ public class Model {
         }
         return result;
     }
+
 }

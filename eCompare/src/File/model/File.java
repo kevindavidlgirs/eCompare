@@ -61,7 +61,8 @@ public abstract class File  extends TreeItem<File>{
     
     public Status getStatus() {return status.getValue();}
     public ReadOnlyObjectProperty statusProperty() {return path;}
-    
+
+    public void set_selected(boolean selected){ this.selected.setValue(selected); }
     public boolean getSelected(){return selected.get();}
     public boolean isSelected(){return selected.get();}
     public BooleanProperty isSelectedProperty(){return selected;}
@@ -69,14 +70,8 @@ public abstract class File  extends TreeItem<File>{
     public void set_status(Status s) {
         this.status.setValue(s);
     }
-    
-    public void set_selected(boolean selected){
-        this.selected.setValue(selected);
-    }
 
-    public void set_size(long size){
-        this.size.setValue(size);
-    }
+    public void set_size(long size){ this.size.setValue(size); }
     
     public void set_date(LocalDateTime date){
         this.date.setValue(date);

@@ -77,12 +77,12 @@ public class EditVM {
     }
     
     public void update(){
-        //Il existe peut-être une meilleur solution.
         viewModel.selected_file_property().getValue().set_size(text.length().get());
         viewModel.selected_file_property().getValue().set_file_content(text.get());
         viewModel.selected_file_property().getValue().set_date(LocalDateTime.now());
+        model.get_left_struct_folder().compare(model.get_left_struct_folder(), model.get_right_struct_folder());
         viewModel.set_leftRoot();
         viewModel.set_rightRoot();
         setVisible(false);
-    }   
+    }
 }

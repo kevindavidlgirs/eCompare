@@ -5,6 +5,7 @@
  */
 package File.view;
 
+import File.model.Model;
 import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.StackPane;
@@ -42,7 +43,7 @@ public class EditView extends Stage {
         
         root.setCenter(stackPane);
         root.setBottom(footerStatus);
-        
+
         setOnHiding((e) -> editVM.setVisible(false));
         editVM.showingProperty().addListener((obj, old, act) -> {
             if(act) showAndWait();

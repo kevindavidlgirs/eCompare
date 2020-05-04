@@ -38,38 +38,31 @@ public class CompareBoxView extends VBox{
     private final TreeTableColumn<File, File> dateModifCol = new TreeTableColumn<>("Date modif");
     private final TreeTableColumn<File, File> sizeCol = new TreeTableColumn<>("Size");
     private final TreeTableColumn<File, File> statusCol = new TreeTableColumn<>("Status");
-    private final BooleanProperty struct_folders_has_changed = new SimpleBooleanProperty(false);
     private final Button directoryButton = new Button();
-    private TreeTableView<File> treeTableViews;
-    private Text labelPathText;
-    HBox label_paht_and_dir = new HBox();
-    //A changer il me semble que ce n'est pas très propre.
-    private String name;
+    private TreeTableView<File> treeTableViews = new TreeTableView();
+    private Text labelPathText = new Text();
+    private final String side;
+    private final HBox label_path_and_dir = new HBox();
 
-    //A changer il me semble que ce n'est pas très propre car item et vm sont liés.
-    public CompareBoxView(TreeItem<File> item, Stage primaryStage, ViewModel vm, String name){
-        createTreeTableView(item, name);
+    public CompareBoxView(Stage primaryStage, ViewModel vm, String side){
+        this.side = side;
+        createTreeTableView(vm);
         createCells();
         configTreeTableView();
-        createLabelPath(item);
+        createLabelPath(vm);
         createDirectorychooser();
         setBindingAndListeners(vm);
         
 
-        label_paht_and_dir.getChildren().addAll(labelPathText, directoryButton);
-        label_paht_and_dir.setMargin(directoryButton,new Insets(0,0,10,10));
-        label_paht_and_dir.setMargin(labelPathText,new Insets(10,0,0,0));
+        label_path_and_dir.getChildren().addAll(labelPathText, directoryButton);
+        label_path_and_dir.setMargin(directoryButton,new Insets(0,0,10,10));
+        label_path_and_dir.setMargin(labelPathText,new Insets(10,0,0,0));
         
-        getChildren().addAll(label_paht_and_dir,treeTableViews);
+        getChildren().addAll(label_path_and_dir,treeTableViews);
         
         directoryButton.setOnAction(e -> {
-            labelPathText.setText(DirChooser.selectDirectory(primaryStage));
             try {
-                vm.set_treeItem(labelPathText.getText(), name);
-                if(name.equals("left"))
-                    treeTableViews.setRoot(vm.get_left_treeItem());
-                else
-                    treeTableViews.setRoot(vm.get_right_treeItem());
+                vm.set_treeItem(DirChooser.selectDirectory(primaryStage), side);
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -78,11 +71,14 @@ public class CompareBoxView extends VBox{
 
     private void createDirectorychooser() {
         Image img = new Image(String.valueOf(getClass().getResource("img/folder.png")));
-        directoryButton.setGraphic(new ImageView(img)); 
+        directoryButton.setGraphic(new ImageView(img));
     }
 
-    private void createLabelPath(TreeItem<File> item) {
-        labelPathText = new Text(item.getValue().getPath().toString());
+    private void createLabelPath(ViewModel vm) {
+        if(side.equals("left"))
+            labelPathText.textProperty().bind(vm.leftLabelPathTextProperty());
+        else
+            labelPathText.textProperty().bind(vm.rightLabelPathTextProperty());
         labelPathText.setStyle("-fx-font-weight: bold");
     }
 
@@ -120,26 +116,21 @@ public class CompareBoxView extends VBox{
         });
     }
 
-    private void createTreeTableView(TreeItem<File> item, String name){
-        treeTableViews = new TreeTableView(item);
-        treeTableViews.setRoot(item);
+    private void createTreeTableView(ViewModel vm){
+        if(side.equals("left"))
+            treeTableViews.rootProperty().bind(vm.root_left_property());
+        else
+            treeTableViews.rootProperty().bind(vm.root_right_property());
         treeTableViews.setShowRoot(false);
-        this.name = name;
     }
     
     private void setBindingAndListeners(ViewModel vm) {
-        //vm.selected_file_property().bind(treeTableViews.getSelectionModel().selectedItemProperty()); //Nous n'avons pas pu le faire fonctionner.
-        struct_folders_has_changed.bindBidirectional(vm.struct_folders_has_changed());
-       
-       if(name.equals("left")) {
+       if(side.equals("left")) {
             treeTableViews.rootProperty().bind(vm.root_left_property());
         }else{
             treeTableViews.rootProperty().bind(vm.root_right_property());
         }
-        
-       
         treeTableViews.setOnMousePressed(e -> {
-            // Solution de contournement du binding qui ne fonctionne pas, à enlever dès que ça fonctionne.
             vm.set_selected_file(treeTableViews.getSelectionModel().selectedItemProperty().getValue().getValue());
             if (e.getClickCount() == 2) {
                vm.openSelectedFile();

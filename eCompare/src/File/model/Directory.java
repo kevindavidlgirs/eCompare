@@ -177,8 +177,7 @@ public class Directory extends File {
         sizeBinding.addBinding(obs);
         sizeBinding.invalidate();
     }
-    
-   
+
     private void addToDateTimeBinding(Observable obs) {
         dateTimeBinding.addBinding(obs);
         dateTimeBinding.invalidate();
@@ -190,11 +189,9 @@ public class Directory extends File {
         protected Long computeValue() {
             return getChildren().stream().map(f -> f.getValue().getSize()).reduce(0L, (s1, s2) -> s1 + s2);
         }
-        
         void addBinding(Observable obs) {
             super.bind(obs);
         }
-        
     }
     
     private class DateTimeBinding extends ObjectBinding<LocalDateTime> {
@@ -206,7 +203,6 @@ public class Directory extends File {
         void addBinding(Observable obs) {
             super.bind(obs);
         }
-        
     }
     
     @Override
