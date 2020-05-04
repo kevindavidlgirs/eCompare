@@ -33,8 +33,6 @@ public class EditVM {
     private final StringProperty text = new SimpleStringProperty();
     private final StringProperty file_name = new SimpleStringProperty();
     private final BooleanProperty showing = new SimpleBooleanProperty(false);
-    private final IntegerProperty size = new SimpleIntegerProperty();
-    private final Button addButton = new Button("Save");
     private final ViewModel viewModel;
     private final Model model;
     
@@ -51,11 +49,7 @@ public class EditVM {
     public StringProperty textProperty() {
         return text;
     }
-    
-    public IntegerBinding sizeProperty(){
-        return text.length();
-    }
-    
+
     public ObservableIntegerValue textLengthProperty() {
         return text.length();
     }

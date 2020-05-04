@@ -19,25 +19,18 @@ import javafx.beans.value.ObservableStringValue;
  */
 public class SimpleFile extends File {
 
-    private final SimpleStringProperty FileContents;
+    private final SimpleStringProperty FileContents = new SimpleStringProperty();
 
     //Utiliser par un fichier texte. Si ce n'est pas un fichier texte alors utilisé directement dans le FileBuilder
     public SimpleFile(String name, LocalDateTime date, long size, Path path){
         super(name, date, size, path);
-        this.FileContents = new SimpleStringProperty("");
+        this.FileContents.setValue(null);
     }
 
     //Si c'est un fichier texte
     public SimpleFile(String name, LocalDateTime date, long size, Path path, String FileContents) {
         this(name, date, size, path);
-        //A voir si cette condition est nécessaire !
         this.FileContents.setValue(FileContents);
-        /*
-        if(FileContents.length() == 0){
-            this.FileContents = "";
-        }else{
-            this.FileContentsnew = new SimpleStringProperty(FileContents);
-        }*/
     }
 
     public String getFileContents(){return FileContents.getValue();}

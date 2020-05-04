@@ -61,7 +61,6 @@ public class ButtonsBoxView extends HBox{
         
         newer_right_button.setOnAction(e -> {
             vm.set_selected_items(newer_right_button.getText(), newer_right_button.isSelected());
-
             //Devrait se retrouver dans le "cssView.css" avec une chose du genre -> .toggle-button:selected { ..... }
             if(newer_right_button.isSelected()){
                 newer_right_button.setStyle("-fx-font-weight: bold");

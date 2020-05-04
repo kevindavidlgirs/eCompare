@@ -24,25 +24,24 @@ import javafx.scene.text.TextFlow;
  * @author herve
  */
 public class EditView extends Stage {
-    private final Button addButton = new Button("Save");
+    private final Button saveButton = new Button("Save");
+    private final TextArea textArea = new TextArea();
+    private final BorderPane root = new BorderPane();
+    private final TextFlow footerStatus = new TextFlow(saveButton);
+    private final StackPane stackPane = new StackPane(textArea);
+    private final EditVM editVM;
+
     public EditView(Stage primaryStage, EditVM editVM) {
-        BorderPane root = new BorderPane();
+
+        this.editVM = editVM;
         initModality(Modality.WINDOW_MODAL);
         initOwner(primaryStage);
-        TextArea textArea = new TextArea();
-        textArea.setWrapText(true);
-        Button saveButton = new Button("Save");
-        
-        textArea.textProperty().bindBidirectional(editVM.textProperty());
-        StackPane stackPane = new StackPane(textArea);
-        
-        TextFlow footerStatus = new TextFlow(saveButton);
-        footerStatus.setTextAlignment(TextAlignment.CENTER);
-        footerStatus.setPadding(new Insets(10));
-
-        
-        root.setCenter(stackPane);
-        root.setBottom(footerStatus);
+        configTextArea();
+        configFooter();
+        configWindow();
+        configBinding();
+        Scene scene = new Scene(root, 600, 400);
+        setScene(scene);
 
         setOnHiding((e) -> editVM.setVisible(false));
         editVM.showingProperty().addListener((obj, old, act) -> {
@@ -52,15 +51,29 @@ public class EditView extends Stage {
         saveButton.setOnAction(e -> {
             editVM.update();
         });
-         
-        Scene scene = new Scene(root, 600, 400);
-        setScene(scene);
-        
+    }
+
+    private void configTextArea(){
+        textArea.setWrapText(true);
+        textArea.textProperty().bindBidirectional(editVM.textProperty());
+    }
+
+    private void configFooter(){
+        footerStatus.setTextAlignment(TextAlignment.CENTER);
+        footerStatus.setPadding(new Insets(10));
+    }
+
+    private void configWindow(){
+        root.setCenter(stackPane);
+        root.setBottom(footerStatus);
+    }
+
+    private void configBinding(){
         titleProperty().bind(editVM.selected_file_name().
                 concat(" : ").
                 concat(editVM.textLengthProperty()).
                 concat(" octets")
         );
     }
-    
+
 }

@@ -26,10 +26,8 @@ public class Directory extends File {
 
     public Directory(String name, LocalDateTime date, long size, Path path) {
         super(name, date, size, path);
-        
         addToSizeBinding(getChildren()); 
         addToDateTimeBinding(getChildren());
-        
         bindSizeTo(sizeBinding);
         bindDateTimeTo(dateTimeBinding);
     }

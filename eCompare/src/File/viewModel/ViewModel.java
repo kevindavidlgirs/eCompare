@@ -159,9 +159,10 @@ public class ViewModel {
     public void set_selected_file(File file){
         selected_file_property.setValue((SimpleFile) file);
     }
-    
+
     public void openSelectedFile() {
-        if(!selected_file_property.getValue().isDirectory()){
+        //Si j'ai bien compris seul les fichiers textes sont éditables..
+        if(!selected_file_property.getValue().isDirectory() && !selected_file_property.getValue().getFileContents().equals(null)){
             editor.set_selected_file_name(selected_file_property.getValue().getName());
             editor.setText(selected_file_property.getValue().getFileContents());
             editor.setVisible(true);

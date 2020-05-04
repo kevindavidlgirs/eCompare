@@ -47,7 +47,7 @@ public class Model {
 
     public void set_right_struct_folder(String path) throws IOException{
         file_structure_right = FileBuilder.make(Paths.get(path).toRealPath());
-        file_structure_right.compare(file_structure_left, file_structure_right);
+        file_structure_left.compare(file_structure_left, file_structure_right);
         set_struct_selected_items(file_structure_right, "right");
         set_struct_selected_items(file_structure_left, "left");
     }

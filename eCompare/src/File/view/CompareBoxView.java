@@ -39,10 +39,10 @@ public class CompareBoxView extends VBox{
     private final TreeTableColumn<File, File> sizeCol = new TreeTableColumn<>("Size");
     private final TreeTableColumn<File, File> statusCol = new TreeTableColumn<>("Status");
     private final Button directoryButton = new Button();
-    private TreeTableView<File> treeTableViews = new TreeTableView();
-    private Text labelPathText = new Text();
-    private final String side;
+    private final TreeTableView<File> treeTableViews = new TreeTableView();
+    private final Text labelPathText = new Text();
     private final HBox label_path_and_dir = new HBox();
+    private final String side;
 
     public CompareBoxView(Stage primaryStage, ViewModel vm, String side){
         this.side = side;
@@ -52,14 +52,8 @@ public class CompareBoxView extends VBox{
         createLabelPath(vm);
         createDirectorychooser();
         setBindingAndListeners(vm);
-        
+        configWindow();
 
-        label_path_and_dir.getChildren().addAll(labelPathText, directoryButton);
-        label_path_and_dir.setMargin(directoryButton,new Insets(0,0,10,10));
-        label_path_and_dir.setMargin(labelPathText,new Insets(10,0,0,0));
-        
-        getChildren().addAll(label_path_and_dir,treeTableViews);
-        
         directoryButton.setOnAction(e -> {
             try {
                 vm.set_treeItem(DirChooser.selectDirectory(primaryStage), side);
@@ -67,6 +61,13 @@ public class CompareBoxView extends VBox{
                 ex.printStackTrace();
             }
         });
+    }
+
+    private void configWindow(){
+        label_path_and_dir.getChildren().addAll(labelPathText, directoryButton);
+        label_path_and_dir.setMargin(directoryButton,new Insets(0,0,10,10));
+        label_path_and_dir.setMargin(labelPathText,new Insets(10,0,0,0));
+        getChildren().addAll(label_path_and_dir,treeTableViews);
     }
 
     private void createDirectorychooser() {

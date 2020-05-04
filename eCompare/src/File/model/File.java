@@ -117,7 +117,6 @@ public abstract class File  extends TreeItem<File>{
     
     public abstract void check_and_setStatus(File f);
     
-    // Folder devra binder size et dateTime au résultat d'un calcul
     final void bindSizeTo(ObservableValue<Long> value) {
         size.bind(value);
     }
@@ -126,7 +125,4 @@ public abstract class File  extends TreeItem<File>{
         date.bind(value);
     }
 
-    public Object concat(String __) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }

@@ -32,17 +32,24 @@ public class View{
     private final CompareBoxView left_vbstruct_folder;
     private final CompareBoxView right_vbstruct_folder;
     private final ButtonsBoxView buttons_view;
+    private final BorderPane root = new BorderPane();
+    private final TextFlow footerStatus = new TextFlow();
 
 
     public View(Stage primaryStage, ViewModel vm) {
         new EditView(primaryStage, vm.getEditVM());
-        
-        BorderPane root = new BorderPane();
         buttons_view = new ButtonsBoxView(vm);
-        
         left_vbstruct_folder = new CompareBoxView(primaryStage, vm, "left");
         right_vbstruct_folder = new CompareBoxView(primaryStage, vm, "right");
-        
+        configStateLabel();
+        configWindow();
+        Scene scene = new Scene(root);
+        primaryStage.setTitle("eCompare");
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    private void configStateLabel(){
         Text ORPHAN = new Text("ORPHAN   ");
         Text SAME = new Text("SAME   ");
         Text PARTIAL_SAME = new Text("PARTIAL_SAME   ");
@@ -55,20 +62,15 @@ public class View{
         NEWER.setFill(Color.RED);
         OLDER.setFill(Color.BROWN);
 
-        TextFlow footerStatus = new TextFlow();
         footerStatus.getChildren().addAll(ORPHAN, SAME, PARTIAL_SAME, NEWER, OLDER);
         footerStatus.setTextAlignment(TextAlignment.CENTER);
         footerStatus.setPadding(new Insets(10));
+    }
 
+    private void configWindow(){
         root.setTop(buttons_view);
         root.setLeft(left_vbstruct_folder);
         root.setRight(right_vbstruct_folder);
         root.setBottom(footerStatus);
-
-        Scene scene = new Scene(root);
-
-        primaryStage.setTitle("eCompare");
-        primaryStage.setScene(scene);
-        primaryStage.show();
     }
 }
