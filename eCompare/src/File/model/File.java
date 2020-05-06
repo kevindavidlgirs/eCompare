@@ -67,9 +67,7 @@ public abstract class File  extends TreeItem<File>{
     public boolean isSelected(){return selected.get();}
     public BooleanProperty isSelectedProperty(){return selected;}
     
-    public void set_status(Status s) {
-        this.status.setValue(s);
-    }
+    public void set_status(Status s) { this.status.setValue(s); }
 
     public void set_size(long size){ this.size.setValue(size); }
     
@@ -125,4 +123,5 @@ public abstract class File  extends TreeItem<File>{
         date.bind(value);
     }
 
+    public abstract boolean removeFile(File file);
 }

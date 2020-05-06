@@ -65,6 +65,12 @@ public class Directory extends File {
     }
 
     @Override
+    public boolean removeFile(File f){
+        files.remove(f);
+        return true;
+    }
+
+    @Override
     public void addFile(File f) {
         addToSizeBinding(f.sizeProperty());
         addToDateTimeBinding(f.dateTimeProperty());

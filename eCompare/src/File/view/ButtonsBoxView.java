@@ -25,6 +25,8 @@ public class ButtonsBoxView extends HBox{
     private final ToggleButton folders_only = new ToggleButton("Folders Only");
     private final ToggleGroup newer_left_right = new ToggleGroup();
 
+    //private final ToggleGroup transition = new ToggleGroup();
+
     {
         getChildren().addAll(all_button, newer_left_button, newer_right_button, orphans_button, same_button, folders_only);
     }
