@@ -30,10 +30,12 @@ public class EditView extends Stage {
     private final TextFlow footerStatus = new TextFlow(saveButton);
     private final StackPane stackPane = new StackPane(textArea);
     private final EditVM editVM;
+    private final String side;
 
-    public EditView(Stage primaryStage, EditVM editVM) {
+    public EditView(Stage primaryStage, EditVM editVM, String side) {
 
         this.editVM = editVM;
+        this.side = side;
         initModality(Modality.WINDOW_MODAL);
         initOwner(primaryStage);
         configTextArea();
@@ -49,7 +51,7 @@ public class EditView extends Stage {
         });
         
         saveButton.setOnAction(e -> {
-            editVM.update();
+            editVM.update(side);
         });
     }
 

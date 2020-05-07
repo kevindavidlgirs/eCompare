@@ -38,9 +38,9 @@ public class CompareBoxView extends VBox{
     private final TreeTableColumn<File, File> dateModifCol = new TreeTableColumn<>("Date modif");
     private final TreeTableColumn<File, File> sizeCol = new TreeTableColumn<>("Size");
     private final TreeTableColumn<File, File> statusCol = new TreeTableColumn<>("Status");
-    private final Button directoryButton = new Button();
     private final TreeTableView<File> treeTableViews = new TreeTableView();
     private final Text labelPathText = new Text();
+    private final Button directoryButton = new Button();
     private final HBox label_path_and_dir = new HBox();
     private final String side;
 
@@ -76,10 +76,7 @@ public class CompareBoxView extends VBox{
     }
 
     private void createLabelPath(ViewModel vm) {
-        if(side.equals("left"))
-            labelPathText.textProperty().bind(vm.leftLabelPathTextProperty());
-        else
-            labelPathText.textProperty().bind(vm.rightLabelPathTextProperty());
+        labelPathText.textProperty().bind(vm.getTreeItem(side).labelPathTextProperty());
         labelPathText.setStyle("-fx-font-weight: bold");
     }
 
@@ -118,23 +115,16 @@ public class CompareBoxView extends VBox{
     }
 
     private void createTreeTableView(ViewModel vm){
-        if(side.equals("left"))
-            treeTableViews.rootProperty().bind(vm.root_left_property());
-        else
-            treeTableViews.rootProperty().bind(vm.root_right_property());
+        treeTableViews.rootProperty().bind(vm.getTreeItem(side).root_property());
         treeTableViews.setShowRoot(false);
     }
     
     private void setBindingAndListeners(ViewModel vm) {
-       if(side.equals("left")) {
-            treeTableViews.rootProperty().bind(vm.root_left_property());
-        }else{
-            treeTableViews.rootProperty().bind(vm.root_right_property());
-        }
+        treeTableViews.rootProperty().bind(vm.getTreeItem(side).root_property());
+        vm.getTreeItem(side).selected_file_property().bind(treeTableViews.getSelectionModel().selectedItemProperty());
         treeTableViews.setOnMousePressed(e -> {
-            vm.set_selected_file(treeTableViews.getSelectionModel().selectedItemProperty().getValue().getValue());
             if (e.getClickCount() == 2) {
-               vm.openSelectedFile();
+                vm.getTreeItem(side).openSelectedFile();
             }
         });
     }

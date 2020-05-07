@@ -71,6 +71,16 @@ public class Directory extends File {
     }
 
     @Override
+    public String getFileContents() {
+        return null;
+    }
+
+    @Override
+    public void set_file_content(String s) {
+
+    }
+
+    @Override
     public void addFile(File f) {
         addToSizeBinding(f.sizeProperty());
         addToDateTimeBinding(f.dateTimeProperty());

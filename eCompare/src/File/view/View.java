@@ -5,24 +5,16 @@
  */
 package File.view;
 
-import File.model.File;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeTableColumn;
-import javafx.scene.control.TreeTableView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import File.viewModel.ViewModel;
-import java.util.Observable;
-import javafx.collections.ObservableList;
-import javafx.event.EventType;
+
 
 /**
  *
@@ -35,9 +27,9 @@ public class View{
     private final BorderPane root = new BorderPane();
     private final TextFlow footerStatus = new TextFlow();
 
-
     public View(Stage primaryStage, ViewModel vm) {
-        new EditView(primaryStage, vm.getEditVM());
+        new EditView(primaryStage, vm.getEditLeftVM(), "left");
+        new EditView(primaryStage, vm.getEditRightVM(), "right");
         buttons_view = new ButtonsBoxView(vm);
         left_vbstruct_folder = new CompareBoxView(primaryStage, vm, "left");
         right_vbstruct_folder = new CompareBoxView(primaryStage, vm, "right");

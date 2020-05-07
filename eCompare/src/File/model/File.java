@@ -124,4 +124,8 @@ public abstract class File  extends TreeItem<File>{
     }
 
     public abstract boolean removeFile(File file);
+
+    public abstract String getFileContents();
+
+    public abstract void set_file_content(String s);
 }

@@ -25,8 +25,6 @@ public class ButtonsBoxView extends HBox{
     private final ToggleButton folders_only = new ToggleButton("Folders Only");
     private final ToggleGroup newer_left_right = new ToggleGroup();
 
-    //private final ToggleGroup transition = new ToggleGroup();
-
     {
         getChildren().addAll(all_button, newer_left_button, newer_right_button, orphans_button, same_button, folders_only);
     }
@@ -45,7 +43,7 @@ public class ButtonsBoxView extends HBox{
         setBinding(vm);
 
         all_button.setOnAction(e -> {
-            vm.set_selected_items(all_button.getText(), all_button.isSelected());
+            vm.getStatusBts().set_selected_items(all_button.getText(), all_button.isSelected());
 
             //Devrait se retrouver dans le "cssView.css" avec une chose du genre -> .toggle-button:selected { ..... }
             if(all_button.isSelected()){
@@ -62,7 +60,7 @@ public class ButtonsBoxView extends HBox{
         });
         
         newer_right_button.setOnAction(e -> {
-            vm.set_selected_items(newer_right_button.getText(), newer_right_button.isSelected());
+            vm.getStatusBts().set_selected_items(newer_right_button.getText(), newer_right_button.isSelected());
             //Devrait se retrouver dans le "cssView.css" avec une chose du genre -> .toggle-button:selected { ..... }
             if(newer_right_button.isSelected()){
                 newer_right_button.setStyle("-fx-font-weight: bold");
@@ -75,7 +73,7 @@ public class ButtonsBoxView extends HBox{
         });
         
         newer_left_button.setOnAction(e -> {
-            vm.set_selected_items(newer_left_button.getText(), newer_left_button.isSelected());
+            vm.getStatusBts().set_selected_items(newer_left_button.getText(), newer_left_button.isSelected());
 
             //Devrait se retrouver dans le "cssView.css" avec une chose du genre -> .toggle-button:selected { ..... }
             if(newer_left_button.isSelected()){
@@ -89,7 +87,7 @@ public class ButtonsBoxView extends HBox{
         });
         
         orphans_button.setOnAction(e -> {
-            vm.set_selected_items(orphans_button.getText(), orphans_button.isSelected());
+            vm.getStatusBts().set_selected_items(orphans_button.getText(), orphans_button.isSelected());
 
             //Devrait se retrouver dans le "cssView.css" avec une chose du genre -> .toggle-button:selected { ..... }
             if(orphans_button.isSelected()){
@@ -102,7 +100,7 @@ public class ButtonsBoxView extends HBox{
         });
         
         same_button.setOnAction(e -> {
-            vm.set_selected_items(same_button.getText(), same_button.isSelected());
+            vm.getStatusBts().set_selected_items(same_button.getText(), same_button.isSelected());
 
             //Devrait se retrouver dans le "cssView.css" avec une chose du genre -> .toggle-button:selected { ..... }
             if(same_button.isSelected()) {
@@ -115,7 +113,7 @@ public class ButtonsBoxView extends HBox{
         });
         
         folders_only.setOnAction(e -> {
-            vm.set_selected_items(folders_only.getText(), folders_only.isSelected());
+            vm.getStatusBts().set_selected_items(folders_only.getText(), folders_only.isSelected());
 
             //Devrait se retrouver dans le "cssView.css" avec une chose du genre -> .toggle-button:selected { ..... }
             if(folders_only.isSelected()) {
@@ -129,11 +127,11 @@ public class ButtonsBoxView extends HBox{
     }
 
     private void setBinding(ViewModel vm) {
-        all_button.selectedProperty().bindBidirectional(vm.all_button_Property());
-        newer_right_button.selectedProperty().bindBidirectional(vm.newer_right_button_Property());
-        newer_left_button.selectedProperty().bindBidirectional(vm.newer_left_button_Property());
-        orphans_button.selectedProperty().bindBidirectional(vm.orphans_button_Property());
-        same_button.selectedProperty().bindBidirectional(vm.same_button_Property());
-        folders_only.selectedProperty().bindBidirectional(vm.folders_only_Property());
+        all_button.selectedProperty().bindBidirectional(vm.getStatusBts().all_button_Property());
+        newer_right_button.selectedProperty().bindBidirectional(vm.getStatusBts().newer_right_button_Property());
+        newer_left_button.selectedProperty().bindBidirectional(vm.getStatusBts().newer_left_button_Property());
+        orphans_button.selectedProperty().bindBidirectional(vm.getStatusBts().orphans_button_Property());
+        same_button.selectedProperty().bindBidirectional(vm.getStatusBts().same_button_Property());
+        folders_only.selectedProperty().bindBidirectional(vm.getStatusBts().folders_only_Property());
     }
 }
