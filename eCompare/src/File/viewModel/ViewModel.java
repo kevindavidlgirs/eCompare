@@ -73,6 +73,7 @@ public class ViewModel {
         
         getTreeItem("left").refresh_root("left");
         getTreeItem("right").refresh_root("right");
+        statusBts.set_selected_items("all",false);
     }
     
     public BooleanProperty actionEnabledProperty() {

@@ -82,7 +82,7 @@ public class EditVM {
         
         viewModel.getTreeItem("left").refresh_root("left");
         viewModel.getTreeItem("right").refresh_root("right");
-
+        
         setVisible(false);
     }
 }

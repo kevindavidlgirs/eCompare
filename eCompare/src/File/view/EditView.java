@@ -50,7 +50,10 @@ public class EditView extends Stage {
 
         setOnHiding((e) -> editVM.setVisible(false));
         editVM.showingProperty().addListener((obj, old, act) -> {
-            if(act) showAndWait();
+            if(act) {
+                saveButton.disableProperty().setValue(false);
+                showAndWait();
+            }
         });
         
         saveButton.setOnAction(e -> {

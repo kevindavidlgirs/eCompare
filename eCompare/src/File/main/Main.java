@@ -24,5 +24,7 @@ public class Main extends Application {
         FacadeECompare fe = new FacadeECompare(primaryStage, "TestBC/RootBC_Left", "TestBC/RootBC_Right");
     }
 
-    public static void main(String[] args) { launch(args); }
+    public static void main(String[] args) {
+        launch(args);
+    }
 }
