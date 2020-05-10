@@ -24,7 +24,7 @@ public class Model {
         file_structure_right = FileBuilder.make(Paths.get(path2).toRealPath());
         file_structure_left.compare(file_structure_left, file_structure_right);
     }
-
+    
     public List<String> get_list_status_selected(){ return Collections.unmodifiableList(statusSelectedForView); }
 
     public void clear_statusList(){
