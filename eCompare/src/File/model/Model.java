@@ -215,6 +215,7 @@ public class Model {
                     if(getPathRelativized(file_structure_right, f.getPath()).equals(getPathRelativized(file_structure_left, fileOrphan.getPath()))){
                         for(File f1 : fileOrphan.getList()){
                             if(!f.getList().contains(f1)){
+                                //COPIE EN PROFONDEUR N'EST PAS IMPLEMENTEE
                                 f.addFile(f1);
                                 fileAdded = true;
                             }
@@ -235,6 +236,7 @@ public class Model {
             for(File f : fileStructRight.getList()){
                 if(getPathRelativized(file_structure_right, f.getPath()).equals(getPathRelativized(file_structure_left, fileOrphan.getParent().getValue().getPath()))){
                     if(!f.getList().contains(fileOrphan)){
+                        //COPIE EN PROFONDEUR N'EST PAS IMPLEMENTEE
                         f.addFile(fileOrphan);
                         fileAdded = true;
                     }
@@ -268,6 +270,7 @@ public class Model {
                 if(getPathRelativized(file_structure_right, f.getPath()).equals(getPathRelativized(file_structure_left, file.getParent().getValue().getPath()))){
                     //f.getList(); retourne une unmodifiableList et de plus impossible d'itérer sur une list et de la modifier durant l'itération
                     //Cette solution n'est pas très intelligente mais fonctionnel, à peaufiner.
+                    //COPIE EN PROFONDEUR N'EST PAS IMPLEMENTEE
                     if(f.isDirectory()){
                         List<File> listForItemsToBeRemoved = new ArrayList<>();
                         for(File f1 : f.getList()){

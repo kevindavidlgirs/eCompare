@@ -23,8 +23,6 @@ import javafx.scene.text.TextFlow;
  * @author herve
  */
 public class FooterBoxView extends VBox{
-    //private final TextFlow footerStatus;
-    //private final ButtonMoveLeftRightView button;
     private final TextFlow footerStatus = new TextFlow();
     private final Button moveLeftRight = new Button("Move Left -> Right");
     

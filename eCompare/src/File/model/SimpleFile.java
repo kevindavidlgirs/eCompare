@@ -21,15 +21,21 @@ public class SimpleFile extends File {
 
     private final SimpleStringProperty FileContents = new SimpleStringProperty();
 
-    //Utiliser par un fichier texte. Si ce n'est pas un fichier texte alors utilisé directement dans le FileBuilder
+    //Utiliser si ce n'est pas un fichier texte
     public SimpleFile(String name, LocalDateTime date, long size, Path path){
         super(name, date, size, path);
         this.FileContents.setValue(null);
     }
 
-    //Si c'est un fichier texte
+    //Utiliser si c'est un fichier texte
     public SimpleFile(String name, LocalDateTime date, long size, Path path, String FileContents) {
         this(name, date, size, path);
+        this.FileContents.setValue(FileContents);
+    }
+
+    //Utiliser pour la copy en profondeur
+    public SimpleFile(File f, Path path, String FileContents){
+        this(f.getName(), f.getDate(), f.getSize(), path);
         this.FileContents.setValue(FileContents);
     }
 
@@ -45,8 +51,8 @@ public class SimpleFile extends File {
     }
 
     @Override
-    public boolean isSame(File f1) {
-        if (this.getDate().isEqual(f1.getDate())) {
+    public boolean isSame(File f) {
+        if (this.getDate().isEqual(f.getDate())) {
             return true;
         }
         return false;

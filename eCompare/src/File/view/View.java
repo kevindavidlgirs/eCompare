@@ -25,9 +25,7 @@ public class View{
     private final CompareBoxView left_vbstruct_folder;
     private final CompareBoxView right_vbstruct_folder;
     private final ButtonsBoxView buttons_view;
-    //private final ButtonMoveLeftRightView button_move_left_right_View;
     private final BorderPane root = new BorderPane();
-    //private final TextFlow footerStatus = new TextFlow();
     private final FooterBoxView footer_bt_text_View;
 
     public View(Stage primaryStage, ViewModel vm) {

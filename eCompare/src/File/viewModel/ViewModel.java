@@ -29,8 +29,8 @@ public class ViewModel {
 
     public ViewModel(Model model) {
         this.model = model;
-        editorL = new EditVM(this, "left");
-        editorR = new EditVM(this, "right");
+        editorL = new EditVM(this, "left", model);
+        editorR = new EditVM(this, "right", model);
     
         root_left = new TreeItemVM(model, editorL);
         root_right = new TreeItemVM(model, editorR);
@@ -41,10 +41,6 @@ public class ViewModel {
         root_right.set_root(model.get_right_struct_folder());
     }
 
-    public EditVM getEditLeftVM() { return editorL; }
-
-    public EditVM getEditRightVM() { return editorR; }
-    
     public EditVM getEditVM(String side){
         if(side.equals("left")){
             return editorL;
@@ -70,9 +66,7 @@ public class ViewModel {
     public void moveItems(){
         model.moveItems();
         compare_folders();
-        
-        getTreeItem("left").refresh_root("left");
-        getTreeItem("right").refresh_root("right");
+        //Partie à peaufiner
         statusBts.set_selected_items("all",false);
     }
     

@@ -71,7 +71,7 @@ public class TreeItemVM {
     public void openSelectedFile() {
         if (!selected_file_property.getValue().getValue().isDirectory() && !selected_file_property.getValue().getValue().getFileContents().equals(null)) {
             editor.setText(selected_file_property.getValue().getValue().getFileContents());
-            editor.start_binding_and_listening();
+            editor.set_selected_file_name(selected_file_property.getValue().getValue().getName());
             editor.setVisible(true);
         }
     }

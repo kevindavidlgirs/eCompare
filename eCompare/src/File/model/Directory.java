@@ -32,6 +32,14 @@ public class Directory extends File {
         bindDateTimeTo(dateTimeBinding);
     }
 
+    public Directory(File f, Path path){
+        super(f.getName(), f.getDate(), f.getSize(), path);
+        addToSizeBinding(getChildren());
+        addToDateTimeBinding(getChildren());
+        bindSizeTo(sizeBinding);
+        bindDateTimeTo(dateTimeBinding);
+    }
+
     private void set_all_status_orphan(File f) {
         for (File f1 : f.getList()) {
             if (f1.isDirectory()) {
@@ -68,16 +76,6 @@ public class Directory extends File {
     public boolean removeFile(File f){
         files.remove(f);
         return true;
-    }
-
-    @Override
-    public String getFileContents() {
-        return null;
-    }
-
-    @Override
-    public void set_file_content(String s) {
-
     }
 
     @Override
@@ -241,6 +239,17 @@ public class Directory extends File {
             res.append(f.displayFormat(offset + 1));
         }
         return res.toString();
+    }
+
+    @Override
+    public String getFileContents() {
+        return null;
+    }
+
+    @Override
+    public void set_file_content(String s) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
     }
 
 }

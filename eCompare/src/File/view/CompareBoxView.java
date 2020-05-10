@@ -47,7 +47,7 @@ public class CompareBoxView extends VBox{
 
     public CompareBoxView(Stage primaryStage, ViewModel vm, String side){
         this.side = side;
-        createTreeTableView();
+        createTreeTableView(vm);
         createCells();
         configTreeTableView();
         createLabelPath(vm);
@@ -116,7 +116,8 @@ public class CompareBoxView extends VBox{
         });
     }
 
-    private void createTreeTableView(){
+    private void createTreeTableView(ViewModel vm){
+        treeTableViews.rootProperty().bind(vm.getTreeItem(side).root_property());
         treeTableViews.setShowRoot(false);
     }
     

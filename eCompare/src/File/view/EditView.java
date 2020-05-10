@@ -78,7 +78,7 @@ public class EditView extends Stage {
     }
 
     private void configBinding(){
-        titleProperty().bind(editVM.nameProperty().
+        titleProperty().bind(editVM.selected_file_name().
                 concat(" : ").
                 concat(editVM.textLengthProperty()).
                 concat(" octets")
