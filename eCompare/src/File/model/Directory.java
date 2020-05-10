@@ -26,10 +26,16 @@ public class Directory extends File {
 
     public Directory(String name, LocalDateTime date, long size, Path path) {
         super(name, date, size, path);
-        
         addToSizeBinding(getChildren()); 
         addToDateTimeBinding(getChildren());
-        
+        bindSizeTo(sizeBinding);
+        bindDateTimeTo(dateTimeBinding);
+    }
+
+    public Directory(File f, Path path){
+        super(f.getName(), f.getDate(), f.getSize(), path);
+        addToSizeBinding(getChildren());
+        addToDateTimeBinding(getChildren());
         bindSizeTo(sizeBinding);
         bindDateTimeTo(dateTimeBinding);
     }
@@ -64,6 +70,12 @@ public class Directory extends File {
     @Override
     public List<File> getList() {
         return Collections.unmodifiableList(files);
+    }
+
+    @Override
+    public boolean removeFile(File f){
+        files.remove(f);
+        return true;
     }
 
     @Override
@@ -177,8 +189,7 @@ public class Directory extends File {
         sizeBinding.addBinding(obs);
         sizeBinding.invalidate();
     }
-    
-   
+
     private void addToDateTimeBinding(Observable obs) {
         dateTimeBinding.addBinding(obs);
         dateTimeBinding.invalidate();
@@ -190,11 +201,9 @@ public class Directory extends File {
         protected Long computeValue() {
             return getChildren().stream().map(f -> f.getValue().getSize()).reduce(0L, (s1, s2) -> s1 + s2);
         }
-        
         void addBinding(Observable obs) {
             super.bind(obs);
         }
-        
     }
     
     private class DateTimeBinding extends ObjectBinding<LocalDateTime> {
@@ -206,7 +215,6 @@ public class Directory extends File {
         void addBinding(Observable obs) {
             super.bind(obs);
         }
-        
     }
     
     @Override
@@ -231,6 +239,17 @@ public class Directory extends File {
             res.append(f.displayFormat(offset + 1));
         }
         return res.toString();
+    }
+
+    @Override
+    public String getFileContents() {
+        return null;
+    }
+
+    @Override
+    public void set_file_content(String s) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
     }
 
 }

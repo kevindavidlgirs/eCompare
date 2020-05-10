@@ -5,25 +5,20 @@
  */
 package File.viewModel;
 
-import File.model.Model;
 import File.model.File;
-import File.model.SimpleFile;
+import File.model.Model;
+import java.io.IOException;
 import java.time.LocalDateTime;
-import javafx.beans.binding.IntegerBinding;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableIntegerValue;
-import javafx.beans.value.ObservableObjectValue;
-import javafx.scene.control.Button;
+import javafx.beans.value.ObservableStringValue;
 import javafx.scene.control.TreeItem;
-
 /**
  *
  * @author herve
@@ -33,41 +28,31 @@ public class EditVM {
     private final StringProperty text = new SimpleStringProperty();
     private final StringProperty file_name = new SimpleStringProperty();
     private final BooleanProperty showing = new SimpleBooleanProperty(false);
-    private final IntegerProperty size = new SimpleIntegerProperty();
-    private final Button addButton = new Button("Save");
+    private final StringProperty nameProperty = new SimpleStringProperty();
     private final ViewModel viewModel;
     private final Model model;
-    
-    
-    EditVM(ViewModel vm, Model model) {
+    private final String side;
+
+    EditVM(ViewModel vm, String side, Model model) {
         viewModel = vm;
         this.model = model;
+        this.side = side;
     }
 
-    void setText(String s) {
-        text.setValue(s);
-    }
-    
+    void setText(String s) { text.setValue(s); }
+
     public StringProperty textProperty() {
         return text;
     }
-    
-    public IntegerBinding sizeProperty(){
-        return text.length();
-    }
-    
+
+    void set_selected_file_name(String s) { file_name.setValue(s); }
+
     public ObservableIntegerValue textLengthProperty() {
         return text.length();
     }
-    
-    void set_selected_file_name(String s) {
-        file_name.setValue(s);
-    }
-    
-    public StringProperty selected_file_name() {
-        return file_name;
-    }
-    
+
+    public StringProperty selected_file_name() { return file_name; }
+
     public ReadOnlyBooleanProperty showingProperty() {
         return showing;
     }
@@ -75,14 +60,14 @@ public class EditVM {
     public void setVisible(boolean b) {
         showing.setValue(b);
     }
-    
-    public void update(){
-        //Il existe peut-être une meilleur solution.
-        viewModel.selected_file_property().getValue().set_size(text.length().get());
-        viewModel.selected_file_property().getValue().set_file_content(text.get());
-        viewModel.selected_file_property().getValue().set_date(LocalDateTime.now());
-        viewModel.set_leftRoot();
-        viewModel.set_rightRoot();
+
+    public void update(String side){
+        viewModel.getTreeItem(side).selected_file_property().getValue().getValue().set_size(text.length().get());
+        viewModel.getTreeItem(side).selected_file_property().getValue().getValue().set_file_content(text.get());
+        viewModel.getTreeItem(side).selected_file_property().getValue().getValue().set_date(LocalDateTime.now());
+        viewModel.compare_folders();
+        viewModel.getTreeItem("left").refresh_root("left");
+        viewModel.getTreeItem("right").refresh_root("right");
         setVisible(false);
-    }   
+    }
 }

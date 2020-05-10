@@ -37,6 +37,8 @@ public class FileBuilder {
                 }
             }
         } else {
+            //Selection des fichier .txt pour l'édition, permet quand même de comparer d'autres types de fichiers.
+            //Si j'ai bien compris seul les fichiers textes sont éditables..
             if(path.getFileName().toString().endsWith(".txt")){
                 String contents =  new String(Files.readAllBytes(path));
                 return result = new SimpleFile(path.getFileName().toString(), ldt, contents.length(), path.toAbsolutePath().toAbsolutePath(), contents);

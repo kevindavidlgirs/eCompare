@@ -19,25 +19,24 @@ import javafx.beans.value.ObservableStringValue;
  */
 public class SimpleFile extends File {
 
-    private final SimpleStringProperty FileContents;
+    private final SimpleStringProperty FileContents = new SimpleStringProperty();
 
-    //Utiliser par un fichier texte. Si ce n'est pas un fichier texte alors utilisé directement dans le FileBuilder
+    //Utiliser si ce n'est pas un fichier texte
     public SimpleFile(String name, LocalDateTime date, long size, Path path){
         super(name, date, size, path);
-        this.FileContents = new SimpleStringProperty("");
+        this.FileContents.setValue(null);
     }
 
-    //Si c'est un fichier texte
+    //Utiliser si c'est un fichier texte
     public SimpleFile(String name, LocalDateTime date, long size, Path path, String FileContents) {
         this(name, date, size, path);
-        //A voir si cette condition est nécessaire !
         this.FileContents.setValue(FileContents);
-        /*
-        if(FileContents.length() == 0){
-            this.FileContents = "";
-        }else{
-            this.FileContentsnew = new SimpleStringProperty(FileContents);
-        }*/
+    }
+
+    //Utiliser pour la copy en profondeur
+    public SimpleFile(File f, Path path, String FileContents){
+        this(f.getName(), f.getDate(), f.getSize(), path);
+        this.FileContents.setValue(FileContents);
     }
 
     public String getFileContents(){return FileContents.getValue();}
@@ -52,8 +51,8 @@ public class SimpleFile extends File {
     }
 
     @Override
-    public boolean isSame(File f1) {
-        if (this.getDate().isEqual(f1.getDate())) {
+    public boolean isSame(File f) {
+        if (this.getDate().isEqual(f.getDate())) {
             return true;
         }
         return false;
@@ -120,4 +119,8 @@ public class SimpleFile extends File {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public boolean removeFile(File file) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

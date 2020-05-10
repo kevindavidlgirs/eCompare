@@ -5,12 +5,16 @@
  */
 package File.view;
 
+import File.model.Model;
 import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import File.viewModel.EditVM;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableIntegerValue;
 import javafx.beans.value.ObservableObjectValue;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -23,43 +27,61 @@ import javafx.scene.text.TextFlow;
  * @author herve
  */
 public class EditView extends Stage {
-    private final Button addButton = new Button("Save");
-    public EditView(Stage primaryStage, EditVM editVM) {
-        BorderPane root = new BorderPane();
+    private final Button saveButton = new Button("Save");
+    private final TextArea textArea = new TextArea();
+    private final BorderPane root = new BorderPane();
+    private final TextFlow footerStatus = new TextFlow(saveButton);
+    private final StackPane stackPane = new StackPane(textArea);
+    private final EditVM editVM;
+    private final String side;
+
+    public EditView(Stage primaryStage, EditVM editVM, String side) {
+
+        this.editVM = editVM;
+        this.side = side;
         initModality(Modality.WINDOW_MODAL);
         initOwner(primaryStage);
-        TextArea textArea = new TextArea();
-        textArea.setWrapText(true);
-        Button saveButton = new Button("Save");
-        
-        textArea.textProperty().bindBidirectional(editVM.textProperty());
-        StackPane stackPane = new StackPane(textArea);
-        
-        TextFlow footerStatus = new TextFlow(saveButton);
-        footerStatus.setTextAlignment(TextAlignment.CENTER);
-        footerStatus.setPadding(new Insets(10));
+        configTextArea();
+        configFooter();
+        configWindow();
+        configBinding();
+        Scene scene = new Scene(root, 600, 400);
+        setScene(scene);
 
-        
-        root.setCenter(stackPane);
-        root.setBottom(footerStatus);
-        
         setOnHiding((e) -> editVM.setVisible(false));
         editVM.showingProperty().addListener((obj, old, act) -> {
-            if(act) showAndWait();
+            if(act) {
+                saveButton.disableProperty().setValue(false);
+                showAndWait();
+            }
         });
         
         saveButton.setOnAction(e -> {
-            editVM.update();
+            editVM.update(side);
+            saveButton.disableProperty().setValue(true);
         });
-         
-        Scene scene = new Scene(root, 600, 400);
-        setScene(scene);
-        
+    }
+
+    private void configTextArea(){
+        textArea.setWrapText(true);
+        textArea.textProperty().bindBidirectional(editVM.textProperty());
+    }
+
+    private void configFooter(){
+        footerStatus.setTextAlignment(TextAlignment.CENTER);
+        footerStatus.setPadding(new Insets(10));
+    }
+
+    private void configWindow(){
+        root.setCenter(stackPane);
+        root.setBottom(footerStatus);
+    }
+
+    private void configBinding(){
         titleProperty().bind(editVM.selected_file_name().
                 concat(" : ").
                 concat(editVM.textLengthProperty()).
                 concat(" octets")
         );
     }
-    
 }
