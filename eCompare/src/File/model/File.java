@@ -18,6 +18,7 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableLongValue;
 import javafx.beans.value.ObservableStringValue;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -48,14 +49,15 @@ public abstract class File  extends TreeItem<File>{
     }
     
     public String getName() {return this.name.get();}
-    public ObservableStringValue nameProperty() { return name;}
+    public ObservableStringValue nameProperty() { return this.name;}
     
     public LocalDateTime getDate() { return date.getValue();}
     public ReadOnlyObjectProperty<LocalDateTime> dateTimeProperty() { return date;}
     
     public long getSize() {return this.size.get();}
     public ReadOnlyLongProperty sizeProperty() {return size;}
-    
+    public ObservableLongValue getsizeProperty(){return size;}
+            
     public Path getPath() { return this.path.getValue();}
     public ReadOnlyObjectProperty pathProperty() {return path;}
     

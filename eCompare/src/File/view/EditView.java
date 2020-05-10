@@ -12,6 +12,9 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import File.viewModel.EditVM;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableIntegerValue;
 import javafx.beans.value.ObservableObjectValue;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -52,6 +55,7 @@ public class EditView extends Stage {
         
         saveButton.setOnAction(e -> {
             editVM.update(side);
+            saveButton.disableProperty().setValue(true);
         });
     }
 
@@ -71,11 +75,10 @@ public class EditView extends Stage {
     }
 
     private void configBinding(){
-        titleProperty().bind(editVM.selected_file_name().
+        titleProperty().bind(editVM.nameProperty().
                 concat(" : ").
                 concat(editVM.textLengthProperty()).
                 concat(" octets")
         );
     }
-
 }

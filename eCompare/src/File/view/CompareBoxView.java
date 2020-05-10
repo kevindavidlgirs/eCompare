@@ -25,6 +25,7 @@ import java.io.IOException;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.event.EventType;
 import javafx.scene.layout.HBox;
 
 
@@ -46,7 +47,7 @@ public class CompareBoxView extends VBox{
 
     public CompareBoxView(Stage primaryStage, ViewModel vm, String side){
         this.side = side;
-        createTreeTableView(vm);
+        createTreeTableView();
         createCells();
         configTreeTableView();
         createLabelPath(vm);
@@ -61,6 +62,7 @@ public class CompareBoxView extends VBox{
                 ex.printStackTrace();
             }
         });
+         new EditView(primaryStage, vm.getEditVM(side), side);
     }
 
     private void configWindow(){
@@ -114,10 +116,11 @@ public class CompareBoxView extends VBox{
         });
     }
 
-    private void createTreeTableView(ViewModel vm){
-        treeTableViews.rootProperty().bind(vm.getTreeItem(side).root_property());
+    private void createTreeTableView(){
         treeTableViews.setShowRoot(false);
     }
+    
+   
     
     private void setBindingAndListeners(ViewModel vm) {
         treeTableViews.rootProperty().bind(vm.getTreeItem(side).root_property());

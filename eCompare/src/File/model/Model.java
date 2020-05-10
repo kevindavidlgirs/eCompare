@@ -172,6 +172,7 @@ public class Model {
         if(statusSelectedForView.contains("ORPHAN")){
             searchOrphanFile(file_structure_left);
         }
+        
         if(statusSelectedForView.contains("NEWERL")){
             searchNewerOrOlderFile(file_structure_left, "NEWER");
         }else if (statusSelectedForView.contains("NEWERR")){

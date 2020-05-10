@@ -13,6 +13,7 @@ public class StatusButtonsVM {
     private final BooleanProperty orphans_button = new SimpleBooleanProperty(false);
     private final BooleanProperty same_button = new SimpleBooleanProperty(false);
     private final BooleanProperty folders_only = new SimpleBooleanProperty(false);
+    private final BooleanProperty actionEnabled = new SimpleBooleanProperty(false);
 
     public StatusButtonsVM(ViewModel vm, Model model){
         this.model = model;
@@ -61,7 +62,7 @@ public class StatusButtonsVM {
         same_button.setValue(false);
         folders_only.setValue(false);
     }
-
+    
     public void set_selected_items(String status, Boolean buttons) {
         if (buttons && status.compareTo("All") != 0) {
             add_status_to_edit(status);
@@ -83,5 +84,4 @@ public class StatusButtonsVM {
         vm.getTreeItem("left").set_root(model.get_left_struct_folder());
         vm.getTreeItem("Right").set_root(model.get_right_struct_folder());
     }
-
 }

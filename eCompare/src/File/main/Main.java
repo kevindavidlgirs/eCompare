@@ -21,7 +21,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        FacadeECompare fe = new FacadeECompare(primaryStage, "eCompare/TestBC/RootBC_Left", "eCompare/TestBC/RootBC_Right");
+        FacadeECompare fe = new FacadeECompare(primaryStage, "TestBC/RootBC_Left", "TestBC/RootBC_Right");
     }
 
     public static void main(String[] args) { launch(args); }

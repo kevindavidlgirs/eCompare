@@ -14,6 +14,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import File.viewModel.ViewModel;
+import javafx.scene.control.Button;
 
 
 /**
@@ -24,16 +25,16 @@ public class View{
     private final CompareBoxView left_vbstruct_folder;
     private final CompareBoxView right_vbstruct_folder;
     private final ButtonsBoxView buttons_view;
+    //private final ButtonMoveLeftRightView button_move_left_right_View;
     private final BorderPane root = new BorderPane();
-    private final TextFlow footerStatus = new TextFlow();
+    //private final TextFlow footerStatus = new TextFlow();
+    private final FooterBoxView footer_bt_text_View;
 
     public View(Stage primaryStage, ViewModel vm) {
-        new EditView(primaryStage, vm.getEditLeftVM(), "left");
-        new EditView(primaryStage, vm.getEditRightVM(), "right");
         buttons_view = new ButtonsBoxView(vm);
         left_vbstruct_folder = new CompareBoxView(primaryStage, vm, "left");
         right_vbstruct_folder = new CompareBoxView(primaryStage, vm, "right");
-        configStateLabel();
+        footer_bt_text_View = new FooterBoxView(vm);
         configWindow();
         Scene scene = new Scene(root);
         primaryStage.setTitle("eCompare");
@@ -41,28 +42,10 @@ public class View{
         primaryStage.show();
     }
 
-    private void configStateLabel(){
-        Text ORPHAN = new Text("ORPHAN   ");
-        Text SAME = new Text("SAME   ");
-        Text PARTIAL_SAME = new Text("PARTIAL_SAME   ");
-        Text NEWER = new Text("NEWER   ");
-        Text OLDER = new Text("OLDER");
-
-        ORPHAN.setFill(Color.BLUEVIOLET);
-        SAME.setFill(Color.GREEN);
-        PARTIAL_SAME.setFill(Color.ORANGE);
-        NEWER.setFill(Color.RED);
-        OLDER.setFill(Color.BROWN);
-
-        footerStatus.getChildren().addAll(ORPHAN, SAME, PARTIAL_SAME, NEWER, OLDER);
-        footerStatus.setTextAlignment(TextAlignment.CENTER);
-        footerStatus.setPadding(new Insets(10));
-    }
-
     private void configWindow(){
         root.setTop(buttons_view);
         root.setLeft(left_vbstruct_folder);
         root.setRight(right_vbstruct_folder);
-        root.setBottom(footerStatus);
+        root.setBottom(footer_bt_text_View);
     }
 }

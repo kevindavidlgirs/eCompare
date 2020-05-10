@@ -1,4 +1,5 @@
 package File.viewModel;
+
 import File.model.File;
 import File.model.Model;
 import javafx.beans.property.ObjectProperty;
@@ -6,15 +7,17 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.TreeItem;
 import java.io.IOException;
+import javafx.beans.property.StringProperty;
 
 public class TreeItemVM {
+
     private final Model model;
     private final EditVM editor;
     private final SimpleStringProperty labelPathText = new SimpleStringProperty();
     private final ObjectProperty<TreeItem<File>> root = new SimpleObjectProperty<>();
     private final ObjectProperty<TreeItem<File>> selected_file_property = new SimpleObjectProperty<>();
 
-    public TreeItemVM(Model model, EditVM editor){
+    public TreeItemVM(Model model, EditVM editor) {
         this.model = model;
         this.editor = editor;
     }
@@ -22,6 +25,14 @@ public class TreeItemVM {
     public void set_root(File f) {
         root.setValue(makeTreeRoot(f));
         labelPathText.setValue(f.getPath().toString());
+    }
+
+    public void refresh_root(String name) {
+        if (name.equals("left")) {
+            root.setValue(makeTreeRoot(model.get_left_struct_folder()));
+        } else {
+            root.setValue(makeTreeRoot(model.get_right_struct_folder()));
+        }
     }
 
     public void set_treeItem(String path, String name) throws IOException {
@@ -45,21 +56,23 @@ public class TreeItemVM {
         return res;
     }
 
-    public ObjectProperty<TreeItem<File>> root_property() { return root; }
-    public SimpleStringProperty labelPathTextProperty(){ return labelPathText; }
+    public ObjectProperty<TreeItem<File>> root_property() {
+        return root;
+    }
 
-    public ObjectProperty<TreeItem<File>> selected_file_property() { return selected_file_property; }
-    //public void set_selected_file(File file){selected_file_property.setValue((SimpleFile) file);}
+    public SimpleStringProperty labelPathTextProperty() {
+        return labelPathText;
+    }
+
+    public ObjectProperty<TreeItem<File>> selected_file_property() {
+        return selected_file_property;
+    }
+
     public void openSelectedFile() {
-        if(!selected_file_property.getValue().getValue().isDirectory() && !selected_file_property.getValue().getValue().getFileContents().equals(null)){
-            editor.set_selected_file_name(selected_file_property.getValue().getValue().getName());
+        if (!selected_file_property.getValue().getValue().isDirectory() && !selected_file_property.getValue().getValue().getFileContents().equals(null)) {
             editor.setText(selected_file_property.getValue().getValue().getFileContents());
+            editor.start_binding_and_listening();
             editor.setVisible(true);
         }
     }
-
-
-
-
-
 }
