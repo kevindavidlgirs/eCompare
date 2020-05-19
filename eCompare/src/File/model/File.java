@@ -71,7 +71,9 @@ public abstract class File  extends TreeItem<File>{
     
     public void set_status(Status s) { this.status.setValue(s); }
 
-    public void set_size(long size){ this.size.setValue(size); }
+    public void set_size(long size){ 
+        this.size.setValue(size);
+    }
     
     public void set_date(LocalDateTime date){
         this.date.setValue(date);

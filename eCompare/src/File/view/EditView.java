@@ -60,6 +60,10 @@ public class EditView extends Stage {
             editVM.update(side);
             saveButton.disableProperty().setValue(true);
         });
+        
+        textArea.textProperty().addListener((obj, old, act) -> {
+                  saveButton.disableProperty().setValue(false);
+        });
     }
 
     private void configTextArea(){

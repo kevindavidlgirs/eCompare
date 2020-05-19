@@ -31,5 +31,4 @@ public class FacadeECompare {
         viewmodel = new ViewModel(model);
         view = new View(primaryStage, viewmodel);
     }
-
 }

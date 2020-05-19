@@ -23,8 +23,10 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.EventType;
 import javafx.scene.layout.HBox;
 
@@ -121,12 +123,13 @@ public class CompareBoxView extends VBox{
         treeTableViews.setShowRoot(false);
     }
     
-   
     
     private void setBindingAndListeners(ViewModel vm) {
         treeTableViews.rootProperty().bind(vm.getTreeItem(side).root_property());
-        vm.getTreeItem(side).selected_file_property().bind(treeTableViews.getSelectionModel().selectedItemProperty());
+        // Fait bugurer le programme lorsqu'on clique plusieurs fois sur save
+        // vm.getTreeItem(side).selected_file_property().bind(treeTableViews.getSelectionModel().selectedItemProperty());
         treeTableViews.setOnMousePressed(e -> {
+            vm.getTreeItem(side).selected_file_property().setValue(treeTableViews.getSelectionModel().selectedItemProperty().get());
             if (e.getClickCount() == 2) {
                 vm.getTreeItem(side).openSelectedFile();
             }
