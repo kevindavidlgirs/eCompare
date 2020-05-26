@@ -5,15 +5,11 @@
  */
 package File.view;
 import File.viewModel.ViewModel;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Button;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
-import javafx.scene.control.TreeItem;
 import File.model.File;
-import File.model.SimpleFile;
-import javafx.beans.property.SimpleObjectProperty;
+import File.model.Status;
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -22,12 +18,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.Property;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.event.EventType;
+import java.time.LocalDateTime;
+import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.layout.HBox;
 
 
@@ -36,11 +28,11 @@ import javafx.scene.layout.HBox;
  * @author herve
  */
 public class CompareBoxView extends VBox{
-    private final TreeTableColumn<File, File> nameCol = new TreeTableColumn<>("Name");
-    private final TreeTableColumn<File, File> typeCol = new TreeTableColumn<>("Type");
-    private final TreeTableColumn<File, File> dateModifCol = new TreeTableColumn<>("Date modif");
-    private final TreeTableColumn<File, File> sizeCol = new TreeTableColumn<>("Size");
-    private final TreeTableColumn<File, File> statusCol = new TreeTableColumn<>("Status");
+    private final TreeTableColumn<File, String> nameCol = new TreeTableColumn<>("Name");
+    private final TreeTableColumn<File, String> typeCol = new TreeTableColumn<>("Type");
+    private final TreeTableColumn<File, LocalDateTime> dateModifCol = new TreeTableColumn<>("Date modif");
+    private final TreeTableColumn<File, Long> sizeCol = new TreeTableColumn<>("Size");
+    private final TreeTableColumn<File, Status> statusCol = new TreeTableColumn<>("Status");
     private final TreeTableView<File> treeTableViews = new TreeTableView();
     private final Text labelPathText = new Text();
     private final Button directoryButton = new Button();
@@ -91,31 +83,16 @@ public class CompareBoxView extends VBox{
     }
 
     private void createCells() {
-        nameCol.setCellValueFactory(r -> new SimpleObjectProperty<>(r.getValue().getValue()));
-        typeCol.setCellValueFactory(r -> new SimpleObjectProperty<>(r.getValue().getValue()));
-        dateModifCol.setCellValueFactory(r -> new SimpleObjectProperty<>(r.getValue().getValue()));
-        sizeCol.setCellValueFactory(r -> new SimpleObjectProperty<>(r.getValue().getValue()));
-        statusCol.setCellValueFactory(r -> new SimpleObjectProperty<>(r.getValue().getValue()));
+        nameCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("name"));
+        typeCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("type"));
+        dateModifCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("date"));
+        sizeCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("size"));
+        statusCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("status"));
         dateModifCol.setPrefWidth(150);
-        nameCol.setCellFactory((param) -> {
-            return new NameFileCell();
-        });
-
-        typeCol.setCellFactory((param) -> {
-            return new TypeFileCell();
-        });
-
-        dateModifCol.setCellFactory((param) -> {
-            return new DateFileCell();
-        });
-
-        sizeCol.setCellFactory((param) -> {
-            return new SizeFileCell();
-        });
-
-        statusCol.setCellFactory((param) -> {
-            return new StatusFileCell();
-        });
+        
+        //nameCol.setCellFactory(column -> {return new ElemCell<>(); });
+        //dateModifCol.setCellFactory(column -> {return new ElemDateTimeCell<>(); });
+        //...
     }
 
     private void createTreeTableView(ViewModel vm){

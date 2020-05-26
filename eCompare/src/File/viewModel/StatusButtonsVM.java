@@ -68,7 +68,6 @@ public class StatusButtonsVM {
             add_status_to_edit(status);
             all_button.setValue(false);
         } else if(!buttons){
-            System.out.println(buttons.toString() + " " + status.toString());
             remove_status_to_edit(status);
             if(get_nb_status() == 0){
                 all_button.setValue(true);

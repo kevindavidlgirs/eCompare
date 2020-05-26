@@ -7,7 +7,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.TreeItem;
 import java.io.IOException;
-import javafx.beans.property.StringProperty;
 
 public class TreeItemVM {
 
