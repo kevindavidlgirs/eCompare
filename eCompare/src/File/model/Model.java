@@ -54,17 +54,20 @@ public class Model {
     }
 
     public void add_status_to_edit(String s){
+        String well_formatted_status = status_converter(s);
         if(s.equals("All")){
             set_all_status_true(file_structure_left);
             set_all_status_true(file_structure_right);
-        }else if(s.equals("Folders Only") && statusSelectedForView.isEmpty()) {
-            String well_formatted_status = status_converter(s);
+        }else if(s.equals("Folders Only") && statusSelectedForView.size() == 0) {
             statusSelectedForView.add(well_formatted_status);
             set_just_folders_true(file_structure_left);
             set_just_folders_true(file_structure_right);
         }else{
-            String well_formatted_status = status_converter(s);
             if(!statusSelectedForView.contains(well_formatted_status)){
+                //Ajouter la condition ici pour BigsFiles ?
+                //if(...){
+                    //set_juste_bigs_files_true(...);
+                //}
                 if(statusSelectedForView.contains("NEWERL") && well_formatted_status.equals("NEWERR")
                         || statusSelectedForView.contains("NEWERR") && well_formatted_status.equals("NEWERL")){
                     if (statusSelectedForView.contains("NEWERL")) {
@@ -75,6 +78,7 @@ public class Model {
                 }
                 statusSelectedForView.add(well_formatted_status);
             }
+            //Quelques conditions à ajouter dans set_struct_selected_items
             set_struct_selected_items(file_structure_left, "left");
             set_struct_selected_items(file_structure_right, "right");
         }
