@@ -25,7 +25,7 @@ public class Directory extends File {
     private final DateTimeBinding dateTimeBinding = new DateTimeBinding();
 
     public Directory(String name, LocalDateTime date, long size, Path path) {
-        super(name, date, size, path);
+        super(name, date, size, path, "D");
         addToSizeBinding(getChildren()); 
         addToDateTimeBinding(getChildren());
         bindSizeTo(sizeBinding);
@@ -33,7 +33,7 @@ public class Directory extends File {
     }
 
     public Directory(File f, Path path){
-        super(f.getName(), f.getDate(), f.getSize(), path);
+        super(f.getName(), f.getDate(), f.getSize(), path, "D");
         addToSizeBinding(getChildren());
         addToDateTimeBinding(getChildren());
         bindSizeTo(sizeBinding);
@@ -41,21 +41,18 @@ public class Directory extends File {
     }
 
     private void set_all_status_orphan(File f) {
-        for (File f1 : f.getList()) {
+        f.getList().forEach((f1) -> {
             if (f1.isDirectory()) {
                 set_all_status_orphan(f1);
             } else {
                 f1.set_status(Status.ORPHAN);
             }
-        }
+        });
         f.set_status(Status.ORPHAN);
     }
 
     private boolean isPartialSame(File f) {
-        if (!isOrphan(f)) {
-            return true;
-        }
-        return false;
+        return !isOrphan(f);
     }
 
     @Override
@@ -130,10 +127,8 @@ public class Directory extends File {
     @Override
     public boolean isOrphan(File f) {
         if (f.getList().size() > 0) {
-            for (File f1 : f.getList()) {
-                if (f1.getStatus() != Status.ORPHAN) {
-                    return false;
-                }
+            if (!f.getList().stream().noneMatch((f1) -> (f1.getStatus() != Status.ORPHAN))) {
+                return false;
             }
         } else {
             return false;
@@ -235,9 +230,9 @@ public class Directory extends File {
                     .append(getStatus() + " ").append("\n");
         }
 
-        for (File f : files) {
+        files.forEach((f) -> {
             res.append(f.displayFormat(offset + 1));
-        }
+        });
         return res.toString();
     }
 

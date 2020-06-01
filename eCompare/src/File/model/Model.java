@@ -54,17 +54,20 @@ public class Model {
     }
 
     public void add_status_to_edit(String s){
+        String well_formatted_status = status_converter(s);
         if(s.equals("All")){
             set_all_status_true(file_structure_left);
             set_all_status_true(file_structure_right);
         }else if(s.equals("Folders Only") && statusSelectedForView.size() == 0) {
-            String well_formatted_status = status_converter(s);
             statusSelectedForView.add(well_formatted_status);
             set_just_folders_true(file_structure_left);
             set_just_folders_true(file_structure_right);
         }else{
-            String well_formatted_status = status_converter(s);
             if(!statusSelectedForView.contains(well_formatted_status)){
+                //Ajouter la condition ici pour BigsFiles ?
+                //if(...){
+                    //set_juste_bigs_files_true(...);
+                //}
                 if(statusSelectedForView.contains("NEWERL") && well_formatted_status.equals("NEWERR")
                         || statusSelectedForView.contains("NEWERR") && well_formatted_status.equals("NEWERL")){
                     if (statusSelectedForView.contains("NEWERL")) {
@@ -75,6 +78,7 @@ public class Model {
                 }
                 statusSelectedForView.add(well_formatted_status);
             }
+            //Quelques conditions à ajouter dans set_struct_selected_items
             set_struct_selected_items(file_structure_left, "left");
             set_struct_selected_items(file_structure_right, "right");
         }
@@ -95,7 +99,7 @@ public class Model {
     }
 
     private void set_all_status_true(File f){
-        if(f.isDirectory() && f.getList().size() != 0){
+        if(f.isDirectory() && !f.getList().isEmpty()){
             f.getList().forEach(fl -> {
                 set_all_status_true(fl);
             });
@@ -104,7 +108,7 @@ public class Model {
     }
 
     private void set_just_folders_true(File f){
-        if(f.isDirectory() && f.getList().size() != 0){
+        if(f.isDirectory() && !f.getList().isEmpty()){
             f.getList().forEach(fl -> {
                 set_just_folders_true(fl);
             });
@@ -117,16 +121,16 @@ public class Model {
     }
 
     public void set_struct_selected_items(File f, String side){
-        if(f.isDirectory() && f.getList().size() != 0 && !statusSelectedForView.isEmpty()){
-            for(File f1 : f.getList()){
+        if(f.isDirectory() && !f.getList().isEmpty() && !statusSelectedForView.isEmpty()){
+            f.getList().forEach((f1) -> {
                 set_struct_selected_items(f1, side);
-            }
+            });
         }
         set_status(f, side);
     }
 
     private void set_status(File f, String side){
-        if(f.isDirectory() && f.getList().size() != 0) {
+        if(f.isDirectory() && !f.getList().isEmpty()) {
             f.set_selected(false);
             for (File f1 : f.getList()) {
                 if (f1.isSelected()) {
@@ -153,16 +157,24 @@ public class Model {
 
     public String status_converter(String s){
         String result="";
-        if(s.equals("Newer Left")) {
-            result = "NEWERL";
-        }else if(s.equals("Newer Right")){
-            result = "NEWERR";
-        }else if(s.equals("Orphans")){
-            result = "ORPHAN";
-        } else if(s.equals("Same")){
-            result = "SAME";
-        } else if(s.equals("Folders Only")){
-            result = "D";
+        switch (s) {
+            case "Newer Left":
+                result = "NEWERL";
+                break;
+            case "Newer Right":
+                result = "NEWERR";
+                break;
+            case "Orphans":
+                result = "ORPHAN";
+                break;
+            case "Same":
+                result = "SAME";
+                break;
+            case "Folders Only":
+                result = "D";
+                break;
+            default:
+                break;
         }
         return result;
     }
@@ -182,13 +194,13 @@ public class Model {
 
     private void searchOrphanFile(File fileStructLeft){
         if(fileStructLeft.isDirectory() && !fileStructLeft.getStatus().toString().equals("ORPHAN")) {
-            for (File f1 : fileStructLeft.getList()) {
+            fileStructLeft.getList().forEach((f1) -> {
                 if (f1.isDirectory() && !f1.getStatus().toString().equals("ORPHAN")) {
                     searchOrphanFile(f1);
                 }else if (f1.getStatus().toString().equals("ORPHAN")){
                     copieOrphanFile(f1);
                 }
-            }
+            });
         }else if(fileStructLeft.getStatus().toString().equals("ORPHAN") ){
             copieOrphanFile(fileStructLeft);
         }
@@ -252,13 +264,13 @@ public class Model {
     //A peaufiner
     private void searchNewerOrOlderFile(File fileStructLeft, String status){
         if(fileStructLeft.isDirectory()) {
-            for (File f1 : fileStructLeft.getList()) {
+            fileStructLeft.getList().forEach((f1) -> {
                 if (f1.isDirectory()) {
                     searchNewerOrOlderFile(f1, status);
                 }else if (!f1.isDirectory() && f1.getStatus().toString().equals(status)){
                     copieNewerOrOlderFile(f1, file_structure_right);
                 }
-            }
+            });
         }else if(fileStructLeft.getStatus().toString().equals(status)){
             copieNewerOrOlderFile(fileStructLeft, file_structure_right);
         }
@@ -266,7 +278,7 @@ public class Model {
 
     private void copieNewerOrOlderFile(File file, File fileStructRight){
         if(fileStructRight.isDirectory()){
-            for(File f : fileStructRight.getList()){
+            fileStructRight.getList().forEach((f) -> {
                 if(getPathRelativized(file_structure_right, f.getPath()).equals(getPathRelativized(file_structure_left, file.getParent().getValue().getPath()))){
                     //f.getList(); retourne une unmodifiableList et de plus impossible d'itérer sur une list et de la modifier durant l'itération
                     //Cette solution n'est pas très intelligente mais fonctionnel, à peaufiner.
@@ -285,7 +297,7 @@ public class Model {
                 }else{
                     copieNewerOrOlderFile(file, f);
                 }
-            }
+            });
         }
     }
 

@@ -5,15 +5,12 @@
  */
 package File.view;
 import File.viewModel.ViewModel;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Button;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
-import javafx.scene.control.TreeItem;
 import File.model.File;
-import File.model.SimpleFile;
-import javafx.beans.property.SimpleObjectProperty;
+import File.model.Status;
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -22,12 +19,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.Property;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.event.EventType;
+import java.time.LocalDateTime;
+import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.layout.HBox;
 
 
@@ -60,8 +53,8 @@ public class CompareBoxView extends VBox{
         directoryButton.setOnAction(e -> {
             try {
                 vm.set_treeItem(DirChooser.selectDirectory(primaryStage), side);
-            } catch (IOException ex) {
-                ex.printStackTrace();
+            } catch (IOException | NullPointerException ex) {
+
             }
         });
          new EditView(primaryStage, vm.getEditVM(side), side);
@@ -81,13 +74,14 @@ public class CompareBoxView extends VBox{
 
     private void createLabelPath(ViewModel vm) {
         labelPathText.textProperty().bind(vm.getTreeItem(side).labelPathTextProperty());
+        labelPathText.setWrappingWidth(500);
         labelPathText.setStyle("-fx-font-weight: bold");
     }
 
     private void configTreeTableView() {
         treeTableViews.getColumns().setAll(nameCol, typeCol, dateModifCol, sizeCol, statusCol);
         setPadding(new Insets(3));
-        setPrefWidth(750);
+        setPrefWidth(550);
     }
 
     private void createCells() {
@@ -118,6 +112,7 @@ public class CompareBoxView extends VBox{
         });
     }
 
+
     private void createTreeTableView(ViewModel vm){
         treeTableViews.rootProperty().bind(vm.getTreeItem(side).root_property());
         treeTableViews.setShowRoot(false);
@@ -126,12 +121,12 @@ public class CompareBoxView extends VBox{
     
     private void setBindingAndListeners(ViewModel vm) {
         treeTableViews.rootProperty().bind(vm.getTreeItem(side).root_property());
-        // Fait bugurer le programme lorsqu'on clique plusieurs fois sur save
-        // vm.getTreeItem(side).selected_file_property().bind(treeTableViews.getSelectionModel().selectedItemProperty());
         treeTableViews.setOnMousePressed(e -> {
             vm.getTreeItem(side).selected_file_property().setValue(treeTableViews.getSelectionModel().selectedItemProperty().get());
             if (e.getClickCount() == 2) {
                 vm.getTreeItem(side).openSelectedFile();
+            }else if(e.isAltDown()){
+                vm.getTreeItem(side).deleteSelectedFile();
             }
         });
     }

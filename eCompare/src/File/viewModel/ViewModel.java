@@ -6,8 +6,6 @@
 package File.viewModel;
 
 import File.model.Model;
-import sun.reflect.generics.tree.Tree;
-
 import java.io.IOException;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
