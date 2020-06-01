@@ -53,21 +53,26 @@ public class Model {
         set_struct_selected_items(file_structure_left, "left");
     }
 
+    /**
+     * On enregistre le status des documents a filtrer
+     * @param s : paramètre de type string contenant le status à traiter.
+     */
     public void add_status_to_edit(String s){
+        // On récupère le nom du bouton sur un format compréhensible par le programme.
         String well_formatted_status = status_converter(s);
-        if(s.equals("All")){
-            set_all_status_true(file_structure_left);
+        // Le champ selected des ducuments ont par défaut la valeur true. donc pas besoin de faire statusSelectedForView.add();
+        if(s.equals("All")){ // Si all est sélectionné.   
+            set_all_status_true(file_structure_left); // On change la valeur du champ selected à true de tous documents de la structure de fichier.
             set_all_status_true(file_structure_right);
-        }else if(s.equals("Folders Only") && statusSelectedForView.size() == 0) {
+        }else if(s.equals("Folders Only") && statusSelectedForView.isEmpty()) {
             statusSelectedForView.add(well_formatted_status);
             set_just_folders_true(file_structure_left);
             set_just_folders_true(file_structure_right);
-        }else{
+        }else if(s.equals("BigsFiles")){
+            set_just_bigs_files_true(file_structure_left);
+            set_just_bigs_files_true(file_structure_right);
+        } else{
             if(!statusSelectedForView.contains(well_formatted_status)){
-                //Ajouter la condition ici pour BigsFiles ?
-                //if(...){
-                    //set_juste_bigs_files_true(...);
-                //}
                 if(statusSelectedForView.contains("NEWERL") && well_formatted_status.equals("NEWERR")
                         || statusSelectedForView.contains("NEWERR") && well_formatted_status.equals("NEWERL")){
                     if (statusSelectedForView.contains("NEWERL")) {
@@ -83,7 +88,11 @@ public class Model {
             set_struct_selected_items(file_structure_right, "right");
         }
     }
-
+    
+    /**
+     * Vide 
+     * @param s  
+     */
     public void remove_status_to_edit(String s){
         String well_formatted_status = status_converter(s);
         if(statusSelectedForView.contains(well_formatted_status)){
@@ -98,6 +107,11 @@ public class Model {
         }
     }
 
+    /**
+     * Change la valeur du champ selected à true pour tous les documents(Directry et SimpleFile) de la structure de fichier.
+     * Ceci afin de filtrer sur les champs selected possèdant la valeur true.
+     * @param f : paramètre de type File contenant la structure du fichier à traiter. 
+     */
     private void set_all_status_true(File f){
         if(f.isDirectory() && !f.getList().isEmpty()){
             f.getList().forEach(fl -> {
@@ -107,12 +121,17 @@ public class Model {
         f.set_selected(true);
     }
 
+    /**
+     * Change la valeur du champ selected à true pour les Directories de la structure de fichier.
+     * @param f : paramètre de type File contenant la structure du fichier à traiter. 
+     */
     private void set_just_folders_true(File f){
         if(f.isDirectory() && !f.getList().isEmpty()){
             f.getList().forEach(fl -> {
                 set_just_folders_true(fl);
             });
         }
+        
         if(f.isDirectory()){
             f.set_selected(true);
         }else{
@@ -128,7 +147,26 @@ public class Model {
         }
         set_status(f, side);
     }
-
+    
+    private void set_just_bigs_files_true(File f){
+         if(f.isDirectory() && !f.getList().isEmpty()){
+            f.getList().forEach(fl -> {
+                set_just_bigs_files_true(fl);
+            });
+        }
+        
+        if(f.getSize() >= 50){
+            f.set_selected(true);
+        }else{
+            f.set_selected(false);
+        }
+    }
+    
+    /**
+     * 
+     * @param f : le document dont le champ selected doit chaner.
+     * @param side : la structure de fichier.
+     */
     private void set_status(File f, String side){
         if(f.isDirectory() && !f.getList().isEmpty()) {
             f.set_selected(false);
@@ -141,7 +179,7 @@ public class Model {
                         f.set_selected(true);
                     }
                 }
-            }
+            }      
         }else if(statusSelectedForView.contains("NEWERL") && ((side.equals("left") && f.getStatus().toString().equals("NEWER"))
                                                                 || side.equals("right") && f.getStatus().toString().equals("OLDER"))) {
             f.set_selected(true);
@@ -173,13 +211,15 @@ public class Model {
             case "Folders Only":
                 result = "D";
                 break;
+            case "BigsFiles":
+                result = "BIGSF";
+                break;
             default:
                 break;
         }
         return result;
     }
-
-
+    
     public void moveItems(){
         if(statusSelectedForView.contains("ORPHAN")){
             searchOrphanFile(file_structure_left);
@@ -300,7 +340,31 @@ public class Model {
             });
         }
     }
-
+    
+    public void deleteFile(File selectedFile, File fileStruct) {
+        if (fileStruct.isDirectory()) {
+            for(File file : fileStruct.getList()){
+                if (file.getPath().equals(selectedFile.getParent().getValue().getPath())) {
+                    if (file.isDirectory()) {
+                        List<File> listForItemsToBeRemoved = new ArrayList<>(); // pour éviter le ConcurrentModificationException.
+                        for (File f : file.getList()) {
+                            if(f.getName().equals(selectedFile.getName())){
+                                listForItemsToBeRemoved.add(f);
+                            }
+                        }
+                        
+                        for(File fileToRemove : listForItemsToBeRemoved){
+                            file.removeFile(fileToRemove);
+                        }
+                    }
+                } else {
+                    deleteFile(selectedFile, file);
+                }
+            }
+        }
+    }
+    
+    
     //Permet de récupérer le path sans le chemin de "la racine au dossier" selectionné
     private Path getPathRelativized(File fileStructLeftOrRight, Path p){
         Path p1 = Paths.get(fileStructLeftOrRight.getPath().toString());

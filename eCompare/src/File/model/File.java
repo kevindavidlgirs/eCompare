@@ -37,7 +37,7 @@ public abstract class File  extends TreeItem<File>{
     private final LongProperty size;
     private final ObjectProperty<Path> path;
     private final ObjectProperty<Status> status;
-    private final BooleanProperty selected = new SimpleBooleanProperty(true);
+    private final BooleanProperty selected = new SimpleBooleanProperty(true); // Ce champ permet de filtrer sur la valeur true
 
     public File(String name, LocalDateTime date, long size, Path path, String type) {
         this.name = new SimpleStringProperty(name);

@@ -118,7 +118,6 @@ public class CompareBoxView extends VBox{
         treeTableViews.setShowRoot(false);
     }
     
-    
     private void setBindingAndListeners(ViewModel vm) {
         treeTableViews.rootProperty().bind(vm.getTreeItem(side).root_property());
         treeTableViews.setOnMousePressed(e -> {
@@ -126,7 +125,7 @@ public class CompareBoxView extends VBox{
             if (e.getClickCount() == 2) {
                 vm.getTreeItem(side).openSelectedFile();
             }else if(e.isAltDown()){
-                vm.getTreeItem(side).deleteSelectedFile();
+                vm.getTreeItem(side).deleteSelectedFile(side);
             }
         });
     }

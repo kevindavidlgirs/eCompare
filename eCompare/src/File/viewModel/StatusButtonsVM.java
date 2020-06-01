@@ -67,12 +67,18 @@ public class StatusButtonsVM {
         folders_only.setValue(false);
     }
     
+    /**
+     * Contient la logique applicative des boutons sélectionnés.
+     * @param status : un string contenant le nom du bouton séléctionné.
+     * @param buttons : un boolean contenant l'état du bouton.
+     */
     public void set_selected_items(String status, Boolean buttons) {
-        if (buttons && status.compareTo("All") != 0) {
-            if(status.compareTo("BigsFiles") == 0){
+        if (buttons && status.compareTo("All") != 0) { // Si n'importe quel bouton est sélectionné (sauf all)
+            if(status.compareTo("BigsFiles") == 0){ // Si Bigsfiles est sélectionné.
+                model.clear_statusList();
                 add_status_to_edit(status);
                 all_button.setValue(false);
-                without_buttonAll_and_buttonBF_set_other_status_false();
+                without_buttonAll_and_buttonBF_set_other_status_false(); // On désactive tous les autres boutons.
             }else{
                 add_status_to_edit(status);
                 all_button.setValue(false);
