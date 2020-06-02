@@ -125,7 +125,7 @@ public class CompareBoxView extends VBox{
             if (e.getClickCount() == 2) {
                 vm.getTreeItem(side).openSelectedFile();
             }else if(e.isAltDown()){
-                vm.getTreeItem(side).deleteSelectedFile(side);
+                vm.deleteSelectedFile(side);
             }
         });
     }

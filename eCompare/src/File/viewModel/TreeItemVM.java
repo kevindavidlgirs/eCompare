@@ -81,19 +81,13 @@ public class TreeItemVM {
 
     public void deleteSelectedFile(String side) {
         File structFiles = model.get_left_struct_folder();
-        
         if(side.equals("right")){
             structFiles = model.get_right_struct_folder();
         }
-        
-        model.deleteFile(selected_file_property.getValue().getValue(), structFiles);
-        
-        //TreeItem<File> selected = selected_file_property.getValue();
-        //selected.getValue().getValue().set_selected(false);
-        //selected.getParent().getChildren().remove(selected);
-        model.get_left_struct_folder().compare(model.get_left_struct_folder(), model.get_right_struct_folder());
-        refresh_root(side);
-        ////refresh_root("right");
-        //System.out.println();
+        try{
+            model.deleteFile(selected_file_property.getValue().getValue(), structFiles);
+        }catch(NullPointerException ex) {
+            System.out.println("Il est préférable de cliquer sur un fichier.");
+        }
     }
 }

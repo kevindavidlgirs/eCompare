@@ -77,4 +77,11 @@ public class ViewModel {
         root_left.set_root(model.get_left_struct_folder());
         root_right.set_root(model.get_right_struct_folder());
     }
+
+    public void deleteSelectedFile(String side) {
+        getTreeItem(side).deleteSelectedFile(side);
+        compare_folders();
+        root_left.refresh_root("left");
+        root_right.refresh_root("right");
+    }
 }

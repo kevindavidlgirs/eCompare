@@ -342,25 +342,16 @@ public class Model {
     }
     
     public void deleteFile(File selectedFile, File fileStruct) {
-        if (fileStruct.isDirectory()) {
+        if (fileStruct.isDirectory() && !fileStruct.getList().contains(selectedFile.getValue())) {
             for(File file : fileStruct.getList()){
                 if (file.getPath().equals(selectedFile.getParent().getValue().getPath())) {
-                    if (file.isDirectory()) {
-                        List<File> listForItemsToBeRemoved = new ArrayList<>(); // pour éviter le ConcurrentModificationException.
-                        for (File f : file.getList()) {
-                            if(f.getName().equals(selectedFile.getName())){
-                                listForItemsToBeRemoved.add(f);
-                            }
-                        }
-                        
-                        for(File fileToRemove : listForItemsToBeRemoved){
-                            file.removeFile(fileToRemove);
-                        }
-                    }
+                    file.removeFile(selectedFile.getValue());
                 } else {
                     deleteFile(selectedFile, file);
                 }
             }
+        }else if(fileStruct.isDirectory() && fileStruct.getList().contains(selectedFile.getValue())){
+            fileStruct.removeFile(selectedFile.getValue());
         }
     }
     
