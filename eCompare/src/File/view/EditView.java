@@ -5,17 +5,12 @@
  */
 package File.view;
 
-import File.model.Model;
 import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import File.viewModel.EditVM;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableIntegerValue;
-import javafx.beans.value.ObservableObjectValue;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
@@ -51,7 +46,7 @@ public class EditView extends Stage {
         setOnHiding((e) -> editVM.setVisible(false));
         editVM.showingProperty().addListener((obj, old, act) -> {
             if(act) {
-                saveButton.disableProperty().setValue(false);
+                saveButton.disableProperty().setValue(true);
                 showAndWait();
             }
         });

@@ -52,12 +52,12 @@ public class CompareBoxView extends VBox{
 
         directoryButton.setOnAction(e -> {
             try {
-                vm.set_treeItem(DirChooser.selectDirectory(primaryStage), side);
+                vm.set_treeItem(DirChooser.selectDirectory(primaryStage, new java.io.File(vm.getTreeItem(side).root_property().getValue().getValue().getPath().toString())), side);
             } catch (IOException | NullPointerException ex) {
 
             }
         });
-         new EditView(primaryStage, vm.getEditVM(side), side);
+        new EditView(primaryStage, vm.getEditVM(side), side);
     }
 
     private void configWindow(){
