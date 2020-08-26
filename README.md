@@ -38,3 +38,6 @@ IDE -> https://www.jetbrains.com/idea/
 ## Auteurs
 * **Kevin David L. Girs** - [kevindavidlgirs](https://github.com/kevindavidlgirs)
 * **Hervé Mbilo**
+
+##Info
+Projet de groupe pour un bachelier en informatique de gestion donné à l'EPFC (Bruxelles-capitale)
