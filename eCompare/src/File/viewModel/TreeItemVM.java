@@ -7,7 +7,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.TreeItem;
 import java.io.IOException;
-import javafx.beans.property.StringProperty;
 
 public class TreeItemVM {
 
@@ -69,10 +68,26 @@ public class TreeItemVM {
     }
 
     public void openSelectedFile() {
-        if (!selected_file_property.getValue().getValue().isDirectory() && !selected_file_property.getValue().getValue().getFileContents().equals(null)) {
-            editor.setText(selected_file_property.getValue().getValue().getFileContents());
-            editor.set_selected_file_name(selected_file_property.getValue().getValue().getName());
-            editor.setVisible(true);
+        try{
+            if (!selected_file_property.getValue().getValue().isDirectory() && !selected_file_property.getValue().getValue().getFileContents().equals(null)) {
+                editor.setText(selected_file_property.getValue().getValue().getFileContents());
+                editor.set_selected_file_name(selected_file_property.getValue().getValue().getName());
+                editor.setVisible(true);
+            }
+        }catch(NullPointerException ex){
+            System.out.println("Attention impossible d'éditer un fichier ayant une extension différente de \".txt\"");
+        }
+    }
+
+    public void deleteSelectedFile(String side) {
+        File structFiles = model.get_left_struct_folder();
+        if(side.equals("right")){
+            structFiles = model.get_right_struct_folder();
+        }
+        try{
+            model.deleteFile(selected_file_property.getValue().getValue(), structFiles);
+        }catch(NullPointerException ex) {
+            System.out.println("Il est préférable de cliquer sur un fichier.");
         }
     }
 }

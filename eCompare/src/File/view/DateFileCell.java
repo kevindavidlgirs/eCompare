@@ -8,10 +8,6 @@ package File.view;
 import File.model.File;
 import java.time.format.DateTimeFormatter;
 
-/**
- *
- * @author kevin
- */
 public class DateFileCell extends FileCell{
 
     @Override

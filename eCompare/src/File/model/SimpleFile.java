@@ -10,38 +10,32 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableStringValue;
 
-/**
- *
- * @author 2207hembilo
- */
 public class SimpleFile extends File {
 
     private final SimpleStringProperty FileContents = new SimpleStringProperty();
 
-    //Utiliser si ce n'est pas un fichier texte
     public SimpleFile(String name, LocalDateTime date, long size, Path path){
-        super(name, date, size, path);
+        super(name, date, size, path, "F");
         this.FileContents.setValue(null);
     }
 
-    //Utiliser si c'est un fichier texte
     public SimpleFile(String name, LocalDateTime date, long size, Path path, String FileContents) {
         this(name, date, size, path);
         this.FileContents.setValue(FileContents);
     }
 
-    //Utiliser pour la copy en profondeur
-    public SimpleFile(File f, Path path, String FileContents){
+    public SimpleFile(File f, Path path){
         this(f.getName(), f.getDate(), f.getSize(), path);
-        this.FileContents.setValue(FileContents);
+        this.FileContents.setValue(f.getFileContents());
     }
 
+    @Override
     public String getFileContents(){return FileContents.getValue();}
     public ObservableStringValue FileContentsProperty() { return FileContents;}
     
+    @Override
     public void set_file_content(String content){
         FileContents.setValue(content);
     }
@@ -52,19 +46,12 @@ public class SimpleFile extends File {
 
     @Override
     public boolean isSame(File f) {
-        if (this.getDate().isEqual(f.getDate())) {
-            return true;
-        }
-        return false;
+        return this.getDate().isEqual(f.getDate());
     }
 
     @Override
     public boolean isNewer(File f) {
-        if (this.getDate().isAfter(f.getDate())) {
-            return true;
-        } else {
-            return false;
-        }
+        return this.getDate().isAfter(f.getDate());
     }
 
     @Override

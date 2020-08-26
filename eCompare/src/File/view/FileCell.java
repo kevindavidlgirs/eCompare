@@ -9,10 +9,6 @@ import File.model.Status;
 import File.model.File;
 import javafx.scene.control.cell.TextFieldTreeTableCell;
 
-/**
- *
- * @author kevin
- */
 public abstract class FileCell extends TextFieldTreeTableCell<File, File> {
 
     private static final String CSSPATH = "File/view/cssView.css";

@@ -5,35 +5,22 @@
  */
 package File.view;
 import File.viewModel.ViewModel;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Button;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableView;
-import javafx.scene.control.TreeItem;
 import File.model.File;
-import File.model.SimpleFile;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
 import java.io.IOException;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.Property;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.event.EventType;
 import javafx.scene.layout.HBox;
 
-
-/**
- *
- * @author herve
- */
 public class CompareBoxView extends VBox{
+
     private final TreeTableColumn<File, File> nameCol = new TreeTableColumn<>("Name");
     private final TreeTableColumn<File, File> typeCol = new TreeTableColumn<>("Type");
     private final TreeTableColumn<File, File> dateModifCol = new TreeTableColumn<>("Date modif");
@@ -57,12 +44,12 @@ public class CompareBoxView extends VBox{
 
         directoryButton.setOnAction(e -> {
             try {
-                vm.set_treeItem(DirChooser.selectDirectory(primaryStage), side);
-            } catch (IOException ex) {
-                ex.printStackTrace();
+                vm.set_treeItem(DirChooser.selectDirectory(primaryStage, new java.io.File(vm.getTreeItem(side).root_property().getValue().getValue().getPath().toString())), side);
+            } catch (IOException | NullPointerException ex) {
+
             }
         });
-         new EditView(primaryStage, vm.getEditVM(side), side);
+        new EditView(primaryStage, vm.getEditVM(side), side);
     }
 
     private void configWindow(){
@@ -79,13 +66,14 @@ public class CompareBoxView extends VBox{
 
     private void createLabelPath(ViewModel vm) {
         labelPathText.textProperty().bind(vm.getTreeItem(side).labelPathTextProperty());
+        labelPathText.setWrappingWidth(500);
         labelPathText.setStyle("-fx-font-weight: bold");
     }
 
     private void configTreeTableView() {
         treeTableViews.getColumns().setAll(nameCol, typeCol, dateModifCol, sizeCol, statusCol);
         setPadding(new Insets(3));
-        setPrefWidth(750);
+        setPrefWidth(550);
     }
 
     private void createCells() {
@@ -116,19 +104,20 @@ public class CompareBoxView extends VBox{
         });
     }
 
+
     private void createTreeTableView(ViewModel vm){
         treeTableViews.rootProperty().bind(vm.getTreeItem(side).root_property());
         treeTableViews.setShowRoot(false);
     }
     
-   
-    
     private void setBindingAndListeners(ViewModel vm) {
         treeTableViews.rootProperty().bind(vm.getTreeItem(side).root_property());
-        vm.getTreeItem(side).selected_file_property().bind(treeTableViews.getSelectionModel().selectedItemProperty());
         treeTableViews.setOnMousePressed(e -> {
+            vm.getTreeItem(side).selected_file_property().setValue(treeTableViews.getSelectionModel().selectedItemProperty().get());
             if (e.getClickCount() == 2) {
                 vm.getTreeItem(side).openSelectedFile();
+            }else if(e.isAltDown()){
+                vm.deleteSelectedFile(side);
             }
         });
     }

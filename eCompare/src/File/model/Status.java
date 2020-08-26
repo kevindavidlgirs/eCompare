@@ -5,10 +5,6 @@
  */
 package File.model;
 
-/**
- *
- * @author kevin
- */
 public enum Status {
 
     ORPHAN, SAME, NEWER, OLDER, PARTIAL_SAME

@@ -25,53 +25,56 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
 
-/**
- *
- * @author 2207hembilo
- */
 public abstract class File  extends TreeItem<File>{
 
+    private final StringProperty type;
     private final StringProperty name;
-    private final ObjectProperty<LocalDateTime>  date;
+    private final ObjectProperty<LocalDateTime> date;
     private final LongProperty size;
     private final ObjectProperty<Path> path;
-    private ObjectProperty<Status> status;
-    private final BooleanProperty selected = new SimpleBooleanProperty(true);
+    private final ObjectProperty<Status> status;
+    private final BooleanProperty selected = new SimpleBooleanProperty(true); // Ce champ permet de filtrer sur la valeur true
 
-    public File(String name, LocalDateTime date, long size, Path path) {
+    public File(String name, LocalDateTime date, long size, Path path, String type) {
         this.name = new SimpleStringProperty(name);
         this.date =  new SimpleObjectProperty<>(date);
         this.size = new SimpleLongProperty(size);
         this.path = new SimpleObjectProperty<>(path);
         this.status =  new SimpleObjectProperty(null);
+        this.type = new SimpleStringProperty(type);
         setExpanded(true);
         setValue(this);
     }
     
+    public String getType(){return this.type.get();}
+    public ObservableStringValue typeProperty(){return this.type;}
+    
     public String getName() {return this.name.get();}
-    public ObservableStringValue nameProperty() { return this.name;}
+    public ObservableStringValue nameProperty(){ return this.name;}
     
     public LocalDateTime getDate() { return date.getValue();}
     public ReadOnlyObjectProperty<LocalDateTime> dateTimeProperty() { return date;}
     
     public long getSize() {return this.size.get();}
-    public ReadOnlyLongProperty sizeProperty() {return size;}
+    public ReadOnlyLongProperty sizeProperty(){return size;}
     public ObservableLongValue getsizeProperty(){return size;}
             
     public Path getPath() { return this.path.getValue();}
-    public ReadOnlyObjectProperty pathProperty() {return path;}
+    public ReadOnlyObjectProperty pathProperty(){return path;}
     
     public Status getStatus() {return status.getValue();}
-    public ReadOnlyObjectProperty statusProperty() {return path;}
+    public ReadOnlyObjectProperty statusProperty() {return status;}
 
-    public void set_selected(boolean selected){ this.selected.setValue(selected); }
+    public void set_selected(boolean selected){this.selected.setValue(selected);}
     public boolean getSelected(){return selected.get();}
     public boolean isSelected(){return selected.get();}
     public BooleanProperty isSelectedProperty(){return selected;}
     
-    public void set_status(Status s) { this.status.setValue(s); }
+    public void set_status(Status s){this.status.setValue(s);}
 
-    public void set_size(long size){ this.size.setValue(size); }
+    public void set_size(long size){ 
+        this.size.setValue(size);
+    }
     
     public void set_date(LocalDateTime date){
         this.date.setValue(date);

@@ -5,26 +5,20 @@
  */
 package File.view;
 
-import File.model.File;
 import File.viewModel.ViewModel;
-import javafx.beans.property.ObjectProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.TreeItem;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 
-/**
- *
- * @author herve
- */
 public class FooterBoxView extends VBox{
+
     private final TextFlow footerStatus = new TextFlow();
-    private final Button moveLeftRight = new Button("Move Left -> Right");
+    private final Button moveLeftRight = new Button("Copy Left -> Right");
     
     {
         getChildren().addAll(footerStatus, moveLeftRight);

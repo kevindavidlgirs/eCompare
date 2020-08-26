@@ -7,10 +7,6 @@ package File.view;
 
 import File.model.File;
 
-/**
- *
- * @author kevin
- */
 public class NameFileCell extends FileCell {
 
     @Override

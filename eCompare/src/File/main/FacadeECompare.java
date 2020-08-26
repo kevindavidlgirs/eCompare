@@ -5,23 +5,14 @@
  */
 package File.main;
 
-import File.model.FileBuilder;
-import File.model.File;
 import File.model.Model;
 import File.view.View;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Paths;
-
 import File.viewModel.ViewModel;
 import javafx.stage.Stage;
 
-/**
- *
- * @author herve
- */
-
 public class FacadeECompare {
+
     private final Model model;
     private final ViewModel viewmodel;
     private final View view;
@@ -31,5 +22,4 @@ public class FacadeECompare {
         viewmodel = new ViewModel(model);
         view = new View(primaryStage, viewmodel);
     }
-
 }

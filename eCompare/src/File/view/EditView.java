@@ -5,28 +5,20 @@
  */
 package File.view;
 
-import File.model.Model;
 import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import File.viewModel.EditVM;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableIntegerValue;
-import javafx.beans.value.ObservableObjectValue;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 
-/**
- *
- * @author herve
- */
 public class EditView extends Stage {
+
     private final Button saveButton = new Button("Save");
     private final TextArea textArea = new TextArea();
     private final BorderPane root = new BorderPane();
@@ -51,7 +43,7 @@ public class EditView extends Stage {
         setOnHiding((e) -> editVM.setVisible(false));
         editVM.showingProperty().addListener((obj, old, act) -> {
             if(act) {
-                saveButton.disableProperty().setValue(false);
+                saveButton.disableProperty().setValue(true);
                 showAndWait();
             }
         });
@@ -59,6 +51,10 @@ public class EditView extends Stage {
         saveButton.setOnAction(e -> {
             editVM.update(side);
             saveButton.disableProperty().setValue(true);
+        });
+        
+        textArea.textProperty().addListener((obj, old, act) -> {
+            saveButton.disableProperty().setValue(false);
         });
     }
 

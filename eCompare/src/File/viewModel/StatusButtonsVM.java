@@ -13,7 +13,7 @@ public class StatusButtonsVM {
     private final BooleanProperty orphans_button = new SimpleBooleanProperty(false);
     private final BooleanProperty same_button = new SimpleBooleanProperty(false);
     private final BooleanProperty folders_only = new SimpleBooleanProperty(false);
-    private final BooleanProperty actionEnabled = new SimpleBooleanProperty(false);
+    private final BooleanProperty bigs_files = new SimpleBooleanProperty(false);
 
     public StatusButtonsVM(ViewModel vm, Model model){
         this.model = model;
@@ -43,6 +43,10 @@ public class StatusButtonsVM {
         return folders_only;
     }
 
+    public BooleanProperty bigs_files_Property() {
+        return bigs_files;
+    }
+
     public void add_status_to_edit(String status) {
         model.add_status_to_edit(status);
     }
@@ -55,7 +59,7 @@ public class StatusButtonsVM {
         return model.get_list_status_selected().size();
     }
 
-    public void set_all_buttons_status_false() {
+    public void without_buttonAll_and_buttonBF_set_other_status_false() {
         newer_left_button.setValue(false);
         newer_right_button.setValue(false);
         orphans_button.setValue(false);
@@ -63,12 +67,24 @@ public class StatusButtonsVM {
         folders_only.setValue(false);
     }
     
+    /**
+     * Contient la logique applicative des boutons sélectionnés.
+     * @param status : un string contenant le nom du bouton séléctionné.
+     * @param buttons : un boolean contenant l'état du bouton.
+     */
     public void set_selected_items(String status, Boolean buttons) {
-        if (buttons && status.compareTo("All") != 0) {
-            add_status_to_edit(status);
-            all_button.setValue(false);
+        if (buttons && status.compareTo("All") != 0) { // Si n'importe quel bouton est sélectionné (sauf all)
+            if(status.compareTo("BigsFiles") == 0){ // Si Bigsfiles est sélectionné.
+                model.clear_statusList();
+                add_status_to_edit(status);
+                all_button.setValue(false);
+                without_buttonAll_and_buttonBF_set_other_status_false(); // On désactive tous les autres boutons.
+            }else{
+                add_status_to_edit(status);
+                all_button.setValue(false);
+                bigs_files.setValue(false);
+            }
         } else if(!buttons){
-            System.out.println(buttons.toString() + " " + status.toString());
             remove_status_to_edit(status);
             if(get_nb_status() == 0){
                 all_button.setValue(true);
@@ -79,7 +95,8 @@ public class StatusButtonsVM {
             add_status_to_edit(status);
             model.clear_statusList();
             all_button.setValue(true);
-            set_all_buttons_status_false();
+            bigs_files.setValue(false);
+            without_buttonAll_and_buttonBF_set_other_status_false();
         }
         vm.getTreeItem("left").set_root(model.get_left_struct_folder());
         vm.getTreeItem("Right").set_root(model.get_right_struct_folder());

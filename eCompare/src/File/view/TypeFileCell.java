@@ -7,10 +7,6 @@ package File.view;
 
 import File.model.File;
 
-/**
- *
- * @author k(^;,  evin
- */
 public class TypeFileCell extends FileCell{
 
     @Override

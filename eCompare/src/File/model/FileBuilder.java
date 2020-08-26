@@ -5,10 +5,6 @@
  */
 package File.model;
 
-import File.model.SimpleFile;
-import File.model.File;
-import File.model.Directory;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -18,10 +14,6 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.ZoneId;
 
-/**
- *
- * @author herve
- */
 public class FileBuilder {
 
     public static File make(Path path) throws IOException{

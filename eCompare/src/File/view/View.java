@@ -5,23 +5,13 @@
  */
 package File.view;
 
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
-import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import File.viewModel.ViewModel;
-import javafx.scene.control.Button;
 
-
-/**
- *
- * @author 2207hembilo
- */
 public class View{
+
     private final CompareBoxView left_vbstruct_folder;
     private final CompareBoxView right_vbstruct_folder;
     private final ButtonsBoxView buttons_view;
