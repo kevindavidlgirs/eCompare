@@ -1,4 +1,4 @@
-# ecompare
+# eCompare
 Est un projet de comparaison de fichier créé en JavaFX
 
 ### Conditions préalables
