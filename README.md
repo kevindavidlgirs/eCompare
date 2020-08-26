@@ -16,7 +16,7 @@ IDE -> https://www.jetbrains.com/idea/
 1) Dans un premier temps il faut installer JDK-8
 2) Ensuite installez l'IDE
 3) Lancez L'IDE et ouvrez le dossier "eCompare"
-4) Depuis l'IDE recherchez le fichier "main" qui se trouve dans le dossier "src" fait un clique droit dessus et cliquez sur exécuter.
+4) Depuis l'IDE recherchez le fichier "main" qui se trouve dans le dossier "src" fait un clique droit dessus et cliquez "Run main" pour l'exécuter.
 
 ## Utilisation
 1) Sachez dans un premier temps que nous n'utilisons pas les fichiers réels de votre système mais une copie de ceux-ci pour éviter tout problème. Mais si vous êtes un peux bidouilleur vous pourrez très bien utiliser les vrais fichiers de votre système sans soucis.
@@ -34,6 +34,8 @@ IDE -> https://www.jetbrains.com/idea/
 ## Architecture
 - Nous avons utilisé l'architecture MVVM pour ce projet.
 - Les méthodes pour le parcours des dossiers ce fait généralement de manière récursive.
+
+[Présentation](https://imgur.com/a/wywWfdD)
 
 ## Auteurs
 * **Kevin David L. Girs** - [kevindavidlgirs](https://github.com/kevindavidlgirs)
