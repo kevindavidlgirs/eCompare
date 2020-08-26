@@ -1,5 +1,5 @@
 # eCompare
-Est un projet de comparaison de fichier créé en JavaFX
+Est un projet de comparaison de fichier créé en JavaFX. [Screenshot](https://imgur.com/a/wywWfdD)
 
 ### Conditions préalables
 Vous avez besoin pour l'utilisation de ce logiciel de JDK-8 et d'un IDE.
@@ -34,8 +34,6 @@ IDE -> https://www.jetbrains.com/idea/
 ## Architecture
 - Nous avons utilisé l'architecture MVVM pour ce projet.
 - Les méthodes pour le parcours des dossiers ce fait généralement de manière récursive.
-
-[Présentation](https://imgur.com/a/wywWfdD)
 
 ## Auteurs
 * **Kevin David L. Girs** - [kevindavidlgirs](https://github.com/kevindavidlgirs)
